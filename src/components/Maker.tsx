@@ -200,28 +200,28 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
         : 'none-border'
 
   return (
-    <div className="page-shell relative mx-auto flex h-dvh max-w-[1200px] flex-col overflow-hidden px-3 py-2 sm:px-5 sm:py-3 lg:px-6">
+    <div className="page-shell relative mx-auto flex h-dvh max-w-[1180px] flex-col overflow-hidden px-4 py-3 sm:px-6 sm:py-4 md:px-8">
       <DecorCorners />
 
-      <header className="animate-pop relative z-10 shrink-0 pb-2">
+      <header className="animate-pop relative z-10 mb-3 shrink-0 sm:mb-4">
         <p className="font-mono text-[10px] tracking-[0.18em] text-[var(--muted)] uppercase">
           {EVENT.name} · {EVENT.year}
         </p>
-        <div className="flex flex-wrap items-end justify-between gap-2">
-          <h1 className="font-display text-2xl font-extrabold tracking-tight text-[var(--ink)] sm:text-[1.75rem]">
+        <div className="mt-1 flex flex-wrap items-end justify-between gap-2">
+          <h1 className="font-display text-[1.65rem] font-extrabold tracking-tight text-[var(--ink)] sm:text-3xl">
             Make your badge your own!
           </h1>
-          <p className="hidden text-xs text-[var(--muted)] sm:block">
+          <p className="hidden text-sm text-[var(--muted)] md:block">
             Stickers · doodle · lock it in
           </p>
         </div>
       </header>
 
-      <div className="relative z-10 grid min-h-0 flex-1 gap-3 lg:grid-cols-[minmax(0,1fr)_280px] lg:items-stretch lg:gap-5">
-        <section className="animate-pop grid min-h-0 content-start gap-2 overflow-hidden">
-          <div className="grid grid-cols-3 gap-2">
-            <ControlCard title="Frame" compact>
-              <div className="grid grid-cols-3 gap-1">
+      <div className="relative z-10 flex min-h-0 flex-1 flex-col-reverse gap-5 overflow-y-auto md:flex-row md:items-stretch md:gap-8 md:overflow-hidden lg:gap-10">
+        <section className="animate-pop flex min-h-0 min-w-0 flex-1 flex-col gap-3 md:gap-4 md:overflow-y-auto md:pr-1">
+          <div className="grid grid-cols-3 gap-3">
+            <ControlCard title="Frame">
+              <div className="grid grid-cols-3 gap-2">
                 {(
                   [
                     ['none', 'None'],
@@ -233,35 +233,37 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
                     key={id}
                     type="button"
                     onClick={() => push({ ...state, border: id })}
-                    className={`flex h-12 flex-col items-center justify-center gap-1 rounded-md bg-white ${
+                    className={`flex aspect-square flex-col items-center justify-center gap-1.5 rounded-xl bg-white ${
                       state.border === id
                         ? 'ring-2 ring-[var(--blue)]'
                         : 'ring-1 ring-black/10'
                     }`}
                   >
                     <span
-                      className={`block h-5 w-5 bg-transparent ${
+                      className={`block h-6 w-6 bg-transparent ${
                         id === 'track'
-                          ? 'border border-black'
+                          ? 'rounded-sm border border-black'
                           : id === 'dashed'
                             ? 'dashed-border'
                             : 'none-border'
                       }`}
                     />
-                    <span className="text-[10px] text-[var(--ink)]/80">{label}</span>
+                    <span className="text-[11px] font-medium text-[var(--ink)]/80">
+                      {label}
+                    </span>
                   </button>
                 ))}
               </div>
             </ControlCard>
 
-            <ControlCard title="Cords" compact>
-              <div className="grid grid-cols-3 gap-1">
+            <ControlCard title="Cords">
+              <div className="grid grid-cols-3 gap-2">
                 {(Object.keys(CORDS) as CordId[]).map((id) => (
                   <button
                     key={id}
                     type="button"
                     onClick={() => push({ ...state, cord: id })}
-                    className={`flex h-12 flex-col items-center justify-center rounded-md bg-white ${
+                    className={`flex aspect-square flex-col items-center justify-center rounded-xl bg-white ${
                       state.cord === id
                         ? 'ring-2 ring-[var(--blue)]'
                         : 'ring-1 ring-black/10'
@@ -273,12 +275,12 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
               </div>
             </ControlCard>
 
-            <ControlCard title="Draw" compact>
-              <div className="flex h-12 items-center justify-center gap-1.5">
+            <ControlCard title="Draw">
+              <div className="flex h-full min-h-[4.5rem] items-center justify-center gap-2">
                 <button
                   type="button"
                   onClick={() => setMode(mode === 'draw' ? 'stick' : 'draw')}
-                  className={`rounded-md px-2 py-1.5 text-[10px] font-semibold ${
+                  className={`rounded-xl px-3 py-2 text-xs font-semibold ${
                     mode === 'draw'
                       ? 'bg-[var(--blue)] text-white'
                       : 'bg-white text-[var(--ink)]/80 ring-1 ring-black/10'
@@ -294,7 +296,7 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
                       setBrush(size)
                       setMode('draw')
                     }}
-                    className={`flex h-9 w-9 items-center justify-center rounded-md bg-white ${
+                    className={`flex h-11 w-11 items-center justify-center rounded-xl bg-white ${
                       brush === size && mode === 'draw'
                         ? 'ring-2 ring-[var(--blue)]'
                         : 'ring-1 ring-black/10'
@@ -302,7 +304,7 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
                   >
                     <span
                       className="rounded-full bg-[var(--ink)]"
-                      style={{ width: size * 4 + 2, height: size * 4 + 2 }}
+                      style={{ width: size * 5, height: size * 5 }}
                     />
                   </button>
                 ))}
@@ -310,8 +312,8 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
             </ControlCard>
           </div>
 
-          <ControlCard title="Stickers" compact>
-            <div className="mb-1.5 flex flex-wrap gap-1">
+          <ControlCard title="Stickers">
+            <div className="mb-3 flex flex-wrap gap-1.5">
               {TABS.map((t) => (
                 <button
                   key={t.id}
@@ -320,7 +322,7 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
                     setTab(t.id)
                     setMode('stick')
                   }}
-                  className={`rounded px-2 py-1 font-mono text-[9px] tracking-wide ${
+                  className={`rounded-lg px-2.5 py-1.5 font-mono text-[10px] tracking-wide ${
                     tab === t.id
                       ? 'bg-[var(--ink)] text-white'
                       : 'bg-white text-[var(--muted)] ring-1 ring-black/10'
@@ -330,7 +332,7 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
                 </button>
               ))}
             </div>
-            <div className="flex max-h-[7.5rem] flex-wrap gap-1.5 overflow-y-auto pr-1">
+            <div className="flex flex-wrap gap-2">
               {STICKERS.filter((s) => s.tab === tab).map((s) => (
                 <button
                   key={s.id}
@@ -341,26 +343,29 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
                   }}
                   className="transition hover:scale-105 active:scale-95"
                 >
-                  <StickerFace def={s} compact />
+                  <StickerFace def={s} />
                 </button>
               ))}
             </div>
+            <p className="mt-3 text-[11px] text-[var(--muted)]">
+              Tap to drop · drag to move · double-click to delete
+            </p>
           </ControlCard>
 
-          <ControlCard title="Field" compact>
-            <div className="grid grid-cols-3 gap-1.5">
+          <ControlCard title="Field">
+            <div className="grid grid-cols-3 gap-3">
               {(Object.keys(FIELDS) as FieldId[]).map((id) => (
                 <button
                   key={id}
                   type="button"
                   onClick={() => push({ ...state, field: id })}
-                  className={`overflow-hidden rounded-md ${
+                  className={`overflow-hidden rounded-xl ${
                     state.field === id
                       ? 'ring-2 ring-[var(--blue)]'
                       : 'ring-1 ring-black/10'
                   }`}
                 >
-                  <div className="relative h-10 bg-[#0a0a0a]">
+                  <div className="relative h-14 bg-[#0a0a0a] sm:h-16">
                     {FIELDS[id].blobs.slice(0, 2).map((b) => (
                       <span
                         key={b.id}
@@ -375,7 +380,7 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
                       />
                     ))}
                   </div>
-                  <div className="bg-white py-1 text-center text-[10px] font-medium text-[var(--ink)]/80">
+                  <div className="bg-white py-2 text-center text-xs font-medium text-[var(--ink)]/80">
                     {FIELDS[id].label}
                   </div>
                 </button>
@@ -384,23 +389,23 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
           </ControlCard>
         </section>
 
-        <aside className="animate-pop flex min-h-0 flex-col items-center justify-center">
-          <div className="flex min-h-0 w-full max-w-[280px] flex-col items-center">
-            <Lanyard from={cord.from} to={cord.to} scale={0.92} />
+        <aside className="animate-pop flex shrink-0 flex-col items-center justify-center md:w-[300px] lg:w-[320px]">
+          <div className="flex w-full max-w-[300px] flex-col items-center">
+            <Lanyard from={cord.from} to={cord.to} scale={1} />
 
             <div
               ref={badgeRef}
-              className={`relative -mt-1 overflow-hidden bg-black shadow-[0_16px_40px_rgba(0,0,0,0.65)] ${borderClass}`}
+              className={`relative -mt-1 overflow-hidden bg-black shadow-[0_18px_44px_rgba(0,0,0,0.28)] ${borderClass}`}
               style={{ width: BADGE_W }}
             >
-              <div className="relative px-3 pt-3 pb-1 text-center">
+              <div className="relative px-3 pt-3.5 pb-1 text-center">
                 <p className="font-display text-[22px] leading-[0.88] font-extrabold tracking-[-0.03em] text-[var(--yellow)] uppercase">
                   COMMON
                 </p>
                 <p className="font-display text-[22px] leading-[0.88] font-extrabold tracking-[-0.03em] text-[var(--yellow)] uppercase">
                   GROUND
                 </p>
-                <p className="mt-1 font-mono text-[8px] tracking-[0.18em] text-white/45 uppercase">
+                <p className="mt-1.5 font-mono text-[8px] tracking-[0.18em] text-white/45 uppercase">
                   ID · BADGE · {EVENT.year}
                 </p>
               </div>
@@ -480,7 +485,7 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
                 })}
               </div>
 
-              <div className="flex items-end justify-between px-3 pt-0.5 pb-2.5">
+              <div className="flex items-end justify-between px-3 pt-1 pb-3">
                 <p className="font-display text-left text-[9px] leading-tight font-bold tracking-wide text-[var(--yellow)] uppercase">
                   {EVENT.subtitle}
                 </p>
@@ -490,25 +495,25 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
               </div>
             </div>
 
-            <div className="mt-2 flex w-full gap-1.5">
+            <div className="mt-3 flex w-full gap-2">
               <button
                 type="button"
                 onClick={undo}
-                className="flex-1 rounded-xl bg-white py-2 text-xs font-semibold text-[var(--ink)] ring-1 ring-black/10"
+                className="flex-1 rounded-xl bg-white py-2.5 text-sm font-semibold text-[var(--ink)] ring-1 ring-black/10"
               >
                 Undo
               </button>
               <button
                 type="button"
                 onClick={clearAll}
-                className="flex-1 rounded-xl bg-white py-2 text-xs font-semibold text-[var(--ink)] ring-1 ring-black/10"
+                className="flex-1 rounded-xl bg-white py-2.5 text-sm font-semibold text-[var(--ink)] ring-1 ring-black/10"
               >
                 Clear
               </button>
               <button
                 type="button"
                 onClick={onDone}
-                className="flex-[1.35] rounded-xl bg-[var(--blue)] py-2 text-xs font-semibold text-white shadow-[0_4px_0_#2436b8] transition active:translate-y-0.5 active:shadow-none"
+                className="flex-[1.35] rounded-xl bg-[var(--blue)] py-2.5 text-sm font-semibold text-white shadow-[0_5px_0_#2436b8] transition active:translate-y-0.5 active:shadow-none"
               >
                 I&apos;m done!
               </button>
@@ -523,23 +528,13 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
 function ControlCard({
   title,
   children,
-  compact,
 }: {
   title: string
   children: ReactNode
-  compact?: boolean
 }) {
   return (
-    <div
-      className={`rounded-2xl bg-[var(--bg-panel)]/90 ring-1 ring-black/5 ${
-        compact ? 'p-2' : 'p-4'
-      }`}
-    >
-      <p
-        className={`font-mono tracking-[0.18em] text-[var(--muted)] uppercase ${
-          compact ? 'mb-1.5 text-[9px]' : 'mb-3 text-[10px]'
-        }`}
-      >
+    <div className="rounded-2xl bg-[var(--bg-panel)]/90 p-3.5 ring-1 ring-black/5 sm:p-4">
+      <p className="mb-2.5 font-mono text-[10px] tracking-[0.18em] text-[var(--muted)] uppercase">
         {title}
       </p>
       {children}
@@ -567,7 +562,7 @@ function StickerFace({ def, compact }: { def: StickerDef; compact?: boolean }) {
   if (def.shape === 'star') {
     return (
       <span
-        className={`${base} sticker-star ${compact ? 'h-11 w-11 text-[7px]' : 'h-16 w-16 text-[9px]'} px-1 leading-tight`}
+        className={`${base} sticker-star ${compact ? 'h-11 w-11 text-[7px]' : 'h-14 w-14 text-[9px]'} px-1 leading-tight`}
         style={{ background: def.color, color: text }}
       >
         {def.label}
@@ -578,7 +573,7 @@ function StickerFace({ def, compact }: { def: StickerDef; compact?: boolean }) {
   if (def.shape === 'cloud') {
     return (
       <span
-        className={`${base} sticker-cloud ${compact ? 'min-h-8 min-w-[4.2rem]' : 'min-h-12 min-w-[5.5rem]'}`}
+        className={`${base} sticker-cloud ${compact ? 'min-h-8 min-w-[4.2rem]' : 'min-h-11 min-w-[5.2rem]'}`}
         style={{ background: def.color, color: text }}
       >
         {def.label}
@@ -589,7 +584,7 @@ function StickerFace({ def, compact }: { def: StickerDef; compact?: boolean }) {
   if (def.shape === 'ticket') {
     return (
       <span
-        className={`${base} rounded-md ${compact ? 'px-2.5' : 'px-4'}`}
+        className={`${base} rounded-md ${compact ? 'px-2.5' : 'px-3.5'}`}
         style={{ background: def.color, color: text }}
       >
         {def.label}
@@ -599,7 +594,7 @@ function StickerFace({ def, compact }: { def: StickerDef; compact?: boolean }) {
 
   return (
     <span
-      className={`${base} sticker-blob ${compact ? 'min-h-8 min-w-[4.2rem]' : 'min-h-12 min-w-[5.5rem]'}`}
+      className={`${base} sticker-blob ${compact ? 'min-h-8 min-w-[4.2rem]' : 'min-h-11 min-w-[5.2rem]'}`}
       style={{ background: def.color, color: text }}
     >
       {def.label}
@@ -612,7 +607,7 @@ function DecorCorners() {
     <>
       <div
         aria-hidden
-        className="pointer-events-none absolute bottom-3 left-3 z-0 hidden gap-2 opacity-90 sm:flex"
+        className="pointer-events-none absolute bottom-4 left-4 z-0 hidden gap-2 opacity-90 sm:flex"
       >
         <span className="sticker-blob bg-[var(--mint)] px-2.5 py-1.5 font-mono text-[9px] font-bold text-[#0b1f14]">
           Aa
@@ -621,7 +616,7 @@ function DecorCorners() {
       </div>
       <div
         aria-hidden
-        className="pointer-events-none absolute right-3 bottom-3 z-0 hidden items-end gap-2 opacity-90 sm:flex"
+        className="pointer-events-none absolute right-4 bottom-4 z-0 hidden items-end gap-2 opacity-90 sm:flex"
       >
         <span className="rounded-lg bg-[var(--coral)] px-2.5 py-1.5 font-mono text-[9px] font-bold text-white">
           ✦ PLAY
