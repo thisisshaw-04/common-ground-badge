@@ -222,7 +222,7 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
               [
                 ['none', 'None'],
                 ['dashed', 'Dashed'],
-                ['track', 'Track'],
+                ['track', 'BBox'],
               ] as [BorderId, string][]
             ).map(([id, label]) => (
               <button
