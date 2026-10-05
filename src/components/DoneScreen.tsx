@@ -87,7 +87,7 @@ export function DoneScreen({ state, badgeNode, onEdit }: DoneProps) {
   }
 
   return (
-    <main className="relative mx-auto flex min-h-dvh max-w-3xl flex-col items-center px-4 py-12 text-center">
+    <main className="relative mx-auto flex h-dvh max-w-3xl flex-col items-center overflow-y-auto px-4 py-6 text-center sm:py-8">
       <div className="animate-pop">
         <p className="font-mono text-[11px] tracking-[0.22em] text-[var(--yellow)] uppercase">
           Track locked
