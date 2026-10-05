@@ -22,7 +22,7 @@ export function DoneScreen({ state, badgeNode, onEdit }: DoneProps) {
       const root = document.createElement('div')
       root.style.width = `${width}px`
       root.style.height = `${height}px`
-      root.style.background = '#050505'
+      root.style.background = '#f3f1ec'
       root.style.display = 'flex'
       root.style.alignItems = 'center'
       root.style.justifyContent = 'center'
@@ -89,11 +89,11 @@ export function DoneScreen({ state, badgeNode, onEdit }: DoneProps) {
   return (
     <main className="relative mx-auto flex h-dvh max-w-3xl flex-col items-center overflow-y-auto px-4 py-6 text-center sm:py-8">
       <div className="animate-pop">
-        <p className="font-mono text-[11px] tracking-[0.22em] text-[var(--yellow)] uppercase">
-          Track locked
+        <p className="font-mono text-[11px] tracking-[0.22em] text-[var(--muted)] uppercase">
+          You did it
         </p>
-        <h1 className="font-display mt-2 text-4xl font-extrabold tracking-tight text-[var(--yellow)] sm:text-5xl">
-          Your badge is ready
+        <h1 className="font-display mt-2 text-4xl font-extrabold tracking-tight text-[var(--ink)] sm:text-5xl">
+          Your badge is ready ✦
         </h1>
         <p className="mx-auto mt-3 max-w-md text-[var(--muted)]">
           Save it for stories, post it everywhere, then show up on {EVENT.date} at{' '}
@@ -103,7 +103,7 @@ export function DoneScreen({ state, badgeNode, onEdit }: DoneProps) {
 
       <div
         ref={previewRef}
-        className="animate-floaty mt-10 scale-[0.92] sm:scale-100"
+        className="animate-floaty mt-8 scale-[0.92] sm:scale-100"
       >
         {badgeNode ? (
           <div
@@ -134,12 +134,12 @@ export function DoneScreen({ state, badgeNode, onEdit }: DoneProps) {
         ) : null}
       </div>
 
-      <div className="animate-pop mt-8 grid w-full max-w-sm gap-2">
+      <div className="animate-pop mt-6 grid w-full max-w-sm gap-2">
         <button
           type="button"
           disabled={!!busy}
           onClick={() => exportPng('story')}
-          className="rounded-xl bg-[var(--yellow)] px-4 py-3.5 text-sm font-semibold text-black disabled:opacity-60"
+          className="rounded-2xl bg-[var(--ink)] px-4 py-3.5 text-sm font-semibold text-white disabled:opacity-60"
         >
           {busy === 'story' ? 'Saving…' : 'Save 9:16 Story'}
         </button>
@@ -147,21 +147,21 @@ export function DoneScreen({ state, badgeNode, onEdit }: DoneProps) {
           type="button"
           disabled={!!busy}
           onClick={() => exportPng('grid')}
-          className="rounded-xl bg-white/5 px-4 py-3.5 text-sm font-semibold text-white ring-1 ring-white/20 disabled:opacity-60"
+          className="rounded-2xl bg-white px-4 py-3.5 text-sm font-semibold ring-1 ring-black/10 disabled:opacity-60"
         >
           {busy === 'grid' ? 'Saving…' : 'Save 3:4 Grid'}
         </button>
         <button
           type="button"
           onClick={share}
-          className="rounded-xl bg-[var(--mint)] px-4 py-3.5 text-sm font-semibold text-black shadow-[0_6px_0_#1a8a5c] transition active:translate-y-1 active:shadow-none"
+          className="rounded-2xl bg-[var(--blue)] px-4 py-3.5 text-sm font-semibold text-white shadow-[0_8px_0_#2436b8] transition active:translate-y-1 active:shadow-none"
         >
           {copied ? 'Copied link!' : 'Share to socials'}
         </button>
         <button
           type="button"
           onClick={tweet}
-          className="rounded-xl px-4 py-3 text-sm font-medium text-[var(--muted)] hover:text-white"
+          className="rounded-2xl px-4 py-3 text-sm font-medium text-[var(--muted)] hover:text-[var(--ink)]"
         >
           Post on X / Twitter
         </button>
@@ -169,14 +169,14 @@ export function DoneScreen({ state, badgeNode, onEdit }: DoneProps) {
           href={EVENT.luma}
           target="_blank"
           rel="noreferrer"
-          className="text-sm text-[var(--muted)] underline decoration-[var(--yellow)]/50 underline-offset-2 hover:text-[var(--yellow)]"
+          className="text-sm text-[var(--muted)] underline decoration-[var(--coral)]/50 underline-offset-2 hover:text-[var(--ink)]"
         >
           Event on Luma
         </a>
         <button
           type="button"
           onClick={onEdit}
-          className="mt-2 text-sm font-semibold text-[var(--yellow)]"
+          className="mt-2 text-sm font-semibold text-[var(--blue)]"
         >
           ← Keep editing
         </button>

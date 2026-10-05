@@ -200,16 +200,16 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
         : 'none-border'
 
   return (
-    <div className="brand-void relative mx-auto flex h-dvh max-w-[1200px] flex-col overflow-hidden px-3 py-2 sm:px-5 sm:py-3 lg:px-6">
+    <div className="page-shell relative mx-auto flex h-dvh max-w-[1200px] flex-col overflow-hidden px-3 py-2 sm:px-5 sm:py-3 lg:px-6">
       <DecorCorners />
 
       <header className="animate-pop relative z-10 shrink-0 pb-2">
-        <p className="font-mono text-[10px] tracking-[0.22em] text-[var(--yellow)] uppercase">
-          {EVENT.subtitle}
+        <p className="font-mono text-[10px] tracking-[0.18em] text-[var(--muted)] uppercase">
+          {EVENT.name} · {EVENT.year}
         </p>
         <div className="flex flex-wrap items-end justify-between gap-2">
-          <h1 className="font-display text-2xl font-extrabold tracking-tight text-[var(--yellow)] sm:text-[1.75rem]">
-            Track your badge
+          <h1 className="font-display text-2xl font-extrabold tracking-tight text-[var(--ink)] sm:text-[1.75rem]">
+            Make your badge your own!
           </h1>
           <p className="hidden text-xs text-[var(--muted)] sm:block">
             Stickers · doodle · lock it in
@@ -233,22 +233,22 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
                     key={id}
                     type="button"
                     onClick={() => push({ ...state, border: id })}
-                    className={`flex h-12 flex-col items-center justify-center gap-1 rounded-md bg-black/60 ${
+                    className={`flex h-12 flex-col items-center justify-center gap-1 rounded-md bg-white ${
                       state.border === id
-                        ? 'ring-1 ring-[var(--yellow)]'
-                        : 'ring-1 ring-white/10'
+                        ? 'ring-2 ring-[var(--blue)]'
+                        : 'ring-1 ring-black/10'
                     }`}
                   >
                     <span
                       className={`block h-5 w-5 bg-transparent ${
                         id === 'track'
-                          ? 'track-border'
+                          ? 'border border-black'
                           : id === 'dashed'
                             ? 'dashed-border'
                             : 'none-border'
                       }`}
                     />
-                    <span className="text-[10px] text-white/80">{label}</span>
+                    <span className="text-[10px] text-[var(--ink)]/80">{label}</span>
                   </button>
                 ))}
               </div>
@@ -261,10 +261,10 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
                     key={id}
                     type="button"
                     onClick={() => push({ ...state, cord: id })}
-                    className={`flex h-12 flex-col items-center justify-center rounded-md bg-black/60 ${
+                    className={`flex h-12 flex-col items-center justify-center rounded-md bg-white ${
                       state.cord === id
-                        ? 'ring-1 ring-[var(--yellow)]'
-                        : 'ring-1 ring-white/10'
+                        ? 'ring-2 ring-[var(--blue)]'
+                        : 'ring-1 ring-black/10'
                     }`}
                   >
                     <CordSwatch from={CORDS[id].from} to={CORDS[id].to} />
@@ -280,8 +280,8 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
                   onClick={() => setMode(mode === 'draw' ? 'stick' : 'draw')}
                   className={`rounded-md px-2 py-1.5 text-[10px] font-semibold ${
                     mode === 'draw'
-                      ? 'bg-[var(--yellow)] text-black'
-                      : 'bg-black/60 text-white/80 ring-1 ring-white/10'
+                      ? 'bg-[var(--blue)] text-white'
+                      : 'bg-white text-[var(--ink)]/80 ring-1 ring-black/10'
                   }`}
                 >
                   {mode === 'draw' ? 'On' : 'Draw'}
@@ -294,14 +294,14 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
                       setBrush(size)
                       setMode('draw')
                     }}
-                    className={`flex h-9 w-9 items-center justify-center rounded-md bg-black/60 ${
+                    className={`flex h-9 w-9 items-center justify-center rounded-md bg-white ${
                       brush === size && mode === 'draw'
-                        ? 'ring-1 ring-[var(--yellow)]'
-                        : 'ring-1 ring-white/10'
+                        ? 'ring-2 ring-[var(--blue)]'
+                        : 'ring-1 ring-black/10'
                     }`}
                   >
                     <span
-                      className="rounded-full bg-[var(--yellow)]"
+                      className="rounded-full bg-[var(--ink)]"
                       style={{ width: size * 4 + 2, height: size * 4 + 2 }}
                     />
                   </button>
@@ -322,8 +322,8 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
                   }}
                   className={`rounded px-2 py-1 font-mono text-[9px] tracking-wide ${
                     tab === t.id
-                      ? 'bg-[var(--yellow)] text-black'
-                      : 'bg-black/60 text-white/60 ring-1 ring-white/10'
+                      ? 'bg-[var(--ink)] text-white'
+                      : 'bg-white text-[var(--muted)] ring-1 ring-black/10'
                   }`}
                 >
                   {t.label}
@@ -347,7 +347,7 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
             </div>
           </ControlCard>
 
-          <ControlCard title="Blob field" compact>
+          <ControlCard title="Field" compact>
             <div className="grid grid-cols-3 gap-1.5">
               {(Object.keys(FIELDS) as FieldId[]).map((id) => (
                 <button
@@ -356,11 +356,11 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
                   onClick={() => push({ ...state, field: id })}
                   className={`overflow-hidden rounded-md ${
                     state.field === id
-                      ? 'ring-1 ring-[var(--yellow)]'
-                      : 'ring-1 ring-white/10'
+                      ? 'ring-2 ring-[var(--blue)]'
+                      : 'ring-1 ring-black/10'
                   }`}
                 >
-                  <div className="relative h-10 bg-black">
+                  <div className="relative h-10 bg-[#0a0a0a]">
                     {FIELDS[id].blobs.slice(0, 2).map((b) => (
                       <span
                         key={b.id}
@@ -375,7 +375,7 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
                       />
                     ))}
                   </div>
-                  <div className="bg-[var(--bg-panel)] py-1 text-center text-[10px] font-medium text-white/80">
+                  <div className="bg-white py-1 text-center text-[10px] font-medium text-[var(--ink)]/80">
                     {FIELDS[id].label}
                   </div>
                 </button>
@@ -494,21 +494,21 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
               <button
                 type="button"
                 onClick={undo}
-                className="flex-1 rounded-md bg-white/5 py-2 text-xs font-semibold text-white/80 ring-1 ring-white/15"
+                className="flex-1 rounded-xl bg-white py-2 text-xs font-semibold text-[var(--ink)] ring-1 ring-black/10"
               >
                 Undo
               </button>
               <button
                 type="button"
                 onClick={clearAll}
-                className="flex-1 rounded-md bg-white/5 py-2 text-xs font-semibold text-white/80 ring-1 ring-white/15"
+                className="flex-1 rounded-xl bg-white py-2 text-xs font-semibold text-[var(--ink)] ring-1 ring-black/10"
               >
                 Clear
               </button>
               <button
                 type="button"
                 onClick={onDone}
-                className="flex-[1.35] rounded-md bg-[var(--yellow)] py-2 text-xs font-semibold text-black shadow-[0_4px_0_#9a8b00] transition active:translate-y-0.5 active:shadow-none"
+                className="flex-[1.35] rounded-xl bg-[var(--blue)] py-2 text-xs font-semibold text-white shadow-[0_4px_0_#2436b8] transition active:translate-y-0.5 active:shadow-none"
               >
                 I&apos;m done!
               </button>
@@ -531,7 +531,7 @@ function ControlCard({
 }) {
   return (
     <div
-      className={`rounded-lg bg-[var(--bg-panel)]/90 ring-1 ring-white/10 ${
+      className={`rounded-2xl bg-[var(--bg-panel)]/90 ring-1 ring-black/5 ${
         compact ? 'p-2' : 'p-4'
       }`}
     >
@@ -612,26 +612,23 @@ function DecorCorners() {
     <>
       <div
         aria-hidden
-        className="pointer-events-none absolute bottom-3 left-3 z-0 hidden opacity-50 lg:block"
+        className="pointer-events-none absolute bottom-3 left-3 z-0 hidden gap-2 opacity-90 sm:flex"
       >
-        <div className="relative h-16 w-20">
-          <div
-            className="pixel-blob track-box absolute inset-1"
-            style={{ backgroundColor: 'rgba(57,255,182,0.3)' }}
-          />
-        </div>
+        <span className="sticker-blob bg-[var(--mint)] px-2.5 py-1.5 font-mono text-[9px] font-bold text-[#0b1f14]">
+          Aa
+        </span>
+        <span className="rounded-full bg-[var(--yellow)] px-2.5 py-1.5 text-sm">✿</span>
       </div>
       <div
         aria-hidden
-        className="pointer-events-none absolute right-3 bottom-4 z-0 hidden opacity-50 lg:block"
+        className="pointer-events-none absolute right-3 bottom-3 z-0 hidden items-end gap-2 opacity-90 sm:flex"
       >
-        <div className="relative h-14 w-16">
-          <div
-            className="pixel-blob track-box absolute inset-1"
-            style={{ backgroundColor: 'rgba(255,79,216,0.3)' }}
-          />
-          <span className="crosshair absolute inset-0" />
-        </div>
+        <span className="rounded-lg bg-[var(--coral)] px-2.5 py-1.5 font-mono text-[9px] font-bold text-white">
+          ✦ PLAY
+        </span>
+        <span className="sticker-star flex h-11 w-11 items-center justify-center bg-[var(--sky)] text-[10px] font-bold text-white">
+          GO
+        </span>
       </div>
     </>
   )
