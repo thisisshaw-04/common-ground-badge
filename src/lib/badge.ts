@@ -52,36 +52,44 @@ export const CORDS: Record<
   acid: { label: 'Acid', from: '#39ffb6', to: '#5b8cff' },
 }
 
-/** Bright translucent tracked blob fields (no checker grids). */
+/** Rock field presets: translucent RECTANGLE tracking regions over pixel rock. */
 export const FIELDS: Record<
   FieldId,
   {
     label: string
-    blobs: { color: string; x: number; y: number; w: number; h: number; id: string }[]
+    tracks: {
+      color: string
+      x: number
+      y: number
+      w: number
+      h: number
+      id: string
+      score: number
+    }[]
   }
 > = {
   signal: {
     label: 'Signal',
-    blobs: [
-      { color: 'rgba(57,255,182,0.45)', x: 8, y: 28, w: 42, h: 36, id: '001' },
-      { color: 'rgba(255,230,0,0.4)', x: 48, y: 42, w: 38, h: 32, id: '002' },
-      { color: 'rgba(91,140,255,0.42)', x: 28, y: 58, w: 44, h: 28, id: '003' },
+    tracks: [
+      { color: 'rgba(57,255,182,0.28)', x: 10, y: 30, w: 38, h: 28, id: '001', score: 92 },
+      { color: 'rgba(255,230,0,0.26)', x: 48, y: 44, w: 36, h: 26, id: '002', score: 88 },
+      { color: 'rgba(91,140,255,0.28)', x: 28, y: 60, w: 42, h: 22, id: '003', score: 85 },
     ],
   },
   pulse: {
     label: 'Pulse',
-    blobs: [
-      { color: 'rgba(255,79,216,0.42)', x: 12, y: 30, w: 40, h: 34, id: '011' },
-      { color: 'rgba(255,154,60,0.4)', x: 50, y: 38, w: 36, h: 40, id: '012' },
-      { color: 'rgba(57,255,182,0.38)', x: 30, y: 62, w: 48, h: 26, id: '013' },
+    tracks: [
+      { color: 'rgba(255,79,216,0.28)', x: 14, y: 28, w: 34, h: 30, id: '011', score: 90 },
+      { color: 'rgba(255,154,60,0.26)', x: 50, y: 36, w: 34, h: 34, id: '012', score: 87 },
+      { color: 'rgba(57,255,182,0.24)', x: 26, y: 62, w: 46, h: 20, id: '013', score: 83 },
     ],
   },
   flare: {
     label: 'Flare',
-    blobs: [
-      { color: 'rgba(91,140,255,0.44)', x: 10, y: 26, w: 36, h: 38, id: '021' },
-      { color: 'rgba(255,230,0,0.42)', x: 42, y: 36, w: 46, h: 30, id: '022' },
-      { color: 'rgba(255,79,216,0.4)', x: 24, y: 56, w: 40, h: 34, id: '023' },
+    tracks: [
+      { color: 'rgba(91,140,255,0.28)', x: 12, y: 26, w: 32, h: 32, id: '021', score: 91 },
+      { color: 'rgba(255,230,0,0.26)', x: 44, y: 38, w: 42, h: 24, id: '022', score: 86 },
+      { color: 'rgba(255,79,216,0.26)', x: 26, y: 56, w: 36, h: 28, id: '023', score: 84 },
     ],
   },
 }

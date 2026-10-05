@@ -30,7 +30,6 @@ export function DoneScreen({ state, badgeNode, onEdit }: DoneProps) {
       root.style.left = '-12000px'
       root.style.top = '0'
       const clone = badgeNode.cloneNode(true) as HTMLElement
-      // freeze inputs as text
       clone.querySelectorAll('input').forEach((input) => {
         const span = document.createElement('div')
         span.className = input.className
@@ -87,16 +86,16 @@ export function DoneScreen({ state, badgeNode, onEdit }: DoneProps) {
   }
 
   return (
-    <div className="page-black flex h-dvh flex-col overflow-hidden">
+    <div className="page-light flex h-dvh flex-col overflow-hidden">
       <main className="relative mx-auto flex min-h-0 w-full max-w-3xl flex-1 flex-col items-center overflow-y-auto px-4 py-6 text-center sm:py-8">
         <div className="animate-pop">
-          <p className="font-mono text-[11px] tracking-[0.22em] text-white/45 uppercase">
+          <p className="font-mono text-[11px] tracking-[0.22em] text-[var(--muted)] uppercase">
             You did it
           </p>
-          <h1 className="font-display mt-2 text-4xl font-bold tracking-tight text-white sm:text-5xl">
+          <h1 className="mt-2 text-4xl font-bold tracking-tight text-[var(--ink)] sm:text-5xl">
             your badge is ready
           </h1>
-          <p className="mx-auto mt-3 max-w-md text-white/55">
+          <p className="mx-auto mt-3 max-w-md text-[var(--muted)]">
             Save it for stories, post it everywhere, then show up on {EVENT.date}{' '}
             at {EVENT.place}.
           </p>
@@ -140,7 +139,7 @@ export function DoneScreen({ state, badgeNode, onEdit }: DoneProps) {
             type="button"
             disabled={!!busy}
             onClick={() => exportPng('story')}
-            className="rounded-full bg-[var(--yellow)] px-4 py-3.5 text-sm font-semibold text-black disabled:opacity-60"
+            className="rounded-full bg-[var(--blue)] px-4 py-3.5 text-sm font-semibold text-white disabled:opacity-60"
           >
             {busy === 'story' ? 'Saving…' : 'Save 9:16 Story'}
           </button>
@@ -148,21 +147,21 @@ export function DoneScreen({ state, badgeNode, onEdit }: DoneProps) {
             type="button"
             disabled={!!busy}
             onClick={() => exportPng('grid')}
-            className="rounded-full bg-white px-4 py-3.5 text-sm font-semibold text-black disabled:opacity-60"
+            className="rounded-full bg-white px-4 py-3.5 text-sm font-semibold text-black ring-1 ring-black/10 disabled:opacity-60"
           >
             {busy === 'grid' ? 'Saving…' : 'Save 3:4 Grid'}
           </button>
           <button
             type="button"
             onClick={share}
-            className="rounded-full bg-white/10 px-4 py-3.5 text-sm font-semibold text-white ring-1 ring-white/20"
+            className="rounded-full bg-[var(--panel)] px-4 py-3.5 text-sm font-semibold text-black ring-1 ring-black/10"
           >
             {copied ? 'Copied link!' : 'Share to socials'}
           </button>
           <button
             type="button"
             onClick={tweet}
-            className="rounded-full px-4 py-3 text-sm font-medium text-white/55 hover:text-white"
+            className="rounded-full px-4 py-3 text-sm font-medium text-[var(--muted)] hover:text-black"
           >
             Post on X / Twitter
           </button>
@@ -170,45 +169,28 @@ export function DoneScreen({ state, badgeNode, onEdit }: DoneProps) {
             href={EVENT.luma}
             target="_blank"
             rel="noreferrer"
-            className="text-sm text-white/45 underline decoration-[var(--yellow)]/50 underline-offset-2 hover:text-[var(--yellow)]"
+            className="text-sm text-[var(--muted)] underline decoration-[var(--blue)]/40 underline-offset-2 hover:text-[var(--blue)]"
           >
             Event on Luma
           </a>
           <button
             type="button"
             onClick={onEdit}
-            className="mt-1 text-sm font-semibold text-[var(--yellow)]"
+            className="mt-1 text-sm font-semibold text-[var(--blue)]"
           >
             ← Keep editing
           </button>
         </div>
       </main>
-      <div className="relative z-20 shrink-0 overflow-hidden bg-[var(--yellow)] py-2.5">
-        <div className="marquee-track">
-          <div className="flex items-center whitespace-nowrap px-2">
-            {Array.from({ length: 8 }).map((_, i) => (
-              <span key={i} className="flex items-center">
-                <span className="font-display px-3 text-xl font-medium text-black/70 italic">
-                  common ground
-                </span>
-                <span className="px-1 text-xl font-black tracking-tight text-black uppercase">
-                  badge maker
-                </span>
-              </span>
-            ))}
-          </div>
-          <div className="flex items-center whitespace-nowrap px-2" aria-hidden>
-            {Array.from({ length: 8 }).map((_, i) => (
-              <span key={i} className="flex items-center">
-                <span className="font-display px-3 text-xl font-medium text-black/70 italic">
-                  common ground
-                </span>
-                <span className="px-1 text-xl font-black tracking-tight text-black uppercase">
-                  badge maker
-                </span>
-              </span>
-            ))}
-          </div>
+      <div className="event-bar relative z-20 shrink-0 px-4 py-2.5 sm:px-6">
+        <div className="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-x-4 gap-y-1 text-[13px] sm:text-sm">
+          <p className="font-semibold tracking-tight">
+            <span className="font-display italic font-medium">{EVENT.name}</span>
+            <span className="mx-2 font-black uppercase">{EVENT.subtitle}</span>
+          </p>
+          <p className="font-mono text-[11px] tracking-wide text-black/70 uppercase sm:text-xs">
+            {EVENT.date} · {EVENT.year} · {EVENT.place}
+          </p>
         </div>
       </div>
     </div>

@@ -23,6 +23,7 @@ import {
   type StickerTab,
 } from '../lib/badge'
 import { CordSwatch, Lanyard } from './Lanyard'
+import { RockField, RockFieldThumb } from './RockField'
 
 const BADGE_W = 260
 const BODY_H = 240
@@ -200,29 +201,24 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
         : 'none-border'
 
   return (
-    <div className="page-black relative flex h-dvh flex-col overflow-hidden">
-      <div className="relative mx-auto flex min-h-0 w-full max-w-[1200px] flex-1 flex-col px-4 pt-4 pb-2 sm:px-6 sm:pt-5">
-        <header className="animate-pop relative z-10 mb-3 flex shrink-0 items-start justify-between gap-3">
+    <div className="page-light relative flex h-dvh flex-col overflow-hidden">
+      <div className="relative mx-auto flex min-h-0 w-full max-w-[1180px] flex-1 flex-col px-4 pt-4 pb-2 sm:px-6 sm:pt-5">
+        <header className="animate-pop mb-4 flex shrink-0 items-start justify-between gap-3">
           <div>
-            <p className="font-mono text-[10px] tracking-[0.2em] text-white/45 uppercase">
+            <p className="font-mono text-[10px] tracking-[0.2em] text-[var(--muted)] uppercase">
               {EVENT.name} · {EVENT.year}
             </p>
-            <h1 className="font-display mt-1 text-[clamp(1.8rem,3vw,2.6rem)] leading-[1.05] font-bold tracking-[-0.02em] text-white">
-              make your badge
+            <h1 className="mt-1 text-[clamp(1.7rem,3vw,2.4rem)] leading-[1.08] font-bold tracking-[-0.03em] text-[var(--ink)]">
+              Make your badge your own!
             </h1>
           </div>
-          <p className="font-display pt-2 text-sm text-white/55 italic">— and more.</p>
+          <p className="pt-2 text-sm text-[var(--muted)]">Stickers · doodle · lock it in</p>
         </header>
 
-        <div className="relative z-10 flex min-h-0 flex-1 flex-col-reverse gap-4 overflow-y-auto md:flex-row md:items-center md:gap-6 md:overflow-hidden lg:gap-8">
-          {/* scattered ticket controls */}
-          <section className="animate-pop relative min-h-0 min-w-0 flex-1 md:overflow-y-auto md:pr-1">
-            <div className="relative mx-auto grid max-w-[640px] grid-cols-2 gap-4 pb-2 sm:gap-5 lg:max-w-none lg:grid-cols-2">
-              <TicketCard
-                className="col-span-2 -rotate-1 sm:col-span-1"
-                shape="notch-x"
-                title="frame( 01 )"
-              >
+        <div className="relative flex min-h-0 flex-1 flex-col-reverse gap-4 overflow-y-auto md:flex-row md:items-stretch md:gap-6 md:overflow-hidden lg:gap-8">
+          <section className="animate-pop min-h-0 min-w-0 flex-1 md:overflow-y-auto md:pr-1">
+            <div className="mx-auto grid max-w-[640px] grid-cols-2 gap-3 pb-2 sm:gap-3.5 lg:max-w-none">
+              <Panel title="Frame" className="col-span-2 sm:col-span-1">
                 <div className="grid grid-cols-3 gap-2">
                   {(
                     [
@@ -235,10 +231,10 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
                       key={id}
                       type="button"
                       onClick={() => push({ ...state, border: id })}
-                      className={`flex aspect-square flex-col items-center justify-center gap-1 rounded-xl bg-white ${
+                      className={`flex aspect-square flex-col items-center justify-center gap-1 rounded-xl bg-[var(--panel)] ${
                         state.border === id
                           ? 'ring-2 ring-[var(--blue)]'
-                          : 'ring-1 ring-black/10'
+                          : 'ring-1 ring-black/8'
                       }`}
                     >
                       <span
@@ -254,28 +250,28 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
                     </button>
                   ))}
                 </div>
-              </TicketCard>
+              </Panel>
 
-              <TicketCard className="col-span-2 rotate-1 sm:col-span-1" shape="pill" title="cords( 02 )">
+              <Panel title="Cords" className="col-span-2 sm:col-span-1">
                 <div className="grid grid-cols-3 gap-2">
                   {(Object.keys(CORDS) as CordId[]).map((id) => (
                     <button
                       key={id}
                       type="button"
                       onClick={() => push({ ...state, cord: id })}
-                      className={`flex aspect-square flex-col items-center justify-center rounded-xl bg-white ${
+                      className={`flex aspect-square flex-col items-center justify-center rounded-xl bg-[var(--panel)] ${
                         state.cord === id
                           ? 'ring-2 ring-[var(--blue)]'
-                          : 'ring-1 ring-black/10'
+                          : 'ring-1 ring-black/8'
                       }`}
                     >
                       <CordSwatch from={CORDS[id].from} to={CORDS[id].to} />
                     </button>
                   ))}
                 </div>
-              </TicketCard>
+              </Panel>
 
-              <TicketCard className="col-span-2 -rotate-[0.8deg]" shape="notch-top" title="stickers( 03 )">
+              <Panel title="Stickers" className="col-span-2">
                 <div className="mb-3 flex flex-wrap gap-1.5">
                   {TABS.map((t) => (
                     <button
@@ -288,7 +284,7 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
                       className={`rounded-lg px-2.5 py-1.5 font-mono text-[10px] tracking-wide ${
                         tab === t.id
                           ? 'bg-black text-white'
-                          : 'bg-white text-[var(--muted)] ring-1 ring-black/10'
+                          : 'bg-[var(--panel)] text-[var(--muted)] ring-1 ring-black/8'
                       }`}
                     >
                       {t.label}
@@ -315,9 +311,9 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
                     Tap to drop · drag to move · double-click to delete
                   </p>
                 </div>
-              </TicketCard>
+              </Panel>
 
-              <TicketCard className="col-span-2 rotate-[0.6deg] sm:col-span-1" shape="soft" title="draw( 04 )">
+              <Panel title="Draw" className="col-span-2 sm:col-span-1">
                 <div className="flex min-h-[4.5rem] items-center justify-center gap-2">
                   <button
                     type="button"
@@ -325,7 +321,7 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
                     className={`rounded-xl px-3 py-2 text-xs font-semibold ${
                       mode === 'draw'
                         ? 'bg-[var(--blue)] text-white'
-                        : 'bg-white text-black/80 ring-1 ring-black/10'
+                        : 'bg-[var(--panel)] text-black/80 ring-1 ring-black/8'
                     }`}
                   >
                     {mode === 'draw' ? 'On' : 'Draw'}
@@ -338,10 +334,10 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
                         setBrush(size)
                         setMode('draw')
                       }}
-                      className={`flex h-11 w-11 items-center justify-center rounded-xl bg-white ${
+                      className={`flex h-11 w-11 items-center justify-center rounded-xl bg-[var(--panel)] ${
                         brush === size && mode === 'draw'
                           ? 'ring-2 ring-[var(--blue)]'
-                          : 'ring-1 ring-black/10'
+                          : 'ring-1 ring-black/8'
                       }`}
                     >
                       <span
@@ -351,9 +347,9 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
                     </button>
                   ))}
                 </div>
-              </TicketCard>
+              </Panel>
 
-              <TicketCard className="col-span-2 -rotate-[0.5deg] sm:col-span-1" shape="notch-x" title="field( 05 )">
+              <Panel title="Rock field" className="col-span-2 sm:col-span-1">
                 <div className="grid grid-cols-3 gap-2">
                   {(Object.keys(FIELDS) as FieldId[]).map((id) => (
                     <button
@@ -363,31 +359,17 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
                       className={`overflow-hidden rounded-xl ${
                         state.field === id
                           ? 'ring-2 ring-[var(--blue)]'
-                          : 'ring-1 ring-black/10'
+                          : 'ring-1 ring-black/8'
                       }`}
                     >
-                      <div className="relative h-12 bg-[#0a0a0a]">
-                        {FIELDS[id].blobs.slice(0, 2).map((b) => (
-                          <span
-                            key={b.id}
-                            className="pixel-blob absolute"
-                            style={{
-                              left: `${b.x}%`,
-                              top: `${b.y - 20}%`,
-                              width: `${b.w * 0.7}%`,
-                              height: '70%',
-                              backgroundColor: b.color,
-                            }}
-                          />
-                        ))}
-                      </div>
+                      <RockFieldThumb tracks={FIELDS[id].tracks} />
                       <div className="bg-white py-1.5 text-center text-[11px] font-medium">
                         {FIELDS[id].label}
                       </div>
                     </button>
                   ))}
                 </div>
-              </TicketCard>
+              </Panel>
             </div>
           </section>
 
@@ -396,7 +378,7 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
               <Lanyard from={cord.from} to={cord.to} scale={1} />
               <div
                 ref={badgeRef}
-                className={`relative -mt-1 overflow-hidden bg-black shadow-[0_22px_50px_rgba(0,0,0,0.55)] ${borderClass}`}
+                className={`relative -mt-1 overflow-hidden bg-black shadow-[0_18px_40px_rgba(0,0,0,0.22)] ${borderClass}`}
                 style={{ width: BADGE_W }}
               >
                 <div className="relative px-3 pt-3.5 pb-1 text-center">
@@ -411,29 +393,8 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
                   </p>
                 </div>
 
-                <div data-badge-body className="relative" style={{ height: BODY_H }}>
-                  {field.blobs.map((b, i) => (
-                    <div
-                      key={b.id}
-                      className="pointer-events-none absolute"
-                      style={{
-                        left: `${b.x}%`,
-                        top: `${b.y}%`,
-                        width: `${b.w}%`,
-                        height: `${b.h}%`,
-                      }}
-                    >
-                      <div
-                        className="pixel-blob track-box relative h-full w-full"
-                        style={{ backgroundColor: b.color }}
-                      >
-                        <span className="track-label absolute -top-3.5 left-0 whitespace-nowrap">
-                          ID: {b.id} {90 + i}
-                        </span>
-                        {i === 1 ? <span className="crosshair absolute inset-0" /> : null}
-                      </div>
-                    </div>
-                  ))}
+                <div data-badge-body className="relative bg-[#0a0a0a]" style={{ height: BODY_H }}>
+                  <RockField tracks={field.tracks} />
 
                   <input
                     value={state.name}
@@ -477,7 +438,7 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
                           <span className="track-label absolute -top-3 left-0 whitespace-nowrap">
                             ID: {s.trackId}
                           </span>
-                          <span className="track-box inline-block p-0.5">
+                          <span className="track-rect relative inline-block p-0.5">
                             <StickerFace def={def} compact />
                           </span>
                         </span>
@@ -500,21 +461,21 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
                 <button
                   type="button"
                   onClick={undo}
-                  className="flex-1 rounded-full bg-white py-2.5 text-sm font-semibold text-black"
+                  className="flex-1 rounded-full bg-white py-2.5 text-sm font-semibold text-black shadow-sm ring-1 ring-black/10"
                 >
                   Undo
                 </button>
                 <button
                   type="button"
                   onClick={clearAll}
-                  className="flex-1 rounded-full bg-white/10 py-2.5 text-sm font-semibold text-white ring-1 ring-white/20"
+                  className="flex-1 rounded-full bg-white/70 py-2.5 text-sm font-semibold text-black/70 ring-1 ring-black/10"
                 >
                   Clear
                 </button>
                 <button
                   type="button"
                   onClick={onDone}
-                  className="flex-[1.35] rounded-full bg-[var(--yellow)] py-2.5 text-sm font-semibold text-black shadow-[0_5px_0_#9a8b00] transition active:translate-y-0.5 active:shadow-none"
+                  className="flex-[1.35] rounded-full bg-[var(--blue)] py-2.5 text-sm font-semibold text-white shadow-[0_4px_0_#2a3fc7] transition active:translate-y-0.5 active:shadow-none"
                 >
                   I&apos;m done!
                 </button>
@@ -524,69 +485,39 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
         </div>
       </div>
 
-      <MarqueeBar />
+      <EventBar />
     </div>
   )
 }
 
-function MarqueeBar() {
-  const phrase = (
-    <>
-      <span className="font-display px-3 text-[clamp(1.1rem,2.2vw,1.55rem)] font-medium tracking-tight text-black/70 italic">
-        common ground
-      </span>
-      <span className="px-1 text-[clamp(1.15rem,2.4vw,1.7rem)] font-black tracking-tight text-black uppercase">
-        badge maker
-      </span>
-      <span className="font-display px-3 text-[clamp(1.1rem,2.2vw,1.55rem)] font-medium tracking-tight text-black/70 italic">
-        nexalune makeathon
-      </span>
-      <span className="px-1 text-[clamp(1.15rem,2.4vw,1.7rem)] font-black tracking-tight text-black uppercase">
-        stickers
-      </span>
-    </>
-  )
+function EventBar() {
   return (
-    <div className="relative z-20 shrink-0 overflow-hidden bg-[var(--yellow)] py-2.5">
-      <div className="marquee-track">
-        <div className="flex items-center whitespace-nowrap px-2">{phrase}{phrase}{phrase}{phrase}</div>
-        <div className="flex items-center whitespace-nowrap px-2" aria-hidden>
-          {phrase}
-          {phrase}
-          {phrase}
-          {phrase}
-        </div>
+    <div className="event-bar relative z-20 shrink-0 px-4 py-2.5 sm:px-6">
+      <div className="mx-auto flex max-w-[1180px] flex-wrap items-center justify-between gap-x-4 gap-y-1 text-[13px] sm:text-sm">
+        <p className="font-semibold tracking-tight">
+          <span className="font-display italic font-medium">{EVENT.name}</span>
+          <span className="mx-2 font-black uppercase">{EVENT.subtitle}</span>
+        </p>
+        <p className="font-mono text-[11px] tracking-wide text-black/70 uppercase sm:text-xs">
+          {EVENT.date} · {EVENT.year} · {EVENT.place}
+        </p>
       </div>
     </div>
   )
 }
 
-function TicketCard({
+function Panel({
   title,
   children,
   className = '',
-  shape = 'soft',
 }: {
   title: string
   children: ReactNode
   className?: string
-  shape?: 'soft' | 'pill' | 'notch-x' | 'notch-top'
 }) {
-  const shapeClass =
-    shape === 'pill'
-      ? 'ticket-pill px-5 py-4'
-      : shape === 'notch-x'
-        ? 'ticket-notch-x ticket-soft px-5 py-4'
-        : shape === 'notch-top'
-          ? 'ticket-notch-top ticket-soft px-5 py-5'
-          : 'ticket-soft px-5 py-4'
-
   return (
-    <div className={`ticket ${shapeClass} ${className}`}>
-      <p className="font-display mb-3 text-[1.35rem] leading-none font-bold tracking-[-0.02em]">
-        {title}
-      </p>
-      <div className="hairline mb-3" />
+    <div className={`panel px-4 py-3.5 ${className}`}>
+      <p className="panel-title mb-2.5">{title}</p>
       {children}
     </div>
   )

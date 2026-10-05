@@ -11,7 +11,7 @@ export default function App() {
   const badgeRef = useRef<HTMLDivElement>(null)
 
   return (
-    <div className="page-black relative min-h-dvh overflow-x-hidden">
+    <div className="page-light relative min-h-dvh overflow-x-hidden">
       <div className={screen === 'make' ? 'block' : 'hidden'}>
         <Maker
           state={state}

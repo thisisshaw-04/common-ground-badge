@@ -1,9 +1,10 @@
 @import 'tailwindcss';
 
 :root {
-  --bg: #050505;
+  --bg: #f4f4f5;
   --ink: #111111;
-  --paper: #f7f4ee;
+  --paper: #ffffff;
+  --panel: #f0f0f2;
   --muted: #6a6a6a;
   --yellow: #ffe600;
   --blue: #3d5afe;
@@ -30,7 +31,7 @@ body,
 
 body {
   margin: 0;
-  color: #f5f5f5;
+  color: var(--ink);
   font-family: var(--font-body);
   background: var(--bg);
   -webkit-font-smoothing: antialiased;
@@ -51,20 +52,11 @@ textarea {
 @keyframes pop-in {
   from {
     opacity: 0;
-    transform: scale(0.96) translateY(8px);
+    transform: scale(0.97) translateY(6px);
   }
   to {
     opacity: 1;
     transform: scale(1) translateY(0);
-  }
-}
-
-@keyframes marquee {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
   }
 }
 
@@ -74,12 +66,12 @@ textarea {
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-6px);
+    transform: translateY(-5px);
   }
 }
 
 .animate-pop {
-  animation: pop-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: pop-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .animate-floaty {
@@ -98,66 +90,74 @@ textarea {
   font-family: var(--font-mono);
 }
 
-.page-black {
-  background: #050505;
+.page-light {
+  background:
+    radial-gradient(ellipse 70% 50% at 8% 100%, rgba(125, 255, 179, 0.18), transparent 55%),
+    radial-gradient(ellipse 60% 45% at 92% 100%, rgba(255, 122, 195, 0.16), transparent 55%),
+    var(--bg);
 }
 
-/* Die-cut ticket / sticker panels */
-.ticket {
+.panel {
   background: var(--paper);
   color: var(--ink);
-  position: relative;
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(17, 17, 17, 0.08);
+  border-radius: 16px;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8) inset;
 }
 
-.ticket-notch-x {
-  mask-image:
-    radial-gradient(circle at 0 50%, transparent 10px, black 11px),
-    radial-gradient(circle at 100% 50%, transparent 10px, black 11px);
-  mask-composite: intersect;
-  -webkit-mask-image:
-    radial-gradient(circle at 0 50%, transparent 10px, black 11px),
-    radial-gradient(circle at 100% 50%, transparent 10px, black 11px);
-  -webkit-mask-composite: source-in;
+.panel-title {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
 }
 
-.ticket-notch-top {
-  mask-image: radial-gradient(circle at 50% 0, transparent 12px, black 13px);
-  -webkit-mask-image: radial-gradient(circle at 50% 0, transparent 12px, black 13px);
+/* Rectangular CV tracking box */
+.track-rect {
+  border: 1px solid rgba(255, 255, 255, 0.92);
+  border-radius: 0;
+  box-sizing: border-box;
 }
 
-.ticket-pill {
-  border-radius: 999px;
+.track-corner {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-color: rgba(255, 255, 255, 0.95);
+  border-style: solid;
 }
 
-.ticket-round {
-  border-radius: 28px;
+.track-corner.tl {
+  top: -1px;
+  left: -1px;
+  border-width: 2px 0 0 2px;
 }
 
-.ticket-soft {
-  border-radius: 22px;
+.track-corner.tr {
+  top: -1px;
+  right: -1px;
+  border-width: 2px 2px 0 0;
 }
 
-.pixel-blob {
-  image-rendering: pixelated;
-  background-image:
-    linear-gradient(rgba(0, 0, 0, 0.18) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 0, 0, 0.18) 1px, transparent 1px);
-  background-size: 6px 6px;
-  border-radius: 42% 58% 48% 52% / 52% 42% 58% 48%;
-  box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.12);
+.track-corner.bl {
+  bottom: -1px;
+  left: -1px;
+  border-width: 0 0 2px 2px;
 }
 
-.track-box {
-  outline: 1px solid rgba(255, 255, 255, 0.85);
-  outline-offset: 4px;
+.track-corner.br {
+  bottom: -1px;
+  right: -1px;
+  border-width: 0 2px 2px 0;
 }
 
 .track-label {
   font-family: var(--font-mono);
   font-size: 8px;
   letter-spacing: 0.08em;
-  color: rgba(255, 255, 255, 0.75);
+  color: rgba(255, 255, 255, 0.85);
   text-transform: uppercase;
 }
 
@@ -195,8 +195,8 @@ textarea {
 }
 
 .track-border {
-  border: 1px solid rgba(255, 255, 255, 0.85);
-  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 2px;
 }
 
 .none-border {
@@ -204,12 +204,11 @@ textarea {
   border-radius: 14px;
 }
 
-.marquee-track {
-  display: flex;
-  width: max-content;
-  animation: marquee 18s linear infinite;
+.hairline {
+  border-top: 1px solid rgba(17, 17, 17, 0.1);
 }
 
-.hairline {
-  border-top: 1px solid rgba(17, 17, 17, 0.2);
+.event-bar {
+  background: var(--yellow);
+  color: #111;
 }
