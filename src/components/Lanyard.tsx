@@ -7,130 +7,186 @@ interface LanyardProps {
   scale?: number
 }
 
-/** Realistic fabric Y-lanyard + metal clip for badge attachment. */
+/** Realistic fabric Y-lanyard + metal J-clip. */
 export function Lanyard({ from, to, label = 'COMMON GROUND', scale = 1 }: LanyardProps) {
   const uid = useId().replace(/:/g, '')
-  const w = 120 * scale
-  const h = 78 * scale
+  const w = 140 * scale
+  const h = 96 * scale
 
   return (
     <div className="relative flex flex-col items-center" style={{ width: w, height: h }}>
       <svg
         width={w}
         height={h}
-        viewBox="0 0 120 78"
+        viewBox="0 0 140 96"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         aria-hidden
-        className="overflow-visible"
+        className="overflow-visible drop-shadow-[0_6px_10px_rgba(0,0,0,0.45)]"
       >
         <defs>
-          <linearGradient id={`strapGrad-${uid}`} x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor={from} />
-            <stop offset="55%" stopColor={to} />
-            <stop offset="100%" stopColor={from} />
+          <linearGradient id={`strapGrad-${uid}`} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={to} />
+            <stop offset="40%" stopColor={from} />
+            <stop offset="100%" stopColor={to} />
           </linearGradient>
-          <linearGradient id={`strapShade-${uid}`} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="rgba(255,255,255,0.35)" />
-            <stop offset="45%" stopColor="rgba(0,0,0,0)" />
-            <stop offset="100%" stopColor="rgba(0,0,0,0.35)" />
+          <linearGradient id={`strapEdge-${uid}`} x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="rgba(0,0,0,0.35)" />
+            <stop offset="35%" stopColor="rgba(255,255,255,0.25)" />
+            <stop offset="65%" stopColor="rgba(255,255,255,0.08)" />
+            <stop offset="100%" stopColor="rgba(0,0,0,0.4)" />
           </linearGradient>
           <linearGradient id={`metal-${uid}`} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#f3f3f3" />
-            <stop offset="40%" stopColor="#c8c8c8" />
-            <stop offset="100%" stopColor="#8a8a8a" />
+            <stop offset="0%" stopColor="#f7f7f7" />
+            <stop offset="45%" stopColor="#c9c9c9" />
+            <stop offset="100%" stopColor="#7d7d7d" />
           </linearGradient>
-          <pattern id={`weave-${uid}`} width="4" height="4" patternUnits="userSpaceOnUse">
-            <path d="M0 2 H4" stroke="rgba(0,0,0,0.18)" strokeWidth="0.6" />
-            <path d="M2 0 V4" stroke="rgba(255,255,255,0.12)" strokeWidth="0.5" />
+          <pattern id={`weave-${uid}`} width="3" height="3" patternUnits="userSpaceOnUse">
+            <rect width="3" height="3" fill="transparent" />
+            <path d="M0 1.5 H3" stroke="rgba(0,0,0,0.2)" strokeWidth="0.45" />
+            <path d="M1.5 0 V3" stroke="rgba(255,255,255,0.14)" strokeWidth="0.4" />
           </pattern>
         </defs>
 
+        {/* Left fabric strap (flat ribbon path) */}
         <path
-          d="M28 2 C 22 18, 30 36, 52 52"
-          stroke={`url(#strapGrad-${uid})`}
-          strokeWidth="11"
-          strokeLinecap="round"
+          d="M34 4
+             C 26 22, 34 42, 58 62
+             L 62 60
+             C 40 42, 34 24, 40 4
+             Z"
+          fill={`url(#strapGrad-${uid})`}
         />
         <path
-          d="M28 2 C 22 18, 30 36, 52 52"
-          stroke={`url(#strapShade-${uid})`}
-          strokeWidth="11"
-          strokeLinecap="round"
+          d="M34 4
+             C 26 22, 34 42, 58 62
+             L 62 60
+             C 40 42, 34 24, 40 4
+             Z"
+          fill={`url(#strapEdge-${uid})`}
+          opacity="0.55"
         />
         <path
-          d="M28 2 C 22 18, 30 36, 52 52"
-          stroke={`url(#weave-${uid})`}
-          strokeWidth="11"
-          strokeLinecap="round"
-        />
-
-        <path
-          d="M92 2 C 98 18, 90 36, 68 52"
-          stroke={`url(#strapGrad-${uid})`}
-          strokeWidth="11"
-          strokeLinecap="round"
-        />
-        <path
-          d="M92 2 C 98 18, 90 36, 68 52"
-          stroke={`url(#strapShade-${uid})`}
-          strokeWidth="11"
-          strokeLinecap="round"
-        />
-        <path
-          d="M92 2 C 98 18, 90 36, 68 52"
-          stroke={`url(#weave-${uid})`}
-          strokeWidth="11"
-          strokeLinecap="round"
+          d="M34 4
+             C 26 22, 34 42, 58 62
+             L 62 60
+             C 40 42, 34 24, 40 4
+             Z"
+          fill={`url(#weave-${uid})`}
         />
 
+        {/* Right fabric strap */}
         <path
-          d="M52 50 C 56 56, 64 56, 68 50"
-          stroke={`url(#strapGrad-${uid})`}
-          strokeWidth="10"
-          strokeLinecap="round"
+          d="M106 4
+             C 114 22, 106 42, 82 62
+             L 78 60
+             C 100 42, 106 24, 100 4
+             Z"
+          fill={`url(#strapGrad-${uid})`}
+        />
+        <path
+          d="M106 4
+             C 114 22, 106 42, 82 62
+             L 78 60
+             C 100 42, 106 24, 100 4
+             Z"
+          fill={`url(#strapEdge-${uid})`}
+          opacity="0.55"
+        />
+        <path
+          d="M106 4
+             C 114 22, 106 42, 82 62
+             L 78 60
+             C 100 42, 106 24, 100 4
+             Z"
+          fill={`url(#weave-${uid})`}
         />
 
+        {/* Stitched edges */}
+        <path
+          d="M37 8 C 30 24, 37 42, 59 60"
+          stroke="rgba(0,0,0,0.25)"
+          strokeWidth="0.7"
+          strokeDasharray="1.5 1.2"
+          fill="none"
+        />
+        <path
+          d="M103 8 C 110 24, 103 42, 81 60"
+          stroke="rgba(0,0,0,0.25)"
+          strokeWidth="0.7"
+          strokeDasharray="1.5 1.2"
+          fill="none"
+        />
+
+        {/* Tiny brand on straps */}
         <text
-          x="24"
-          y="22"
-          fill="rgba(0,0,0,0.35)"
-          fontSize="4.2"
+          x="30"
+          y="28"
+          fill="rgba(0,0,0,0.4)"
+          fontSize="4.5"
           fontFamily="IBM Plex Mono, monospace"
-          transform="rotate(-58 24 22)"
+          fontWeight="700"
+          transform="rotate(-62 30 28)"
         >
-          {label.slice(0, 8)}
+          {label.slice(0, 6)}
         </text>
         <text
-          x="86"
-          y="22"
-          fill="rgba(0,0,0,0.35)"
-          fontSize="4.2"
+          x="102"
+          y="28"
+          fill="rgba(0,0,0,0.4)"
+          fontSize="4.5"
           fontFamily="IBM Plex Mono, monospace"
-          transform="rotate(58 86 22)"
+          fontWeight="700"
+          transform="rotate(62 102 28)"
         >
-          {label.slice(0, 8)}
+          {label.slice(0, 6)}
         </text>
 
-        <circle
-          cx="60"
-          cy="54"
-          r="5.2"
+        {/* Metal O-ring where straps meet */}
+        <ellipse
+          cx="70"
+          cy="64"
+          rx="7"
+          ry="5.5"
           fill="none"
           stroke={`url(#metal-${uid})`}
-          strokeWidth="2.2"
+          strokeWidth="2.6"
         />
-        <circle cx="60" cy="54" r="3.2" fill="#111" />
+        <ellipse cx="70" cy="64" rx="4" ry="3" fill="#0a0a0a" />
 
-        <rect x="55.5" y="58" width="9" height="7" rx="1.2" fill={`url(#metal-${uid})`} />
+        {/* Plastic strap keeper / slider */}
+        <rect
+          x="64.5"
+          y="58"
+          width="11"
+          height="5"
+          rx="1"
+          fill={`url(#metal-${uid})`}
+          opacity="0.9"
+        />
+
+        {/* Metal bulldog / J-clip body */}
+        <rect x="65" y="68" width="10" height="8" rx="1.4" fill={`url(#metal-${uid})`} />
+        <rect x="66.2" y="69.2" width="7.6" height="1.6" rx="0.5" fill="rgba(255,255,255,0.5)" />
+        {/* Spring teeth hint */}
         <path
-          d="M57 65 L57 71 C57 73.2 58.4 74.5 60 74.5 C61.6 74.5 63 73.2 63 71 L63 65"
+          d="M67 73.5 H73 M67.5 75 H72.5"
+          stroke="rgba(0,0,0,0.35)"
+          strokeWidth="0.6"
+        />
+        {/* J hook hanging into badge slot */}
+        <path
+          d="M67.5 76
+             L67.5 86
+             C67.5 89.5 69 91.5 70 91.5
+             C71 91.5 72.5 89.5 72.5 86
+             L72.5 76"
           stroke={`url(#metal-${uid})`}
-          strokeWidth="2"
+          strokeWidth="2.4"
           fill="none"
           strokeLinecap="round"
+          strokeLinejoin="round"
         />
-        <rect x="56.5" y="59" width="7" height="1.4" rx="0.5" fill="rgba(255,255,255,0.45)" />
       </svg>
     </div>
   )
@@ -140,7 +196,7 @@ export function Lanyard({ from, to, label = 'COMMON GROUND', scale = 1 }: Lanyar
 export function CordSwatch({ from, to }: { from: string; to: string }) {
   const uid = useId().replace(/:/g, '')
   return (
-    <svg width="28" height="40" viewBox="0 0 28 40" aria-hidden>
+    <svg width="30" height="38" viewBox="0 0 30 38" aria-hidden>
       <defs>
         <linearGradient id={`c-${uid}`} x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor={from} />
@@ -148,21 +204,15 @@ export function CordSwatch({ from, to }: { from: string; to: string }) {
         </linearGradient>
       </defs>
       <path
-        d="M8 2 C 6 12, 10 20, 14 28"
-        stroke={`url(#c-${uid})`}
-        strokeWidth="7"
-        strokeLinecap="round"
-        fill="none"
+        d="M7 2 C 5 14, 10 22, 15 28 L 12 28 C 8 22, 5 14, 8 2 Z"
+        fill={`url(#c-${uid})`}
       />
       <path
-        d="M20 2 C 22 12, 18 20, 14 28"
-        stroke={`url(#c-${uid})`}
-        strokeWidth="7"
-        strokeLinecap="round"
-        fill="none"
+        d="M23 2 C 25 14, 20 22, 15 28 L 18 28 C 22 22, 25 14, 22 2 Z"
+        fill={`url(#c-${uid})`}
       />
-      <circle cx="14" cy="30" r="3" fill="#c8c8c8" stroke="#888" strokeWidth="0.8" />
-      <rect x="11.5" y="32.5" width="5" height="4" rx="0.8" fill="#bdbdbd" />
+      <ellipse cx="15" cy="29.5" rx="3.2" ry="2.4" fill="#d0d0d0" stroke="#888" strokeWidth="0.7" />
+      <rect x="12.5" y="31.5" width="5" height="4.5" rx="0.8" fill="#bdbdbd" />
     </svg>
   )
 }
