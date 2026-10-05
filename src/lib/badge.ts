@@ -71,9 +71,9 @@ export const FIELDS: Record<
   signal: {
     label: 'Signal',
     tracks: [
-      { color: 'rgba(57,255,182,0.28)', x: 10, y: 30, w: 38, h: 28, id: '001', score: 92 },
-      { color: 'rgba(255,230,0,0.26)', x: 48, y: 44, w: 36, h: 26, id: '002', score: 88 },
-      { color: 'rgba(91,140,255,0.28)', x: 28, y: 60, w: 42, h: 22, id: '003', score: 85 },
+      { color: 'rgba(57,255,182,0.34)', x: 10, y: 30, w: 38, h: 28, id: '001', score: 92 },
+      { color: 'rgba(255,230,0,0.32)', x: 48, y: 44, w: 36, h: 26, id: '002', score: 88 },
+      { color: 'rgba(91,140,255,0.34)', x: 28, y: 60, w: 42, h: 22, id: '003', score: 85 },
     ],
   },
   pulse: {
