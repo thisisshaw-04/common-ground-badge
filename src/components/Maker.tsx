@@ -10,20 +10,17 @@ import {
 import {
   CORDS,
   EVENT,
-  FIELDS,
   STICKERS,
   TABS,
   stickerById,
   type BadgeState,
   type BorderId,
   type CordId,
-  type FieldId,
   type PlacedSticker,
   type StickerDef,
   type StickerTab,
 } from '../lib/badge'
 import { CordSwatch, Lanyard } from './Lanyard'
-import { RockField, RockFieldThumb } from './RockField'
 
 const BADGE_W = 340
 const BODY_H = 300
@@ -191,7 +188,6 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
     setHistory((h) => [...h.slice(-30), state])
   }
 
-  const field = FIELDS[state.field]
   const cord = CORDS[state.cord]
   const borderClass =
     state.border === 'track'
@@ -313,7 +309,7 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
                 </div>
               </Panel>
 
-              <Panel title="Draw" className="col-span-2 sm:col-span-1">
+              <Panel title="Draw" className="col-span-2">
                 <div className="flex min-h-[4.5rem] items-center justify-center gap-2">
                   <button
                     type="button"
@@ -348,28 +344,6 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
                   ))}
                 </div>
               </Panel>
-
-              <Panel title="Rock cards" className="col-span-2">
-                <div className="grid grid-cols-3 gap-2 sm:grid-cols-6">
-                  {(Object.keys(FIELDS) as FieldId[]).map((id) => (
-                    <button
-                      key={id}
-                      type="button"
-                      onClick={() => push({ ...state, field: id })}
-                      className={`overflow-hidden rounded-xl ${
-                        state.field === id
-                          ? 'ring-2 ring-[var(--blue)]'
-                          : 'ring-1 ring-black/8'
-                      }`}
-                    >
-                      <RockFieldThumb def={FIELDS[id]} />
-                      <div className="bg-white py-1.5 text-center text-[10px] font-medium sm:text-[11px]">
-                        {FIELDS[id].label}
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </Panel>
             </div>
           </section>
 
@@ -395,11 +369,9 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
 
                 <div
                   data-badge-body
-                  className="relative mx-3 mb-1 overflow-hidden rounded-sm bg-[#f0f0ee]"
+                  className="relative mx-3 mb-1 overflow-hidden rounded-sm bg-[#f4f4f2]"
                   style={{ height: BODY_H }}
                 >
-                  <RockField def={field} />
-
                   <input
                     value={state.name}
                     onChange={(e) => onChange({ ...state, name: e.target.value })}
