@@ -22,7 +22,7 @@ export function DoneScreen({ state, badgeNode, onEdit }: DoneProps) {
       const root = document.createElement('div')
       root.style.width = `${width}px`
       root.style.height = `${height}px`
-      root.style.background = '#050505'
+      root.style.background = '#f4f4f5'
       root.style.display = 'flex'
       root.style.alignItems = 'center'
       root.style.justifyContent = 'center'

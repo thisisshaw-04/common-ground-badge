@@ -139,10 +139,10 @@ interface RockFieldProps {
 export function RockField({ def, className = '', showLabels = true }: RockFieldProps) {
   return (
     <div className={`pointer-events-none absolute inset-0 overflow-hidden ${className}`}>
-      <div className="absolute inset-0 bg-[#0a0a0a]" />
+      <div className="absolute inset-0 bg-[#f0f0ee]" />
       <RockCardArt
         def={def}
-        className="absolute inset-[4%] h-[92%] w-[92%]"
+        className="absolute inset-[3%] h-[94%] w-[94%]"
         showMeta
       />
       {def.tracks.map((t, i) => (

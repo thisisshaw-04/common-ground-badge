@@ -25,8 +25,8 @@ import {
 import { CordSwatch, Lanyard } from './Lanyard'
 import { RockField, RockFieldThumb } from './RockField'
 
-const BADGE_W = 260
-const BODY_H = 240
+const BADGE_W = 340
+const BODY_H = 300
 
 interface MakerProps {
   state: BadgeState
@@ -373,27 +373,31 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
             </div>
           </section>
 
-          <aside className="animate-pop flex shrink-0 flex-col items-center justify-center md:w-[300px] lg:w-[320px]">
-            <div className="flex w-full max-w-[300px] flex-col items-center">
-              <Lanyard from={cord.from} to={cord.to} scale={1} />
+          <aside className="animate-pop flex shrink-0 flex-col items-center justify-center md:w-[380px] lg:w-[400px]">
+            <div className="flex w-full max-w-[360px] flex-col items-center">
+              <Lanyard from={cord.from} to={cord.to} scale={1.15} />
               <div
                 ref={badgeRef}
-                className={`relative -mt-1 overflow-hidden bg-black shadow-[0_18px_40px_rgba(0,0,0,0.22)] ${borderClass}`}
+                className={`relative -mt-2 overflow-hidden bg-white shadow-[0_22px_50px_rgba(0,0,0,0.14)] ${borderClass}`}
                 style={{ width: BADGE_W }}
               >
-                <div className="relative px-3 pt-3.5 pb-1 text-center">
-                  <p className="font-display text-[22px] leading-[0.88] font-bold tracking-[-0.03em] text-[var(--yellow)] uppercase">
+                <div className="relative px-4 pt-4 pb-1.5 text-center">
+                  <p className="font-display text-[28px] leading-[0.88] font-bold tracking-[-0.03em] text-black uppercase">
                     COMMON
                   </p>
-                  <p className="font-display text-[22px] leading-[0.88] font-bold tracking-[-0.03em] text-[var(--yellow)] uppercase">
+                  <p className="font-display text-[28px] leading-[0.88] font-bold tracking-[-0.03em] text-black uppercase">
                     GROUND
                   </p>
-                  <p className="mt-1.5 font-mono text-[8px] tracking-[0.18em] text-white/45 uppercase">
+                  <p className="mt-2 font-mono text-[9px] tracking-[0.18em] text-black/40 uppercase">
                     ID · BADGE · {EVENT.year}
                   </p>
                 </div>
 
-                <div data-badge-body className="relative bg-[#0a0a0a]" style={{ height: BODY_H }}>
+                <div
+                  data-badge-body
+                  className="relative mx-3 mb-1 overflow-hidden rounded-sm bg-[#f0f0ee]"
+                  style={{ height: BODY_H }}
+                >
                   <RockField def={field} />
 
                   <input
@@ -402,7 +406,7 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
                     onBlur={() => push(state)}
                     placeholder="tap to write your name"
                     maxLength={22}
-                    className="font-hand absolute top-3 left-1/2 z-20 w-[88%] -translate-x-1/2 bg-transparent text-center text-3xl text-black outline-none placeholder:text-black/30"
+                    className="font-hand absolute top-3 left-1/2 z-20 w-[88%] -translate-x-1/2 bg-transparent text-center text-4xl text-black outline-none placeholder:text-black/30"
                   />
 
                   <canvas
@@ -447,11 +451,11 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
                   })}
                 </div>
 
-                <div className="flex items-end justify-between px-3 pt-1 pb-3">
-                  <p className="font-display text-left text-[9px] leading-tight font-bold tracking-wide text-[var(--yellow)] uppercase">
+                <div className="flex items-end justify-between gap-3 px-4 pt-2 pb-4">
+                  <p className="font-display text-left text-[11px] leading-tight font-bold tracking-wide text-black uppercase">
                     {EVENT.subtitle}
                   </p>
-                  <p className="font-mono text-[7px] tracking-[0.14em] text-white/40 uppercase">
+                  <p className="font-mono text-[8px] tracking-[0.14em] text-black/40 uppercase">
                     {EVENT.date}
                   </p>
                 </div>
