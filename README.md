@@ -1,16 +1,20 @@
 # Common Ground Badge
 
-Personal badge / name-tag generator for **[Common Ground Makeathon](https://luma.com/yjffwqr2)** — Design × Tech × Culture, 11 October at SQ Collective Singapore.
+Whimsical sticker badge maker for **[Common Ground Makeathon](https://luma.com/yjffwqr2)** — Design × Tech × Culture, 11 October at SQ Collective Singapore.
 
-Inspired by the FigBuild badge builder pattern: land on a branded hero, personalize a badge, then download shareable PNGs.
+Inspired by the FigBuild badge playground: drop stickers, doodle, pick cords & patterns, then save / share.
+
+## Public site
+
+https://thisisshaw-04.github.io/common-ground-badge/
 
 ## Features
 
-- Live badge preview with lanyard-style name tag
-- Name, pronouns, track (Design × Tech / Culture × Tech), role, vibe sticker, and theme
-- Optional photo upload
-- Download **9:16 Story** or **3:4 Grid** PNGs
-- Share event link (Web Share API or clipboard)
+- One maker page — no forms, just stickers + drawing
+- Drag / peel stickers (role, track, vibe, pronouns, about)
+- Border styles, lanyard cords, checker backgrounds
+- Scribble + handwritten name on the badge
+- Done screen with Story / Grid PNG download + social share
 
 ## Run locally
 
@@ -20,10 +24,6 @@ npm run dev
 ```
 
 App runs at [http://127.0.0.1:4317](http://127.0.0.1:4317).
-
-## Public site
-
-https://thisisshaw-04.github.io/common-ground-badge/
 
 ## Build
 
