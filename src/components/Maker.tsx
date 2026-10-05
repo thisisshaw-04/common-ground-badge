@@ -189,7 +189,6 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
     setHistory((h) => [...h.slice(-30), state])
   }
 
-  const cord = CORDS[state.cord]
   const borderClass =
     state.border === 'track'
       ? 'track-border'
@@ -262,7 +261,7 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
                           : 'ring-1 ring-black/8'
                       }`}
                     >
-                      <CordSwatch from={CORDS[id].from} to={CORDS[id].to} />
+                      <CordSwatch cord={id} />
                     </button>
                   ))}
                 </div>
@@ -350,10 +349,10 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
 
           <aside className="animate-pop flex shrink-0 flex-col items-center justify-center md:w-[380px] lg:w-[400px]">
             <div className="flex w-full max-w-[360px] flex-col items-center">
-              <Lanyard from={cord.from} to={cord.to} scale={1.15} />
+              <Lanyard cord={state.cord} scale={1.25} />
               <div
                 ref={badgeRef}
-                className={`relative -mt-2 overflow-hidden bg-white shadow-[0_22px_50px_rgba(0,0,0,0.14)] ${borderClass}`}
+                className={`relative -mt-6 overflow-hidden bg-white shadow-[0_22px_50px_rgba(0,0,0,0.14)] ${borderClass}`}
                 style={{ width: BADGE_W }}
               >
                 <div className="relative px-4 pt-4 pb-1.5 text-center">
