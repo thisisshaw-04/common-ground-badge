@@ -21,6 +21,10 @@ npm run dev
 
 App runs at [http://127.0.0.1:4317](http://127.0.0.1:4317).
 
+## Public site
+
+https://thisisshaw-04.github.io/common-ground-badge/
+
 ## Build
 
 ```bash
