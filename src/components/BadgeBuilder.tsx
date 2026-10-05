@@ -561,12 +561,12 @@ function Field({
   children: ReactNode
 }) {
   return (
-    <label className="block">
+    <div className="block">
       <span className="mb-2 block font-mono text-[10px] tracking-[0.18em] text-[var(--ink-muted)] uppercase">
         {label}
       </span>
       {children}
-    </label>
+    </div>
   )
 }
 
