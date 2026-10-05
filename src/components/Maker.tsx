@@ -332,7 +332,7 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
                 </button>
               ))}
             </div>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-3">
               {STICKERS.filter((s) => s.tab === tab).map((s) => (
                 <button
                   key={s.id}
@@ -341,7 +341,7 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
                     setMode('stick')
                     placeSticker(s)
                   }}
-                  className="transition hover:scale-105 active:scale-95"
+                  className="inline-flex shrink-0 transition hover:scale-105 active:scale-95"
                 >
                   <StickerFace def={s} />
                 </button>
@@ -562,7 +562,7 @@ function StickerFace({ def, compact }: { def: StickerDef; compact?: boolean }) {
   if (def.shape === 'star') {
     return (
       <span
-        className={`${base} sticker-star ${compact ? 'h-11 w-11 text-[7px]' : 'h-14 w-14 text-[9px]'} px-1 leading-tight`}
+        className={`${base} flex items-center justify-center rounded-2xl ${compact ? 'h-10 min-w-10 px-1.5 text-[7px]' : 'h-11 min-w-11 px-2 text-[9px]'} leading-tight`}
         style={{ background: def.color, color: text }}
       >
         {def.label}
