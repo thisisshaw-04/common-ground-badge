@@ -21,6 +21,7 @@ import {
   type StickerTab,
 } from '../lib/badge'
 import { CordSwatch, Lanyard } from './Lanyard'
+import { StickerFace } from './StickerFace'
 
 const BADGE_W = 340
 const BODY_H = 300
@@ -79,7 +80,7 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
       defId: def.id,
       x: 18 + Math.random() * 50,
       y: 28 + Math.random() * 40,
-      rotation: -14 + Math.random() * 28,
+      rotation: -18 + Math.random() * 36,
       trackId: String(100 + Math.floor(Math.random() * 800)).padStart(3, '0'),
     }
     push({ ...state, stickers: [...state.stickers, placed] })
@@ -287,7 +288,7 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
                     </button>
                   ))}
                 </div>
-                <div className="flex flex-wrap items-center gap-x-3 gap-y-3">
+                <div className="flex flex-wrap items-center gap-x-2.5 gap-y-3">
                   {STICKERS.filter((s) => s.tab === tab).map((s) => (
                     <button
                       key={s.id}
@@ -296,7 +297,7 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
                         setMode('stick')
                         placeSticker(s)
                       }}
-                      className="inline-flex shrink-0 transition hover:scale-105 active:scale-95"
+                      className="inline-flex shrink-0 transition hover:-translate-y-0.5 hover:scale-105 active:scale-95"
                     >
                       <StickerFace def={s} />
                     </button>
@@ -411,12 +412,10 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
                         onDoubleClick={() => removeSticker(s.uid)}
                       >
                         <span className="relative inline-block">
-                          <span className="track-label absolute -top-3 left-0 whitespace-nowrap">
+                          <span className="track-label absolute -top-3.5 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap">
                             ID: {s.trackId}
                           </span>
-                          <span className="track-rect relative inline-block p-0.5">
-                            <StickerFace def={def} compact />
-                          </span>
+                          <StickerFace def={def} compact />
                         </span>
                       </button>
                     )
@@ -499,64 +498,4 @@ function Panel({
   )
 }
 
-function StickerFace({ def, compact }: { def: StickerDef; compact?: boolean }) {
-  const text = def.textColor ?? '#fff'
-  const base = `inline-flex items-center justify-center text-center font-mono font-bold tracking-wide backdrop-blur-[2px] ${
-    compact ? 'px-2 py-1 text-[8px]' : 'px-3 py-2 text-[10px]'
-  }`
-
-  if (def.shape === 'pill') {
-    return (
-      <span
-        className={`${base} rounded-full`}
-        style={{ background: def.color, color: text }}
-      >
-        {def.label}
-      </span>
-    )
-  }
-
-  if (def.shape === 'star') {
-    return (
-      <span
-        className={`${base} flex items-center justify-center rounded-2xl ${compact ? 'h-10 min-w-10 px-1.5 text-[7px]' : 'h-11 min-w-11 px-2 text-[9px]'} leading-tight`}
-        style={{ background: def.color, color: text }}
-      >
-        {def.label}
-      </span>
-    )
-  }
-
-  if (def.shape === 'cloud') {
-    return (
-      <span
-        className={`${base} sticker-cloud ${compact ? 'min-h-8 min-w-[4.2rem]' : 'min-h-11 min-w-[5.2rem]'}`}
-        style={{ background: def.color, color: text }}
-      >
-        {def.label}
-      </span>
-    )
-  }
-
-  if (def.shape === 'ticket') {
-    return (
-      <span
-        className={`${base} rounded-md ${compact ? 'px-2.5' : 'px-3.5'}`}
-        style={{ background: def.color, color: text }}
-      >
-        {def.label}
-      </span>
-    )
-  }
-
-  return (
-    <span
-      className={`${base} sticker-blob ${compact ? 'min-h-8 min-w-[4.2rem]' : 'min-h-11 min-w-[5.2rem]'}`}
-      style={{ background: def.color, color: text }}
-    >
-      {def.label}
-    </span>
-  )
-}
-
-export { StickerFace, BADGE_W }
+export { BADGE_W }
