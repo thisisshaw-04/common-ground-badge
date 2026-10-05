@@ -1,4 +1,6 @@
-/** Pixel-rock terrain + rectangular CV-style tracking boxes. */
+/** Stepped rectilinear “rock” card fields — inspired by geometric poster cards. */
+
+export type RockShapeId = 'slab' | 'notch' | 'terrace' | 'spit' | 'canyon' | 'ledge'
 
 export interface TrackRect {
   color: string
@@ -10,123 +12,140 @@ export interface TrackRect {
   score: number
 }
 
-interface RockFieldProps {
+export interface RockCardDef {
+  shape: RockShapeId
+  /** Light paper behind the black rock */
+  paper: string
+  /** Tiny accent pill on the rock */
+  accent: string
+  accentLabel: string
   tracks: TrackRect[]
-  className?: string
-  showLabels?: boolean
 }
 
-/** Grayscale voxel/topographic rock — stepped facets like the branding poster. */
-export function RockSilhouette({ className = '' }: { className?: string }) {
-  // Voxel cells: [x, y, size, shade 0-1]
-  const voxels: [number, number, number, number][] = [
-    [72, 18, 14, 0.72],
-    [86, 16, 14, 0.8],
-    [100, 20, 14, 0.68],
-    [58, 30, 14, 0.55],
-    [72, 32, 14, 0.62],
-    [86, 30, 14, 0.75],
-    [100, 34, 14, 0.58],
-    [114, 28, 14, 0.7],
-    [128, 34, 14, 0.5],
-    [44, 44, 14, 0.42],
-    [58, 44, 14, 0.5],
-    [72, 46, 14, 0.58],
-    [86, 44, 14, 0.65],
-    [100, 48, 14, 0.52],
-    [114, 42, 14, 0.6],
-    [128, 48, 14, 0.45],
-    [142, 42, 14, 0.55],
-    [36, 58, 14, 0.35],
-    [50, 58, 14, 0.48],
-    [64, 60, 14, 0.4],
-    [78, 58, 14, 0.55],
-    [92, 62, 14, 0.38],
-    [106, 56, 14, 0.5],
-    [120, 62, 14, 0.42],
-    [134, 56, 14, 0.48],
-    [148, 60, 14, 0.32],
-    [42, 72, 14, 0.3],
-    [56, 72, 14, 0.4],
-    [70, 74, 14, 0.35],
-    [84, 72, 14, 0.45],
-    [98, 76, 14, 0.28],
-    [112, 70, 14, 0.38],
-    [126, 76, 14, 0.33],
-    [140, 72, 14, 0.28],
-    [50, 86, 14, 0.25],
-    [64, 88, 14, 0.32],
-    [78, 86, 14, 0.28],
-    [92, 90, 14, 0.22],
-    [106, 84, 14, 0.3],
-    [120, 90, 14, 0.24],
-    [58, 100, 14, 0.2],
-    [72, 102, 14, 0.26],
-    [86, 100, 14, 0.18],
-    [100, 104, 14, 0.22],
-    [114, 98, 14, 0.2],
-    [66, 114, 14, 0.16],
-    [80, 116, 14, 0.2],
-    [94, 114, 14, 0.14],
-    [108, 118, 14, 0.16],
-  ]
+/** Stepped black rock silhouettes (viewBox 0 0 200 140). */
+const ROCK_PATHS: Record<RockShapeId, string> = {
+  // Wide top plateau → steps down right
+  slab: 'M10 14 H130 V40 H178 V88 H150 V122 H42 V98 H10 Z',
+  // Notch cut from top-right
+  notch: 'M12 12 H100 V38 H170 V72 H138 V124 H28 V96 H12 Z',
+  // Terrace steps descending
+  terrace: 'M10 34 H70 V12 H124 V40 H182 V76 H152 V124 H34 V98 H10 Z',
+  // Tall spit / tower on left
+  spit: 'M18 10 H86 V36 H58 V58 H120 V36 H168 V82 H146 V126 H24 V104 H18 Z',
+  // Canyon cut through middle
+  canyon: 'M8 22 H78 V48 H52 V90 H96 V56 H152 V28 H188 V74 H164 V126 H22 V100 H8 Z',
+  // Low ledge with right overhang
+  ledge: 'M12 44 H92 V18 H142 V44 H186 V86 H158 V126 H40 V98 H12 Z',
+}
 
-  const shade = (t: number) => {
-    const v = Math.round(28 + t * 160)
-    return `rgb(${v},${v},${v})`
-  }
+function StampEdge({ side }: { side: 'left' | 'top' }) {
+  const dots =
+    side === 'left'
+      ? Array.from({ length: 14 }, (_, i) => (
+          <circle key={i} cx="3" cy={8 + i * 9.5} r="2.2" fill="#0a0a0a" />
+        ))
+      : Array.from({ length: 18 }, (_, i) => (
+          <circle key={i} cx={10 + i * 10.5} cy="3" r="2.2" fill="#0a0a0a" />
+        ))
+  return <g>{dots}</g>
+}
 
+export function RockCardArt({
+  def,
+  className = '',
+  showMeta = true,
+}: {
+  def: RockCardDef
+  className?: string
+  showMeta?: boolean
+}) {
+  const path = ROCK_PATHS[def.shape]
   return (
     <svg
-      viewBox="0 0 200 150"
+      viewBox="0 0 200 140"
       className={className}
-      preserveAspectRatio="xMidYMid meet"
+      preserveAspectRatio="xMidYMid slice"
       aria-hidden
     >
-      <defs>
-        <pattern id="rockMesh" width="4" height="4" patternUnits="userSpaceOnUse">
-          <path
-            d="M4 0 H0 V4"
-            fill="none"
-            stroke="rgba(255,255,255,0.07)"
-            strokeWidth="0.5"
-          />
-        </pattern>
-      </defs>
+      {/* Paper panel */}
+      <rect x="6" y="6" width="188" height="128" fill={def.paper} />
+      <StampEdge side="left" />
+      <StampEdge side="top" />
 
-      {/* Soft ground shadow */}
-      <ellipse cx="100" cy="132" rx="62" ry="10" fill="rgba(0,0,0,0.55)" />
+      {/* Black stepped rock */}
+      <path d={path} fill="#0a0a0a" />
 
-      {/* Voxel rock stack */}
-      {voxels.map(([x, y, s, t], i) => (
-        <g key={i}>
-          <rect x={x} y={y} width={s} height={s} fill={shade(t)} />
-          {/* top highlight edge */}
-          <path
-            d={`M${x} ${y + 1} H${x + s - 1}`}
-            stroke="rgba(255,255,255,0.22)"
-            strokeWidth="1"
+      {showMeta ? (
+        <>
+          {/* Tiny accent pill tucked into rock */}
+          <rect
+            x="28"
+            y="30"
+            width="36"
+            height="11"
+            rx="5.5"
+            fill={def.accent}
           />
-          {/* right shadow edge */}
-          <path
-            d={`M${x + s - 1} ${y} V${y + s}`}
-            stroke="rgba(0,0,0,0.35)"
-            strokeWidth="1.2"
-          />
-        </g>
-      ))}
-
-      <rect x="30" y="14" width="140" height="120" fill="url(#rockMesh)" />
+          <text
+            x="46"
+            y="38.2"
+            textAnchor="middle"
+            fill="#111"
+            fontSize="6.5"
+            fontFamily="IBM Plex Mono, monospace"
+            fontWeight="700"
+          >
+            {def.accentLabel}
+          </text>
+          {/* Micro type block */}
+          <text
+            x="28"
+            y="52"
+            fill="#0a0a0a"
+            fontSize="4.5"
+            fontFamily="IBM Plex Mono, monospace"
+            opacity="0.85"
+          >
+            REGIONS DETECTED
+          </text>
+          <text
+            x="28"
+            y="59"
+            fill="#0a0a0a"
+            fontSize="4"
+            fontFamily="IBM Plex Mono, monospace"
+            opacity="0.55"
+          >
+            CG · NEXALUNE · 2026
+          </text>
+          {/* Barcode nubs */}
+          <g fill="#0a0a0a" opacity="0.7">
+            {[0, 2, 3, 5, 8, 9, 11, 14].map((n, i) => (
+              <rect key={i} x={28 + n * 2.2} y="64" width="1.4" height="8" />
+            ))}
+          </g>
+        </>
+      ) : null}
     </svg>
   )
 }
 
-export function RockField({ tracks, className = '', showLabels = true }: RockFieldProps) {
+interface RockFieldProps {
+  def: RockCardDef
+  className?: string
+  showLabels?: boolean
+}
+
+export function RockField({ def, className = '', showLabels = true }: RockFieldProps) {
   return (
     <div className={`pointer-events-none absolute inset-0 overflow-hidden ${className}`}>
-      <div className="absolute inset-0 bg-[#070707]" />
-      <RockSilhouette className="absolute inset-x-0 top-[8%] h-[88%] w-full opacity-95" />
-      {tracks.map((t, i) => (
+      <div className="absolute inset-0 bg-[#0a0a0a]" />
+      <RockCardArt
+        def={def}
+        className="absolute inset-[4%] h-[92%] w-[92%]"
+        showMeta
+      />
+      {def.tracks.map((t, i) => (
         <div
           key={t.id}
           className="track-rect absolute"
@@ -143,7 +162,7 @@ export function RockField({ tracks, className = '', showLabels = true }: RockFie
               ID: {t.id}_{t.score}
             </span>
           ) : null}
-          {i === 1 ? <span className="crosshair absolute inset-0" /> : null}
+          {i === 0 ? <span className="crosshair absolute inset-0" /> : null}
           <span className="track-corner tl" />
           <span className="track-corner tr" />
           <span className="track-corner bl" />
@@ -154,23 +173,14 @@ export function RockField({ tracks, className = '', showLabels = true }: RockFie
   )
 }
 
-export function RockFieldThumb({ tracks }: { tracks: TrackRect[] }) {
+export function RockFieldThumb({ def }: { def: RockCardDef }) {
   return (
-    <div className="relative h-12 overflow-hidden bg-[#0a0a0a]">
-      <RockSilhouette className="absolute inset-0 h-full w-full scale-110 opacity-90" />
-      {tracks.slice(0, 2).map((t) => (
-        <span
-          key={t.id}
-          className="track-rect absolute"
-          style={{
-            left: `${t.x}%`,
-            top: `${Math.max(8, t.y - 18)}%`,
-            width: `${t.w * 0.85}%`,
-            height: '55%',
-            backgroundColor: t.color,
-          }}
-        />
-      ))}
+    <div className="relative h-14 overflow-hidden bg-[#0a0a0a]">
+      <RockCardArt def={def} className="absolute inset-0 h-full w-full" showMeta={false} />
+      <span
+        className="absolute bottom-1.5 left-1.5 h-2 w-5 rounded-full"
+        style={{ background: def.accent }}
+      />
     </div>
   )
 }

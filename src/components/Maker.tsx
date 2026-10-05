@@ -349,8 +349,8 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
                 </div>
               </Panel>
 
-              <Panel title="Rock field" className="col-span-2 sm:col-span-1">
-                <div className="grid grid-cols-3 gap-2">
+              <Panel title="Rock cards" className="col-span-2">
+                <div className="grid grid-cols-3 gap-2 sm:grid-cols-6">
                   {(Object.keys(FIELDS) as FieldId[]).map((id) => (
                     <button
                       key={id}
@@ -362,8 +362,8 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
                           : 'ring-1 ring-black/8'
                       }`}
                     >
-                      <RockFieldThumb tracks={FIELDS[id].tracks} />
-                      <div className="bg-white py-1.5 text-center text-[11px] font-medium">
+                      <RockFieldThumb def={FIELDS[id]} />
+                      <div className="bg-white py-1.5 text-center text-[10px] font-medium sm:text-[11px]">
                         {FIELDS[id].label}
                       </div>
                     </button>
@@ -394,7 +394,7 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
                 </div>
 
                 <div data-badge-body className="relative bg-[#0a0a0a]" style={{ height: BODY_H }}>
-                  <RockField tracks={field.tracks} />
+                  <RockField def={field} />
 
                   <input
                     value={state.name}
@@ -402,7 +402,7 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
                     onBlur={() => push(state)}
                     placeholder="tap to write your name"
                     maxLength={22}
-                    className="font-hand absolute top-3 left-1/2 z-20 w-[88%] -translate-x-1/2 bg-transparent text-center text-3xl text-[var(--yellow)] outline-none placeholder:text-white/25"
+                    className="font-hand absolute top-3 left-1/2 z-20 w-[88%] -translate-x-1/2 bg-transparent text-center text-3xl text-black outline-none placeholder:text-black/30"
                   />
 
                   <canvas
