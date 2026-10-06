@@ -42,6 +42,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
   const [tab, setTab] = useState<StickerTab>('role')
   const [mode, setMode] = useState<'stick' | 'draw'>('stick')
   const [brush, setBrush] = useState<1 | 2 | 3>(2)
+  const [draggingUid, setDraggingUid] = useState<string | null>(null)
   const [, setHistory] = useState<BadgeState[]>([state])
   const drawing = useRef(false)
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -159,6 +160,8 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
   const onStickerPointerDown = (e: ReactPointerEvent<HTMLButtonElement>, uid: string) => {
     if (mode === 'draw') return
     dragUid.current = uid
+    setDraggingUid(uid)
+    setMode('stick')
     e.currentTarget.setPointerCapture(e.pointerId)
   }
 
@@ -182,6 +185,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
   const onStickerPointerUp = () => {
     if (!dragUid.current) return
     dragUid.current = null
+    setDraggingUid(null)
     push(state)
   }
 
@@ -297,24 +301,27 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                     </button>
                   ))}
                 </div>
-                <div className="flex flex-wrap items-center gap-x-2.5 gap-y-3">
-                  {STICKERS.filter((s) => s.tab === tab).map((s) => (
-                    <button
-                      key={s.id}
-                      type="button"
-                      onClick={() => {
-                        setMode('stick')
-                        placeSticker(s)
-                      }}
-                      className="inline-flex shrink-0 transition hover:-translate-y-0.5 hover:scale-105 active:scale-95"
-                    >
-                      <StickerFace def={s} />
-                    </button>
-                  ))}
+                <div className="sticker-sheet">
+                  <div className="sticker-sheet-row">
+                    {STICKERS.filter((s) => s.tab === tab).map((s) => (
+                      <button
+                        key={s.id}
+                        type="button"
+                        onClick={() => {
+                          setMode('stick')
+                          placeSticker(s)
+                        }}
+                        className="sticker-pick inline-flex shrink-0"
+                      >
+                        <StickerFace def={s} large />
+                      </button>
+                    ))}
+                  </div>
+                  <span className="sticker-sheet-peel" aria-hidden />
                 </div>
                 <div className="hairline mt-3 pt-2">
                   <p className="text-[11px] text-[var(--muted)]">
-                    Tap to drop · drag to move · double-click to delete
+                    Tap to drop · drag on badge to move · double-click to delete
                   </p>
                 </div>
               </Panel>
@@ -394,7 +401,9 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                         <button
                           key={s.uid}
                           type="button"
-                          className="absolute z-30 touch-none select-none"
+                          className={`absolute z-30 cursor-grab touch-none select-none active:cursor-grabbing ${
+                            draggingUid === s.uid ? 'z-40' : ''
+                          }`}
                           style={{
                             left: `${s.x}%`,
                             top: `${s.y}%`,
@@ -403,9 +412,15 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                           onPointerDown={(e) => onStickerPointerDown(e, s.uid)}
                           onPointerMove={(e) => onStickerPointerMove(e, s.uid)}
                           onPointerUp={onStickerPointerUp}
+                          onPointerCancel={onStickerPointerUp}
                           onDoubleClick={() => removeSticker(s.uid)}
                         >
-                          <StickerFace def={def} compact />
+                          <StickerFace
+                            def={def}
+                            compact
+                            large
+                            dragging={draggingUid === s.uid}
+                          />
                         </button>
                       )
                     })}

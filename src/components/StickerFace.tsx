@@ -5,6 +5,10 @@ function linesFor(label: string): string[] {
     const [a, b] = label.split('×').map((s) => s.trim())
     return [`${a} ×`, b]
   }
+  if (label.includes('YEAR')) {
+    const [a, b] = label.split(' ')
+    return b ? [a, b] : [label]
+  }
   const parts = label.split(' ')
   if (parts.length >= 2 && label.length > 10) {
     return [parts[0], parts.slice(1).join(' ')]
@@ -12,14 +16,33 @@ function linesFor(label: string): string[] {
   return [label]
 }
 
-export function StickerFace({ def, compact }: { def: StickerDef; compact?: boolean }) {
+export function StickerFace({
+  def,
+  compact,
+  large,
+  dragging,
+}: {
+  def: StickerDef
+  compact?: boolean
+  large?: boolean
+  dragging?: boolean
+}) {
   const text = def.textColor ?? '#111'
   const tilt = def.tilt ?? 0
   const lines = linesFor(def.label)
-  const pad = compact ? 'px-2.5 py-1.5' : 'px-3.5 py-2'
-  const type = compact
-    ? 'text-[9px] leading-[1.1] tracking-[0.04em]'
-    : 'text-[11px] leading-[1.1] tracking-[0.04em]'
+  const size = large ? 'large' : compact ? 'compact' : 'normal'
+  const pad =
+    size === 'large'
+      ? 'px-4 py-3'
+      : size === 'compact'
+        ? 'px-3 py-2'
+        : 'px-3.5 py-2.5'
+  const type =
+    size === 'large'
+      ? 'text-[12px] leading-[1.05] tracking-[0.04em]'
+      : size === 'compact'
+        ? 'text-[10px] leading-[1.1] tracking-[0.04em]'
+        : 'text-[12px] leading-[1.1] tracking-[0.04em]'
 
   const shape =
     def.shape === 'pill'
@@ -32,15 +55,24 @@ export function StickerFace({ def, compact }: { def: StickerDef; compact?: boole
             ? 'sticker-nice sticker-nice-jagged'
             : def.shape === 'flower'
               ? 'sticker-nice sticker-nice-flower'
-              : 'sticker-nice sticker-nice-soft'
+              : def.shape === 'blob'
+                ? 'sticker-nice sticker-nice-blob'
+                : 'sticker-nice sticker-nice-soft'
 
   return (
     <span
-      className={`${shape} ${pad} inline-flex flex-col items-center justify-center whitespace-nowrap text-center`}
+      className={`${shape} ${pad} inline-flex flex-col items-center justify-center whitespace-nowrap text-center ${
+        dragging ? 'sticker-dragging' : ''
+      }`}
       style={{
         background: def.color,
         color: text,
-        transform: `rotate(${tilt}deg)`,
+        ['--sticker-tilt' as string]: `${tilt}deg`,
+        transform: dragging
+          ? `rotate(${tilt}deg) scale(1.08)`
+          : def.shape === 'blob'
+            ? undefined
+            : `rotate(${tilt}deg)`,
       }}
     >
       {lines.map((line, i) => (
