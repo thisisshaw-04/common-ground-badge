@@ -305,6 +305,127 @@ textarea {
   border-radius: 0;
 }
 
+/* —— Poster typographic lockup —— */
+.badge-poster {
+  font-family: var(--font-body);
+}
+
+.poster-lockup {
+  min-height: 8.25rem;
+}
+
+.poster-meta {
+  margin: 0;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #111;
+  line-height: 1;
+}
+
+.poster-meta-tr {
+  position: absolute;
+  top: 1.25rem;
+  right: 1rem;
+}
+
+.poster-title-row {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  margin-top: 0.15rem;
+}
+
+.poster-sub-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: 0.5rem 1rem;
+  margin-top: 0.4rem;
+}
+
+.poster-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid #111;
+  background: #fff;
+  color: #111;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.poster-box-common {
+  font-size: clamp(1.45rem, 4.5vw, 1.95rem);
+  padding: 0.32em 0.4em 0.26em;
+}
+
+.poster-box-ground {
+  font-size: clamp(1.45rem, 4.5vw, 1.95rem);
+  padding: 0.32em 0.4em 0.26em;
+  margin-left: 0;
+  justify-self: end;
+}
+
+.poster-box-date {
+  display: block;
+  width: fit-content;
+  font-size: 1rem;
+  padding: 0.4em 0.5em;
+  letter-spacing: -0.02em;
+  margin-top: 0.28rem;
+}
+
+.poster-rule-h {
+  display: block;
+  flex: 1 1 auto;
+  height: auto;
+  min-height: 1px;
+  border-top: 1px solid #111;
+  margin-top: calc(0.5em + 0.32em);
+  align-self: flex-start;
+}
+
+.poster-date-block {
+  position: relative;
+  margin-top: 0.9rem;
+  width: fit-content;
+}
+
+.poster-rule-v {
+  position: absolute;
+  left: 50%;
+  top: calc(100% + 1px);
+  width: 1px;
+  height: 1.1rem;
+  background: #111;
+  transform: translateX(-50%);
+}
+
+.poster-place {
+  position: absolute;
+  right: 1rem;
+  bottom: 0.15rem;
+  margin: 0;
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #111;
+}
+
+.poster-name-input {
+  font-family: var(--font-body);
+}
+
+.poster-foot {
+  border-top: none !important;
+}
+
 .badge-inner-dashed {
   border: 1.5px dashed #111;
 }

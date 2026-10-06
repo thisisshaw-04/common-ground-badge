@@ -58,15 +58,27 @@ export const FOOT_VIDEOS: Record<
   FootVideoId,
   { label: string; file: string; swatch: string }
 > = {
-  ink: { label: 'Ink', file: 'ink.mp4', swatch: '#111111' },
+  heat: { label: 'Heat', file: 'heat.mp4', swatch: '#ff2a2a' },
   paper: { label: 'Paper', file: 'paper.mp4', swatch: '#f0f0f0' },
   violet: { label: 'Violet', file: 'violet.mp4', swatch: '#6b4cff' },
   signal: { label: 'Signal', file: 'signal.mp4', swatch: '#ffe34a' },
   flare: { label: 'Flare', file: 'flare.mp4', swatch: '#d44cff' },
-  heat: { label: 'Heat', file: 'heat.mp4', swatch: '#ff2a2a' },
+  ink: { label: 'Ink', file: 'ink.mp4', swatch: '#111111' },
   acid: { label: 'Acid', file: 'acid.mp4', swatch: '#2ad4ff' },
   mint: { label: 'Mint', file: 'mint.mp4', swatch: '#2fe08a' },
 }
+
+/** Display order matching the 2×4 poster grid. */
+export const FOOT_VIDEO_ORDER: FootVideoId[] = [
+  'heat',
+  'paper',
+  'violet',
+  'signal',
+  'flare',
+  'ink',
+  'acid',
+  'mint',
+]
 
 export function footVideoSrc(id: FootVideoId) {
   const base = import.meta.env.BASE_URL || '/'
@@ -114,10 +126,10 @@ export const STICKERS: StickerDef[] = [
 
 /** Sample placements for the landing preview badge. */
 export const DEMO_STICKERS: PlacedSticker[] = [
-  { uid: 'demo-dev', defId: 'developer', x: 28, y: 38, rotation: -8, trackId: '214' },
-  { uid: 'demo-des', defId: 'designer', x: 72, y: 58, rotation: 10, trackId: '318' },
-  { uid: 'demo-pro', defId: 'shethey', x: 30, y: 68, rotation: -4, trackId: '102' },
-  { uid: 'demo-fl', defId: 'weave', x: 70, y: 32, rotation: 6, trackId: '441' },
+  { uid: 'demo-dev', defId: 'developer', x: 28, y: 55, rotation: -8, trackId: '214' },
+  { uid: 'demo-des', defId: 'designer', x: 72, y: 62, rotation: 10, trackId: '318' },
+  { uid: 'demo-pro', defId: 'shethey', x: 30, y: 78, rotation: -4, trackId: '102' },
+  { uid: 'demo-fl', defId: 'weave', x: 70, y: 42, rotation: 6, trackId: '441' },
 ]
 
 export const TABS: { id: StickerTab; label: string }[] = [

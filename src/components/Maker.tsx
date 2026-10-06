@@ -10,24 +10,25 @@ import {
 import {
   CORDS,
   FOOT_VIDEOS,
+  FOOT_VIDEO_ORDER,
   STICKERS,
   TABS,
   stickerById,
   type BadgeState,
   type BorderId,
   type CordId,
-  type FootVideoId,
   type PlacedSticker,
   type StickerDef,
   type StickerTab,
 } from '../lib/badge'
-import { BadgeInnerFrame, FrameSwatch } from './BadgeFrame'
+import { BadgeFace } from './BadgeFace'
+import { FrameSwatch } from './BadgeFrame'
 import { CordSwatch, Lanyard } from './Lanyard'
-import { FootVideo } from './FootVideo'
 import { StickerFace } from './StickerFace'
 
 const BADGE_W = 400
-const BODY_H = 340
+const BODY_H = 200
+const FOOT_H = 200
 
 interface MakerProps {
   state: BadgeState
@@ -323,7 +324,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                   Plays in the grey strip at the bottom of the card
                 </p>
                 <div className="grid grid-cols-2 gap-3">
-                  {(Object.keys(FOOT_VIDEOS) as FootVideoId[]).map((id) => {
+                  {FOOT_VIDEO_ORDER.map((id) => {
                     const v = FOOT_VIDEOS[id]
                     return (
                       <button
@@ -356,72 +357,61 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
           <aside className="animate-pop flex shrink-0 flex-col items-center lg:sticky lg:top-0 lg:w-[460px] xl:w-[500px]">
             <div className="flex w-full max-w-[440px] -translate-y-3 flex-col items-center sm:-translate-y-5">
               <Lanyard cord={state.cord} scale={0.62} />
-              <div
-                ref={badgeRef}
-                className="badge-shell relative -mt-10 overflow-hidden bg-white shadow-[0_18px_40px_rgba(0,0,0,0.1)]"
-                style={{ width: BADGE_W }}
-              >
-                <BadgeInnerFrame border={state.border} />
-                <div className="flex items-center justify-center gap-2 px-3 pt-3 pb-1">
-                  <span className="brand-chip brand-chip-rect text-[17px] tracking-tight uppercase">
-                    Common Ground
-                  </span>
-                  <span className="brand-chip brand-chip-pill text-[17px]">2026</span>
-                </div>
+              <BadgeFace
+                badgeRef={badgeRef}
+                width={BADGE_W}
+                footVideo={state.footVideo}
+                border={state.border}
+                bodyHeight={BODY_H}
+                footHeight={FOOT_H}
+                className="-mt-10"
+                body={
+                  <>
+                    <input
+                      value={state.name}
+                      onChange={(e) => onChange({ ...state, name: e.target.value })}
+                      onBlur={() => push(state)}
+                      placeholder="YOUR NAME"
+                      maxLength={22}
+                      className="poster-name-input absolute top-2 left-1/2 z-20 w-[84%] -translate-x-1/2 bg-transparent text-center text-[1.65rem] font-extrabold tracking-[-0.03em] text-black uppercase outline-none placeholder:font-extrabold placeholder:text-black/25"
+                    />
 
-                <div
-                  data-badge-body
-                  className="relative mx-3 overflow-hidden bg-white"
-                  style={{ height: BODY_H }}
-                >
-                  <input
-                    value={state.name}
-                    onChange={(e) => onChange({ ...state, name: e.target.value })}
-                    onBlur={() => push(state)}
-                    placeholder="write your name"
-                    maxLength={22}
-                    className="absolute top-1.5 left-1/2 z-20 w-[88%] -translate-x-1/2 bg-transparent text-center text-[2.75rem] font-medium tracking-tight text-black outline-none placeholder:font-normal placeholder:text-black/30"
-                  />
+                    <canvas
+                      ref={canvasRef}
+                      className={`absolute inset-0 z-10 h-full w-full ${
+                        mode === 'draw' ? 'cursor-crosshair' : 'pointer-events-none'
+                      }`}
+                      onPointerDown={onDrawPointerDown}
+                      onPointerMove={onDrawPointerMove}
+                      onPointerUp={onDrawPointerUp}
+                      onPointerLeave={onDrawPointerUp}
+                    />
 
-                  <canvas
-                    ref={canvasRef}
-                    className={`absolute inset-0 z-10 h-full w-full ${
-                      mode === 'draw' ? 'cursor-crosshair' : 'pointer-events-none'
-                    }`}
-                    onPointerDown={onDrawPointerDown}
-                    onPointerMove={onDrawPointerMove}
-                    onPointerUp={onDrawPointerUp}
-                    onPointerLeave={onDrawPointerUp}
-                  />
-
-                  {state.stickers.map((s) => {
-                    const def = stickerById(s.defId)
-                    if (!def) return null
-                    return (
-                      <button
-                        key={s.uid}
-                        type="button"
-                        className="absolute z-30 touch-none select-none"
-                        style={{
-                          left: `${s.x}%`,
-                          top: `${s.y}%`,
-                          transform: `translate(-50%, -50%) rotate(${s.rotation}deg)`,
-                        }}
-                        onPointerDown={(e) => onStickerPointerDown(e, s.uid)}
-                        onPointerMove={(e) => onStickerPointerMove(e, s.uid)}
-                        onPointerUp={onStickerPointerUp}
-                        onDoubleClick={() => removeSticker(s.uid)}
-                      >
-                        <StickerFace def={def} compact />
-                      </button>
-                    )
-                  })}
-                </div>
-
-                <div className="badge-foot relative z-50 mt-0 h-[180px] overflow-hidden bg-[#d8d8d8]">
-                  <FootVideo id={state.footVideo} />
-                </div>
-              </div>
+                    {state.stickers.map((s) => {
+                      const def = stickerById(s.defId)
+                      if (!def) return null
+                      return (
+                        <button
+                          key={s.uid}
+                          type="button"
+                          className="absolute z-30 touch-none select-none"
+                          style={{
+                            left: `${s.x}%`,
+                            top: `${s.y}%`,
+                            transform: `translate(-50%, -50%) rotate(${s.rotation}deg)`,
+                          }}
+                          onPointerDown={(e) => onStickerPointerDown(e, s.uid)}
+                          onPointerMove={(e) => onStickerPointerMove(e, s.uid)}
+                          onPointerUp={onStickerPointerUp}
+                          onDoubleClick={() => removeSticker(s.uid)}
+                        >
+                          <StickerFace def={def} compact />
+                        </button>
+                      )
+                    })}
+                  </>
+                }
+              />
 
               <div className="mt-4 flex gap-2" style={{ width: BADGE_W }}>
                 <button
