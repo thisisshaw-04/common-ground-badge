@@ -138,7 +138,7 @@ function RopeLanyardScene({ from, to }: { from: string; to: string }) {
   })
 
   return (
-    <group ref={group} rotation={[0.12, 0, 0]} position={[0, 0.05, 0]}>
+    <group ref={group} rotation={[0.18, -0.22, 0]} position={[0, 0.05, 0]}>
       <RopeStrand points={left} radius={0.145} from={from} to={to} />
       <RopeStrand points={right} radius={0.145} from={from} to={to} />
       <mesh position={[0, -0.9, 0]} rotation={[0.25, 0, 0]}>
@@ -225,7 +225,7 @@ export function Lanyard({ cord, scale = 1 }: LanyardProps) {
       <WebGLGate fallback={fallback}>
         <Canvas
           orthographic
-          camera={{ position: [0, 0.02, 4], zoom: 108 * scale, near: 0.1, far: 20 }}
+          camera={{ position: [0.35, 0.15, 4], zoom: 108 * scale, near: 0.1, far: 20 }}
           dpr={[1, 1.75]}
           gl={{
             antialias: true,
@@ -233,8 +233,9 @@ export function Lanyard({ cord, scale = 1 }: LanyardProps) {
             powerPreference: 'high-performance',
             failIfMajorPerformanceCaveat: false,
           }}
-          onCreated={({ gl }) => {
+          onCreated={({ gl, camera }) => {
             gl.setClearColor(0x000000, 0)
+            camera.lookAt(0, 0.1, 0)
           }}
           style={{ background: 'transparent', width: '100%', height: '100%' }}
         >
