@@ -80,7 +80,7 @@ export function FrameSwatch({ border }: { border: BorderId }) {
           d={WIGGLY_D}
           fill="none"
           stroke="#111"
-          strokeWidth="4"
+          strokeWidth="1.25"
           vectorEffect="non-scaling-stroke"
         />
       </svg>
