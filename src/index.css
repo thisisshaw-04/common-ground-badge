@@ -13,9 +13,9 @@
   --pink: #ff5ec8;
   --sky: #4c54f5;
   --lime: #c8ff4a;
-  --font-display: 'Outfit', system-ui, sans-serif;
-  --font-body: 'Outfit', system-ui, sans-serif;
-  --font-hand: 'Caveat', cursive;
+  --font-display: 'Google Sans', 'Google Sans Text', system-ui, sans-serif;
+  --font-body: 'Google Sans', 'Google Sans Text', system-ui, sans-serif;
+  --font-hand: 'Google Sans', 'Google Sans Text', system-ui, sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
 }
 
@@ -99,6 +99,8 @@ textarea {
 
 .font-hand {
   font-family: var(--font-hand);
+  font-weight: 500;
+  letter-spacing: -0.02em;
 }
 
 .font-mono {

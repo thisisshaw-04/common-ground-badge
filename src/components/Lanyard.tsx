@@ -138,7 +138,7 @@ function RopeLanyardScene({ from, to }: { from: string; to: string }) {
   })
 
   return (
-    <group ref={group} rotation={[0.18, -0.22, 0]} position={[0, 0.05, 0]}>
+    <group ref={group} rotation={[0.18, -0.22, 0]} position={[0, 0.28, 0]}>
       <RopeStrand points={left} radius={0.145} from={from} to={to} />
       <RopeStrand points={right} radius={0.145} from={from} to={to} />
       <mesh position={[0, -0.9, 0]} rotation={[0.25, 0, 0]}>
@@ -213,19 +213,19 @@ interface LanyardProps {
 export function Lanyard({ cord, scale = 1 }: LanyardProps) {
   const { from, to } = CORDS[cord]
   const w = 380 * scale
-  const h = 280 * scale
+  const h = 220 * scale
   const fallback = <RopeFallback from={from} to={to} w={w} h={h} />
 
   return (
     <div
-      className="pointer-events-none relative -mb-4"
+      className="pointer-events-none relative -mb-6"
       style={{ width: w, height: h }}
       aria-hidden
     >
       <WebGLGate fallback={fallback}>
         <Canvas
           orthographic
-          camera={{ position: [0.35, 0.15, 4], zoom: 108 * scale, near: 0.1, far: 20 }}
+          camera={{ position: [0.35, 0.05, 4], zoom: 118 * scale, near: 0.1, far: 20 }}
           dpr={[1, 1.75]}
           gl={{
             antialias: true,
@@ -235,7 +235,7 @@ export function Lanyard({ cord, scale = 1 }: LanyardProps) {
           }}
           onCreated={({ gl, camera }) => {
             gl.setClearColor(0x000000, 0)
-            camera.lookAt(0, 0.1, 0)
+            camera.lookAt(0, 0.22, 0)
           }}
           style={{ background: 'transparent', width: '100%', height: '100%' }}
         >

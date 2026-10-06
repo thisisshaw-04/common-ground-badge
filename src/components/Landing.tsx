@@ -18,13 +18,13 @@ export function Landing({ onStart }: LandingProps) {
     <div className="page-fig relative flex h-dvh flex-col overflow-hidden">
       <main className="relative z-20 mx-auto flex min-h-0 w-full max-w-[1120px] flex-1 flex-col items-center px-5 pt-6 pb-24 md:flex-row md:items-center md:justify-between md:gap-10 md:px-10 lg:gap-16">
         {/* Badge preview — left */}
-        <div className="animate-floaty flex shrink-0 scale-[0.88] flex-col items-center sm:scale-95 md:scale-100">
-          <Lanyard cord={demo.cord} scale={0.68} />
+        <div className="animate-floaty flex shrink-0 -translate-y-2 scale-[0.88] flex-col items-center sm:scale-95 md:-translate-y-4 md:scale-100">
+          <Lanyard cord={demo.cord} scale={0.58} />
           <div
-            className="relative -mt-7 overflow-hidden border-2 border-black bg-white shadow-[0_18px_40px_rgba(0,0,0,0.1)]"
+            className="relative -mt-9 overflow-hidden border-2 border-black bg-white shadow-[0_18px_40px_rgba(0,0,0,0.1)]"
             style={{ width: BADGE_W }}
           >
-            <div className="flex items-center justify-center gap-2 px-3 pt-5 pb-2">
+            <div className="flex items-center justify-center gap-2 px-3 pt-3 pb-1">
               <span className="brand-chip brand-chip-rect text-[17px] tracking-tight uppercase">
                 Common Ground
               </span>
@@ -35,7 +35,7 @@ export function Landing({ onStart }: LandingProps) {
               className="relative mx-3 overflow-hidden bg-white"
               style={{ height: BODY_H }}
             >
-              <p className="font-hand absolute top-6 left-1/2 z-10 w-[88%] -translate-x-1/2 text-center text-5xl text-black">
+              <p className="absolute top-1.5 left-1/2 z-10 w-[88%] -translate-x-1/2 text-center text-[2.75rem] font-medium tracking-tight text-black">
                 {demo.name}
               </p>
               {demo.stickers.map((s) => {

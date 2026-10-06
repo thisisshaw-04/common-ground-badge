@@ -26,7 +26,7 @@ export function DecoCorners() {
             y="62"
             textAnchor="middle"
             fill="#fff"
-            fontFamily="Outfit, sans-serif"
+            fontFamily="Google Sans, sans-serif"
             fontSize="22"
             fontWeight="700"
           >
@@ -64,7 +64,7 @@ export function DecoCorners() {
             x="155"
             y="130"
             fill="#111"
-            fontFamily="Outfit, sans-serif"
+            fontFamily="Google Sans, sans-serif"
             fontSize="36"
             fontWeight="800"
           >

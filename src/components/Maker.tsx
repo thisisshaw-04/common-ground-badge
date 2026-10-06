@@ -192,8 +192,8 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
 
   return (
     <div className="page-fig relative flex h-dvh flex-col overflow-hidden">
-      <div className="relative mx-auto flex min-h-0 w-full max-w-[1280px] flex-1 flex-col px-4 pt-4 pb-4 sm:px-6 sm:pt-5">
-        <header className="animate-pop mb-4 shrink-0">
+      <div className="relative mx-auto flex min-h-0 w-full max-w-[1280px] flex-1 flex-col px-4 pt-3 pb-4 sm:px-6 sm:pt-4">
+        <header className="animate-pop mb-2 shrink-0 sm:mb-3">
           <button
             type="button"
             onClick={onBack}
@@ -201,7 +201,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
           >
             ← Back
           </button>
-          <h1 className="mt-2 text-[clamp(1.6rem,3.2vw,2.35rem)] leading-[1.1] font-bold tracking-[-0.03em] text-black">
+          <h1 className="mt-1.5 text-[clamp(1.6rem,3.2vw,2.35rem)] leading-[1.1] font-bold tracking-[-0.03em] text-black">
             Make your Common Ground Badge your own!
           </h1>
         </header>
@@ -369,14 +369,14 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
 
           {/* Badge RIGHT */}
           <aside className="animate-pop flex shrink-0 flex-col items-center lg:sticky lg:top-0 lg:w-[460px] xl:w-[500px]">
-            <div className="flex w-full max-w-[440px] flex-col items-center">
-              <Lanyard cord={state.cord} scale={0.72} />
+            <div className="flex w-full max-w-[440px] -translate-y-3 flex-col items-center sm:-translate-y-5">
+              <Lanyard cord={state.cord} scale={0.62} />
               <div
                 ref={badgeRef}
-                className={`relative -mt-8 overflow-hidden bg-white shadow-[0_18px_40px_rgba(0,0,0,0.1)] ${borderClass}`}
+                className={`relative -mt-10 overflow-hidden bg-white shadow-[0_18px_40px_rgba(0,0,0,0.1)] ${borderClass}`}
                 style={{ width: BADGE_W }}
               >
-                <div className="flex items-center justify-center gap-2 px-3 pt-5 pb-2">
+                <div className="flex items-center justify-center gap-2 px-3 pt-3 pb-1">
                   <span className="brand-chip brand-chip-rect text-[17px] tracking-tight uppercase">
                     Common Ground
                   </span>
@@ -394,7 +394,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                     onBlur={() => push(state)}
                     placeholder="write your name"
                     maxLength={22}
-                    className="font-hand absolute top-5 left-1/2 z-20 w-[88%] -translate-x-1/2 bg-transparent text-center text-5xl text-black outline-none placeholder:text-black/25"
+                    className="absolute top-1.5 left-1/2 z-20 w-[88%] -translate-x-1/2 bg-transparent text-center text-[2.75rem] font-medium tracking-tight text-black outline-none placeholder:font-normal placeholder:text-black/30"
                   />
 
                   <canvas
