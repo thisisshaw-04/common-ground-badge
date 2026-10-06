@@ -385,6 +385,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                   ))}
                 </div>
                 <StickerRoll
+                  key={tab}
                   stickers={STICKERS.filter((s) => s.tab === tab)}
                   peelingId={peel?.def.id ?? null}
                   onPeelStart={onPeelStart}

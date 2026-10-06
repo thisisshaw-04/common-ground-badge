@@ -404,106 +404,45 @@ textarea {
   transform: scale(0.96);
 }
 
-/* —— Tape roll —— */
-.sticker-roll {
+/* —— Sticker tape: white strip unrolling off a roll at the bottom-right —— */
+.tape-stage {
   position: relative;
-  display: flex;
-  align-items: stretch;
-  gap: 0;
-  min-height: 7.5rem;
+  background: #ececec;
+  padding: 1rem 0.75rem 1.75rem;
   user-select: none;
 }
 
-.sticker-roll-core {
+.tape {
   position: relative;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.55rem;
-  flex-shrink: 0;
-  border-radius: 999px;
-  background:
-    repeating-linear-gradient(
-      180deg,
-      #d0d0d0 0 2px,
-      #b8b8b8 2px 5px
-    ),
-    radial-gradient(circle at 40% 35%, #f2f2f2 0 22%, #b4b4b4 58%, #7a7a7a 100%);
-  background-blend-mode: multiply, normal;
-  border: 1.5px solid #111;
-  box-shadow: inset -3px 0 6px rgba(0, 0, 0, 0.18);
 }
 
-.sticker-roll-core-end {
-  box-shadow: inset 3px 0 6px rgba(0, 0, 0, 0.18);
-}
-
-.sticker-roll-hole {
-  display: block;
-  width: 0.55rem;
-  height: 55%;
-  min-height: 2.4rem;
-  border-radius: 999px;
-  background: #fff;
-  border: 1px solid #111;
-  box-shadow: inset 0 0 0 2px #cfcfcf;
-}
-
-.sticker-roll-strip {
+.tape-strip {
   position: relative;
   z-index: 1;
-  flex: 1;
-  min-width: 0;
-  margin: 0.55rem -0.4rem;
-  padding: 0.85rem 0.35rem 1rem;
-  background:
-    repeating-linear-gradient(
-      90deg,
-      rgba(17, 17, 17, 0.045) 0 2px,
-      transparent 2px 15px
-    ),
-    linear-gradient(180deg, #f7f7f7 0%, #ebebeb 46%, #e0e0e0 54%, #f0f0f0 100%);
-  border-top: 1.5px solid #111;
-  border-bottom: 1.5px solid #111;
-  box-shadow:
-    inset 0 8px 12px rgba(255, 255, 255, 0.55),
-    inset 0 -6px 10px rgba(0, 0, 0, 0.08);
+  background: #fff;
+  border-top-right-radius: 2.6rem 3rem;
   overflow-x: auto;
   overflow-y: hidden;
+  scrollbar-width: none;
+  animation: tape-unroll 1.2s cubic-bezier(0.55, 0, 0.25, 1) both;
 }
 
-.sticker-roll-perforation {
-  position: absolute;
-  top: 0.35rem;
-  bottom: 0.35rem;
-  left: 0.15rem;
-  width: 4px;
-  pointer-events: none;
-  background: repeating-linear-gradient(
-    180deg,
-    #111 0 3px,
-    transparent 3px 7px
-  );
-  opacity: 0.35;
+.tape-strip::-webkit-scrollbar {
+  display: none;
 }
 
-.sticker-roll-perforation-end {
-  left: auto;
-  right: 0.15rem;
-}
-
-.sticker-roll-track {
+.tape-track {
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
-  gap: 0.85rem;
+  gap: 1rem;
   width: max-content;
-  min-height: 4.6rem;
-  padding-inline: 0.55rem;
+  min-height: 6rem;
+  padding: 1rem 2.6rem 1rem 0.9rem;
+  animation: tape-track-in 1.2s cubic-bezier(0.55, 0, 0.25, 1) both;
 }
 
-.sticker-roll-item {
+.tape-item {
   position: relative;
   flex-shrink: 0;
   cursor: grab;
@@ -511,27 +450,109 @@ textarea {
   background: transparent;
   border: 0;
   padding: 0;
-  transform: rotate(calc((var(--peel-i, 0) % 3 - 1) * 3deg));
   transition:
     transform 0.16s ease,
     filter 0.16s ease,
     opacity 0.12s ease;
-  filter: drop-shadow(0 2px 0 rgba(17, 17, 17, 0.12));
 }
 
-.sticker-roll-item:hover {
-  transform: translateY(-10px) rotate(calc((var(--peel-i, 0) % 3 - 1) * 3deg))
-    scale(1.05);
-  filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.18));
-  z-index: 3;
+.tape-item:hover {
+  transform: translateY(-6px) rotate(-3deg);
+  filter: drop-shadow(0 10px 12px rgba(0, 0, 0, 0.16));
 }
 
-.sticker-roll-item:active,
-.sticker-roll-item.is-peeling {
+.tape-item:active,
+.tape-item.is-peeling {
   cursor: grabbing;
-  opacity: 0.22;
-  transform: translateY(-4px) scale(0.96);
+  opacity: 0.18;
+  transform: none;
   filter: none;
+}
+
+/* Glossy band where the tape bends over the roll */
+.tape-curl-shine {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  right: 1.35rem;
+  bottom: 0;
+  width: 0.55rem;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.55) 45%,
+    rgba(255, 255, 255, 0.15) 70%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  mix-blend-mode: screen;
+}
+
+/* The roll — a short cylinder seen from just above */
+.tape-roll {
+  position: absolute;
+  z-index: 0;
+  right: 0;
+  bottom: -1.15rem;
+  width: 7.5rem;
+  max-width: 40%;
+  height: 2.1rem;
+  border-radius: 50%;
+  background: linear-gradient(90deg, #bdbdbd 0%, #e6e6e6 30%, #fafafa 50%, #e2e2e2 72%, #b5b5b5 100%);
+  box-shadow:
+    inset 0 -3px 4px rgba(0, 0, 0, 0.08),
+    0 2px 3px rgba(0, 0, 0, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: tape-roll-spin 1.2s cubic-bezier(0.55, 0, 0.25, 1) both;
+}
+
+.tape-roll-hole {
+  display: block;
+  width: 78%;
+  height: 58%;
+  margin-top: 0.15rem;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at 50% 40%, #ffffff 0 45%, #e2e2e2 75%, #bdbdbd 100%);
+  box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.12);
+}
+
+@keyframes tape-unroll {
+  from {
+    clip-path: inset(0 0 0 calc(100% - 3rem) round 0 2.6rem 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0 round 0 2.6rem 0 0);
+  }
+}
+
+@keyframes tape-track-in {
+  from {
+    transform: translateX(70%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes tape-roll-spin {
+  from {
+    background-position: 0 0;
+    transform: scaleX(1.06);
+  }
+  to {
+    background-position: 0 0;
+    transform: scaleX(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tape-strip,
+  .tape-track,
+  .tape-roll {
+    animation: none;
+  }
 }
 
 .sticker-peel-ghost {

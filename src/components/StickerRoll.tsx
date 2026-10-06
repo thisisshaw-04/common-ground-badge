@@ -8,40 +8,41 @@ interface StickerRollProps {
   onPeelStart: (def: StickerDef, e: ReactPointerEvent<HTMLButtonElement>) => void
 }
 
-/** Horizontal tape-roll tray — peel a sticker and drag it onto the badge. */
+/**
+ * White sticker tape that unrolls leftward off a roll at the bottom-right.
+ * Remount (e.g. `key={tab}`) to replay the unroll.
+ */
 export function StickerRoll({ stickers, peelingId = null, onPeelStart }: StickerRollProps) {
   return (
-    <div className="sticker-roll" aria-label="Sticker tape roll">
-      <div className="sticker-roll-core" aria-hidden>
-        <span className="sticker-roll-hole" />
-      </div>
-      <div className="sticker-roll-strip">
-        <div className="sticker-roll-perforation" aria-hidden />
-        <div className="sticker-roll-track">
-          {stickers.map((s, i) => {
-            const peeling = peelingId === s.id
-            return (
-              <button
-                key={s.id}
-                type="button"
-                className={`sticker-roll-item${peeling ? ' is-peeling' : ''}`}
-                style={{ ['--peel-i' as string]: i }}
-                aria-label={`Peel ${s.label} sticker`}
-                onPointerDown={(e) => {
-                  e.preventDefault()
-                  e.stopPropagation()
-                  onPeelStart(s, e)
-                }}
-              >
-                <StickerFace def={s} large />
-              </button>
-            )
-          })}
+    <div className="tape-stage" aria-label="Sticker tape">
+      <div className="tape">
+        <div className="tape-strip">
+          <div className="tape-track">
+            {stickers.map((s, i) => {
+              const peeling = peelingId === s.id
+              return (
+                <button
+                  key={s.id}
+                  type="button"
+                  className={`tape-item${peeling ? ' is-peeling' : ''}`}
+                  style={{ ['--i' as string]: i }}
+                  aria-label={`Peel ${s.label} sticker`}
+                  onPointerDown={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    onPeelStart(s, e)
+                  }}
+                >
+                  <StickerFace def={s} large />
+                </button>
+              )
+            })}
+          </div>
         </div>
-        <div className="sticker-roll-perforation sticker-roll-perforation-end" aria-hidden />
-      </div>
-      <div className="sticker-roll-core sticker-roll-core-end" aria-hidden>
-        <span className="sticker-roll-hole" />
+        <span className="tape-curl-shine" aria-hidden />
+        <span className="tape-roll" aria-hidden>
+          <span className="tape-roll-hole" />
+        </span>
       </div>
     </div>
   )
