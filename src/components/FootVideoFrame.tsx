@@ -65,7 +65,8 @@ export function FootVideoFrame({ id, height }: FootVideoFrameProps) {
   useLayoutEffect(() => {
     const el = boxRef.current
     if (!el) return
-    const update = () => setWidth(el.getBoundingClientRect().width || el.offsetWidth)
+    // Layout width, not getBoundingClientRect — that includes the card's pop-in scale.
+    const update = () => setWidth(el.clientWidth)
     update()
     const ro = new ResizeObserver(update)
     ro.observe(el)
