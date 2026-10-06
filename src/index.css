@@ -110,19 +110,63 @@ textarea {
 }
 
 .panel {
+  position: relative;
   background: var(--paper);
   color: var(--ink);
-  border: 1.5px solid rgba(17, 17, 17, 0.1);
-  border-radius: 18px;
+  border: 1px solid #111;
+  border-radius: 0;
+  padding: 1.1rem 0.9rem 0.85rem;
 }
 
 .panel-title {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  transform: translate(6px, -50%);
+  margin: 0;
+  padding: 0 5px;
+  background: #fff;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: #111;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.track-box {
+  position: relative;
+  border: 1px solid #111;
+  border-radius: 0;
+  background: #fff;
+  overflow: visible;
+}
+
+.track-box-label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  transform: translate(4px, -50%);
+  padding: 0 4px;
+  background: #fff;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #111;
+  line-height: 1.15;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.track-box.is-selected {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
 }
 
 .brand-chip {

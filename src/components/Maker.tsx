@@ -306,9 +306,9 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
 
           {/* Tools RIGHT */}
           <section className="animate-pop min-h-0 min-w-0 flex-1 md:overflow-y-auto md:pr-1">
-            <div className="mx-auto grid max-w-[640px] grid-cols-2 gap-3 pb-2 sm:gap-3.5 lg:max-w-none">
+            <div className="mx-auto grid max-w-[640px] grid-cols-2 gap-x-3 gap-y-5 pb-2 sm:gap-x-3.5 sm:gap-y-6 lg:max-w-none">
               <Panel title="Frame" className="col-span-2 sm:col-span-1">
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-3 gap-2 pt-1">
                   {(
                     [
                       ['none', 'None'],
@@ -320,38 +320,34 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                       key={id}
                       type="button"
                       onClick={() => push({ ...state, border: id })}
-                      className={`flex aspect-square flex-col items-center justify-center gap-1 rounded-xl bg-[var(--panel)] ${
-                        state.border === id
-                          ? 'ring-2 ring-[var(--blue)]'
-                          : 'ring-1 ring-black/8'
+                      className={`track-box flex aspect-square flex-col items-center justify-center gap-1 bg-[var(--panel)] ${
+                        state.border === id ? 'is-selected' : ''
                       }`}
                     >
                       <span
                         className={`block h-6 w-6 bg-transparent ${
                           id === 'track'
-                            ? 'rounded-sm border border-black'
+                            ? 'border border-black'
                             : id === 'dashed'
-                              ? 'dashed-border'
-                              : 'none-border'
+                              ? 'dashed-border !rounded-none'
+                              : 'none-border !rounded-none'
                         }`}
                       />
-                      <span className="text-[11px] font-medium">{label}</span>
+                      <span className="font-mono text-[10px] uppercase tracking-wide">{label}</span>
                     </button>
                   ))}
                 </div>
               </Panel>
 
               <Panel title="Cords" className="col-span-2 sm:col-span-1">
-                <div className="grid grid-cols-4 gap-1.5">
+                <div className="grid grid-cols-4 gap-1.5 pt-1">
                   {(Object.keys(CORDS) as CordId[]).map((id) => (
                     <button
                       key={id}
                       type="button"
                       onClick={() => push({ ...state, cord: id })}
-                      className={`flex aspect-square flex-col items-center justify-center rounded-xl bg-[var(--panel)] ${
-                        state.cord === id
-                          ? 'ring-2 ring-[var(--blue)]'
-                          : 'ring-1 ring-black/8'
+                      className={`track-box flex aspect-square flex-col items-center justify-center bg-[var(--panel)] ${
+                        state.cord === id ? 'is-selected' : ''
                       }`}
                     >
                       <CordSwatch cord={id} />
@@ -361,10 +357,10 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
               </Panel>
 
               <Panel title="Foot video" className="col-span-2">
-                <p className="mb-2.5 text-[11px] text-[var(--muted)]">
+                <p className="mb-3 pt-1 text-[11px] text-[var(--muted)]">
                   Plays in the grey strip at the bottom of the card
                 </p>
-                <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
                   {(Object.keys(FOOT_VIDEOS) as FootVideoId[]).map((id) => {
                     const v = FOOT_VIDEOS[id]
                     return (
@@ -372,13 +368,12 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                         key={id}
                         type="button"
                         onClick={() => push({ ...state, footVideo: id })}
-                        className={`overflow-hidden rounded-lg text-left ring-offset-2 ${
-                          state.footVideo === id
-                            ? 'ring-2 ring-[var(--blue)]'
-                            : 'ring-1 ring-black/10'
+                        className={`track-box text-left ${
+                          state.footVideo === id ? 'is-selected' : ''
                         }`}
                       >
-                        <div className="relative h-8 bg-[#d8d8d8] sm:h-9">
+                        <span className="track-box-label">{v.label}</span>
+                        <div className="relative h-8 overflow-hidden bg-[#d8d8d8] sm:h-9">
                           <video
                             src={`${import.meta.env.BASE_URL}foot-videos/${v.file}`}
                             muted
@@ -386,14 +381,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                             preload="metadata"
                             className="h-full w-full object-cover object-center"
                           />
-                          <span
-                            className="absolute top-1/2 left-1.5 h-2 w-2 -translate-y-1/2 rounded-full ring-1 ring-white/80"
-                            style={{ background: v.swatch }}
-                          />
                         </div>
-                        <p className="bg-white px-1.5 py-0.5 font-mono text-[9px] tracking-wide uppercase">
-                          {v.label}
-                        </p>
                       </button>
                     )
                   })}
@@ -401,7 +389,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
               </Panel>
 
               <Panel title="Stickers" className="col-span-2">
-                <div className="mb-3 flex flex-wrap gap-1.5">
+                <div className="mb-3 flex flex-wrap gap-1.5 pt-1">
                   {TABS.map((t) => (
                     <button
                       key={t.id}
@@ -410,10 +398,10 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                         setTab(t.id)
                         setMode('stick')
                       }}
-                      className={`rounded-lg px-2.5 py-1.5 font-mono text-[10px] tracking-wide ${
+                      className={`px-2.5 py-1.5 font-mono text-[10px] tracking-wide ${
                         tab === t.id
                           ? 'bg-black text-white'
-                          : 'bg-[var(--panel)] text-[var(--muted)] ring-1 ring-black/8'
+                          : 'border border-black/20 bg-white text-[var(--muted)]'
                       }`}
                     >
                       {t.label}
@@ -443,14 +431,14 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
               </Panel>
 
               <Panel title="Draw" className="col-span-2">
-                <div className="flex min-h-[4.5rem] items-center justify-center gap-2">
+                <div className="flex min-h-[4.5rem] items-center justify-center gap-2 pt-1">
                   <button
                     type="button"
                     onClick={() => setMode(mode === 'draw' ? 'stick' : 'draw')}
-                    className={`rounded-xl px-3 py-2 text-xs font-semibold ${
+                    className={`border border-black px-3 py-2 text-xs font-semibold ${
                       mode === 'draw'
                         ? 'bg-[var(--blue)] text-white'
-                        : 'bg-[var(--panel)] text-black/80 ring-1 ring-black/8'
+                        : 'bg-white text-black/80'
                     }`}
                   >
                     {mode === 'draw' ? 'On' : 'Draw'}
@@ -463,10 +451,8 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                         setBrush(size)
                         setMode('draw')
                       }}
-                      className={`flex h-11 w-11 items-center justify-center rounded-xl bg-[var(--panel)] ${
-                        brush === size && mode === 'draw'
-                          ? 'ring-2 ring-[var(--blue)]'
-                          : 'ring-1 ring-black/8'
+                      className={`track-box flex h-11 w-11 items-center justify-center bg-[var(--panel)] ${
+                        brush === size && mode === 'draw' ? 'is-selected' : ''
                       }`}
                     >
                       <span
@@ -495,8 +481,8 @@ function Panel({
   className?: string
 }) {
   return (
-    <div className={`panel px-4 py-3.5 ${className}`}>
-      <p className="panel-title mb-2.5">{title}</p>
+    <div className={`panel ${className}`}>
+      <p className="panel-title">{title}</p>
       {children}
     </div>
   )
