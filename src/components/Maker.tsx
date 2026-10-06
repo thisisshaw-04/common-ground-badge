@@ -247,8 +247,8 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                   <button
                     type="button"
                     onClick={() => setMode(mode === 'draw' ? 'stick' : 'draw')}
-                    className={`border border-black px-3 py-2 text-xs font-semibold ${
-                      mode === 'draw' ? 'bg-[var(--blue)] text-white' : 'bg-white text-black/80'
+                    className={`border border-black bg-white px-3 py-2 text-xs font-semibold text-black/80 ${
+                      mode === 'draw' ? 'is-selected' : ''
                     }`}
                   >
                     {mode === 'draw' ? 'On' : 'Draw'}
@@ -301,10 +301,8 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                         setTab(t.id)
                         setMode('stick')
                       }}
-                      className={`px-2.5 py-1.5 font-mono text-[10px] tracking-wide ${
-                        tab === t.id
-                          ? 'bg-black text-white'
-                          : 'border border-black/20 bg-white text-[var(--muted)]'
+                      className={`border border-black/20 bg-white px-2.5 py-1.5 font-mono text-[10px] tracking-wide text-[var(--muted)] ${
+                        tab === t.id ? 'is-selected text-black' : ''
                       }`}
                     >
                       {t.label}
@@ -441,7 +439,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                 <button
                   type="button"
                   onClick={undo}
-                  className="flex-1 border border-black bg-[var(--panel)] py-2.5 text-sm font-semibold text-black"
+                  className="flex-1 border border-black bg-white py-2.5 text-sm font-semibold text-black"
                 >
                   Undo
                 </button>

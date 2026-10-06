@@ -4,9 +4,10 @@
   --bg: #ffffff;
   --ink: #111111;
   --paper: #ffffff;
-  --panel: #f6f6f7;
+  --panel: #ffffff;
   --muted: #8a8a8a;
   --yellow: #ffe34a;
+  --ochre: #c4892a;
   --blue: #4c54f5;
   --coral: #ff4fd8;
   --mint: #39ffb6;
@@ -108,7 +109,7 @@ textarea {
 }
 
 .page-fig {
-  background: #ececec;
+  background: #ffffff;
 }
 
 .panel-wrap {
@@ -120,7 +121,7 @@ textarea {
 
 .panel {
   position: relative;
-  background: #e4e4e4;
+  background: #ffffff;
   color: var(--ink);
   border: 1px solid #2a2a2a;
   border-radius: 0;
@@ -148,7 +149,7 @@ textarea {
   position: relative;
   border: 1px solid #2a2a2a;
   border-radius: 0;
-  background: #ededed;
+  background: #ffffff;
   overflow: hidden;
 }
 
@@ -171,9 +172,10 @@ textarea {
   pointer-events: none;
 }
 
-.track-box.is-selected {
-  outline: 2px solid var(--blue);
-  outline-offset: 1px;
+.track-box.is-selected,
+.is-selected {
+  outline: 1px solid var(--ochre);
+  outline-offset: 2px;
 }
 
 .brand-chip {
