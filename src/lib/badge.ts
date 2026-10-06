@@ -84,12 +84,13 @@ export const CORDS: Record<
 }
 
 export const STICKERS: StickerDef[] = [
-  { id: 'designer', tab: 'role', label: 'DESIGNER', color: '#ff5ec8', textColor: '#111', shape: 'jagged', tilt: -6 },
+  /* Roles — ribbon shape; colours match foot-video backgrounds */
+  { id: 'designer', tab: 'role', label: 'DESIGNER', color: '#ff2a2a', textColor: '#fff', shape: 'jagged', tilt: -6 },
   { id: 'developer', tab: 'role', label: 'DEVELOPER', color: '#2fe08a', textColor: '#111', shape: 'jagged', tilt: 4 },
-  { id: 'maker', tab: 'role', label: 'MAKER', color: '#ffe34a', textColor: '#111', shape: 'soft', tilt: -5 },
-  { id: 'storyteller', tab: 'role', label: 'STORYTELLER', color: '#4c54f5', textColor: '#fff', shape: 'soft', tilt: 4 },
-  { id: 'researcher', tab: 'role', label: 'RESEARCHER', color: '#c9a0ff', textColor: '#2a1050', shape: 'pill', tilt: -3 },
-  { id: 'wildcard', tab: 'role', label: 'WILDCARD', color: '#ff9a3c', textColor: '#111', shape: 'jagged', tilt: 5 },
+  { id: 'maker', tab: 'role', label: 'MAKER', color: '#ffe34a', textColor: '#111', shape: 'jagged', tilt: -5 },
+  { id: 'storyteller', tab: 'role', label: 'STORYTELLER', color: '#6b4cff', textColor: '#fff', shape: 'jagged', tilt: 4 },
+  { id: 'researcher', tab: 'role', label: 'RESEARCHER', color: '#2ad4ff', textColor: '#111', shape: 'jagged', tilt: -3 },
+  { id: 'wildcard', tab: 'role', label: 'WILDCARD', color: '#d44cff', textColor: '#fff', shape: 'jagged', tilt: 5 },
   { id: 'dxtech', tab: 'track', label: 'DESIGN × TECH', color: '#2fe08a', textColor: '#111', shape: 'ticket', tilt: -3 },
   { id: 'cxtech', tab: 'track', label: 'CULTURE × TECH', color: '#ffe34a', textColor: '#111', shape: 'ticket', tilt: 3 },
   { id: 'solo', tab: 'track', label: 'SOLO BUILDER', color: '#4c54f5', textColor: '#fff', shape: 'tag', tilt: -4 },
