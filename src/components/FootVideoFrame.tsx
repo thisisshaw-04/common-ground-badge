@@ -2,29 +2,31 @@ import { useId } from 'react'
 import type { FootVideoId } from '../lib/badge'
 import { FootVideo } from './FootVideo'
 
-/** viewBox aspect ~1.51 matches the red brand mark. */
-export const FOOT_FRAME_VB = { w: 400, h: 265 } as const
+/** Matches the provided outline asset aspect (~853×568). */
+export const FOOT_FRAME_VB = { w: 400, h: 266 } as const
+
+const OUTLINE_SRC = `${import.meta.env.BASE_URL}foot-frame-outline.png`
 
 /**
- * Soft brand foot frame — exact 180° point symmetry around (200, 132.5).
- * Top gently slopes into a large soft TR round (from the close-up);
- * BL is the precise rotation of that edge.
+ * Clip path traced from the outline asset — soft TR dip, matching BL,
+ * rounded TL/BR. viewBox 0 0 400 266.
  */
 export const FOOT_FRAME_PATH =
-  'M 6 132.5 ' +
-  'V 34 ' +
-  'C 6 14 18 6 38 6 ' +
-  'H 198 ' +
-  'C 238 6 275 10 312 26 ' +
-  'C 340 38 360 42 376 44 ' +
-  'C 388 46 394 54 394 68 ' +
-  'V 231 ' +
-  'C 394 251 382 259 362 259 ' +
-  'H 202 ' +
-  'C 162 259 125 255 88 239 ' +
-  'C 60 227 40 223 24 221 ' +
-  'C 12 219 6 211 6 197 ' +
-  'V 132.5 ' +
+  'M 4 133 ' +
+  'V 28 ' +
+  'C 4 12 12 2 28 2 ' +
+  'H 252 ' +
+  'C 278 2 300 8 322 18 ' +
+  'C 344 28 360 30 374 30 ' +
+  'C 388 30 396 38 396 54 ' +
+  'V 212 ' +
+  'C 396 228 390 244 374 252 ' +
+  'C 366 260 356 264 340 264 ' +
+  'H 148 ' +
+  'C 122 264 98 258 76 250 ' +
+  'C 54 242 36 242 22 242 ' +
+  'C 10 242 4 234 4 218 ' +
+  'V 133 ' +
   'Z'
 
 interface FootVideoFrameProps {
@@ -39,6 +41,7 @@ export function FootVideoFrame({ id, height }: FootVideoFrameProps) {
 
   return (
     <div className="foot-frame relative w-full" style={{ height }}>
+      {/* Video clipped to the outline shape */}
       <div className="foot-frame-media absolute inset-0">
         <svg className="absolute h-0 w-0" aria-hidden>
           <defs>
@@ -58,22 +61,14 @@ export function FootVideoFrame({ id, height }: FootVideoFrameProps) {
         </div>
       </div>
 
-      <svg
-        className="foot-frame-stroke pointer-events-none absolute inset-0 h-full w-full overflow-visible"
-        viewBox={`0 0 ${w} ${h}`}
-        preserveAspectRatio="none"
+      {/* Exact outline stroke from the provided asset */}
+      <img
+        src={OUTLINE_SRC}
+        alt=""
         aria-hidden
-      >
-        <path
-          d={FOOT_FRAME_PATH}
-          fill="none"
-          stroke="#111"
-          strokeWidth="1.1"
-          strokeLinejoin="round"
-          strokeLinecap="round"
-          vectorEffect="non-scaling-stroke"
-        />
-      </svg>
+        draggable={false}
+        className="pointer-events-none absolute inset-0 h-full w-full object-fill select-none"
+      />
     </div>
   )
 }
