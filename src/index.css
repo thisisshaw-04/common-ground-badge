@@ -327,6 +327,8 @@ textarea {
 }
 
 .badge-foot {
+  position: relative;
+  z-index: 50;
   background: #d8d8d8;
   border-top: 1.5px solid #111;
 }

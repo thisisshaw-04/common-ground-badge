@@ -418,7 +418,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                   })}
                 </div>
 
-                <div className="badge-foot relative mt-0 h-[180px] overflow-hidden bg-[#d8d8d8]">
+                <div className="badge-foot relative z-50 mt-0 h-[180px] overflow-hidden bg-[#d8d8d8]">
                   <FootVideo id={state.footVideo} />
                 </div>
               </div>
