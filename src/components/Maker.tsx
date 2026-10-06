@@ -50,44 +50,57 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
     y: number
     overCard: boolean
   } | null>(null)
-  const [, setHistory] = useState<BadgeState[]>([state])
+  const [canUndo, setCanUndo] = useState(false)
   const drawing = useRef(false)
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const paintedUrl = useRef<string | null | undefined>(undefined)
   const dragUid = useRef<string | null>(null)
   const dragLive = useRef<BadgeState | null>(null)
   const peelDef = useRef<StickerDef | null>(null)
   const peelPointerId = useRef<number | null>(null)
+  // Live edits (typing, dragging) go straight to onChange; only push() records
+  // an undo step, measured against the last committed snapshot.
+  const past = useRef<BadgeState[]>([])
+  const committed = useRef<BadgeState>(state)
 
   const push = useCallback(
     (next: BadgeState) => {
       onChange(next)
-      setHistory((h) => [...h.slice(-30), next])
+      if (JSON.stringify(next) === JSON.stringify(committed.current)) return
+      past.current = [...past.current.slice(-40), committed.current]
+      committed.current = next
+      setCanUndo(true)
     },
     [onChange],
   )
 
-  const undo = () => {
-    setHistory((h) => {
-      if (h.length < 2) return h
-      const next = h.slice(0, -1)
-      onChange(next[next.length - 1])
-      return next
-    })
-  }
+  const undo = useCallback(() => {
+    const prev = past.current.pop()
+    if (!prev) return
+    committed.current = prev
+    onChange(prev)
+    setCanUndo(past.current.length > 0)
+  }, [onChange])
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (!(e.metaKey || e.ctrlKey) || e.shiftKey || e.key.toLowerCase() !== 'z') return
+      const el = document.activeElement
+      if (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) return
+      e.preventDefault()
+      undo()
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [undo])
 
   const clearAll = () => {
-    const blank = {
+    push({
       ...state,
       name: '',
       stickers: [],
       drawingDataUrl: null,
-    }
-    const c = canvasRef.current
-    if (c) {
-      const ctx = c.getContext('2d')
-      ctx?.clearRect(0, 0, c.width, c.height)
-    }
-    push(blank)
+    })
   }
 
   const placeSticker = (def: StickerDef, x = 15 + Math.random() * 70, y = 12 + Math.random() * 76) => {
@@ -179,20 +192,33 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
     if (!c) return
     c.width = BADGE_W
     c.height = BODY_H
-    const ctx = c.getContext('2d')
-    if (!ctx) return
-    if (state.drawingDataUrl) {
-      const img = new Image()
-      img.onload = () => ctx.drawImage(img, 0, 0)
-      img.src = state.drawingDataUrl
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  // Repaint when the drawing changes from outside the pen (undo, clear, mount).
+  useEffect(() => {
+    const url = state.drawingDataUrl
+    if (url === paintedUrl.current) return
+    paintedUrl.current = url
+    const c = canvasRef.current
+    const ctx = c?.getContext('2d')
+    if (!c || !ctx) return
+    ctx.clearRect(0, 0, c.width, c.height)
+    if (!url) return
+    const img = new Image()
+    img.onload = () => {
+      if (paintedUrl.current !== url) return
+      ctx.clearRect(0, 0, c.width, c.height)
+      ctx.drawImage(img, 0, 0)
+    }
+    img.src = url
+  }, [state.drawingDataUrl])
 
   const saveDrawing = () => {
     const c = canvasRef.current
     if (!c) return
-    push({ ...state, drawingDataUrl: c.toDataURL('image/png') })
+    const url = c.toDataURL('image/png')
+    paintedUrl.current = url
+    push({ ...state, drawingDataUrl: url })
   }
 
   const onDrawPointerDown = (e: ReactPointerEvent<HTMLCanvasElement>) => {
@@ -503,7 +529,9 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                 <button
                   type="button"
                   onClick={undo}
-                  className="min-w-0 flex-1 border border-black bg-white py-2.5 text-sm font-semibold text-black"
+                  disabled={!canUndo}
+                  title="Undo (Ctrl/⌘ Z)"
+                  className="min-w-0 flex-1 border border-black bg-white py-2.5 text-sm font-semibold text-black disabled:cursor-not-allowed disabled:border-black/20 disabled:text-black/30"
                 >
                   Undo
                 </button>
