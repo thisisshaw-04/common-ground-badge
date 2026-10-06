@@ -156,7 +156,7 @@ textarea {
 
 .track-box.is-selected,
 .is-selected {
-  outline: 2px solid var(--select);
+  outline: 1px solid var(--select);
   outline-offset: 2px;
 }
 
@@ -170,19 +170,14 @@ button.track-box,
     border-color 0.14s ease;
 }
 
-button.track-box:hover,
-.option-btn:hover {
+button.track-box:not(.is-selected):hover,
+.option-btn:not(.is-selected):hover {
   transform: translate(-2px, -2px);
   box-shadow: 3px 3px 0 #111;
 }
 
-button.track-box.is-selected:hover,
-.option-btn.is-selected:hover {
-  box-shadow: 3px 3px 0 var(--select);
-}
-
-button.track-box:active,
-.option-btn:active {
+button.track-box:not(.is-selected):active,
+.option-btn:not(.is-selected):active {
   transform: translate(0, 0);
   box-shadow: 1px 1px 0 #111;
 }
@@ -193,12 +188,12 @@ button.track-box > div:not(.relative) {
   transition: transform 0.18s ease;
 }
 
-button.track-box:hover > svg,
-button.track-box:hover > span:first-child {
+button.track-box:not(.is-selected):hover > svg,
+button.track-box:not(.is-selected):hover > span:first-child {
   transform: scale(1.12) rotate(-4deg);
 }
 
-button.track-box:hover video {
+button.track-box:not(.is-selected):hover video {
   filter: saturate(1.15);
 }
 
