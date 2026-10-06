@@ -430,7 +430,7 @@ button.track-box:hover video {
 
 /* —— Sticker tape: strip winds on/off a vertical roll at the right —— */
 .tape-bed {
-  background: #ececec;
+  background: #fff;
   padding: 0.85rem 0.75rem 1.35rem;
   user-select: none;
 }
@@ -452,8 +452,8 @@ button.track-box:hover video {
   background: #fff;
   border-radius: 2px 0 0 2px;
   box-shadow:
-    0 1px 0 rgba(0, 0, 0, 0.05),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.04);
+    inset 0 0 0 1px #dcdcdc,
+    0 2px 4px rgba(0, 0, 0, 0.06);
 }
 
 .tape-track {
