@@ -8,8 +8,8 @@ interface LandingProps {
   onStart: () => void
 }
 
-const BADGE_W = 300
-const BODY_H = 280
+const BADGE_W = 380
+const BODY_H = 320
 
 export function Landing({ onStart }: LandingProps) {
   const demo = DEMO_STATE
@@ -18,17 +18,17 @@ export function Landing({ onStart }: LandingProps) {
     <div className="page-fig relative flex h-dvh flex-col overflow-hidden">
       <main className="relative z-20 mx-auto flex min-h-0 w-full max-w-[1120px] flex-1 flex-col items-center px-5 pt-6 pb-24 md:flex-row md:items-center md:justify-between md:gap-10 md:px-10 lg:gap-16">
         {/* Badge preview — left */}
-        <div className="animate-floaty flex shrink-0 scale-[0.82] flex-col items-center sm:scale-90 md:scale-100">
-          <Lanyard cord={demo.cord} scale={1.15} />
+        <div className="animate-floaty flex shrink-0 scale-[0.88] flex-col items-center sm:scale-95 md:scale-100">
+          <Lanyard cord={demo.cord} scale={0.68} />
           <div
-            className="relative -mt-12 overflow-hidden border-2 border-black bg-white shadow-[0_18px_40px_rgba(0,0,0,0.1)]"
+            className="relative -mt-7 overflow-hidden border-2 border-black bg-white shadow-[0_18px_40px_rgba(0,0,0,0.1)]"
             style={{ width: BADGE_W }}
           >
-            <div className="flex items-center justify-center gap-2 px-3 pt-4 pb-2">
-              <span className="brand-chip brand-chip-rect text-[15px] tracking-tight uppercase">
+            <div className="flex items-center justify-center gap-2 px-3 pt-5 pb-2">
+              <span className="brand-chip brand-chip-rect text-[17px] tracking-tight uppercase">
                 Common Ground
               </span>
-              <span className="brand-chip brand-chip-pill text-[15px]">{EVENT.year}</span>
+              <span className="brand-chip brand-chip-pill text-[17px]">{EVENT.year}</span>
             </div>
 
             <div
@@ -57,7 +57,7 @@ export function Landing({ onStart }: LandingProps) {
               })}
             </div>
 
-            <div className="badge-foot relative mx-0 h-[150px] overflow-hidden bg-[#d8d8d8]">
+            <div className="badge-foot relative mx-0 h-[170px] overflow-hidden bg-[#d8d8d8]">
               <FootVideo id={demo.footVideo} />
             </div>
           </div>

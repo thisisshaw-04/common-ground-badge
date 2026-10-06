@@ -26,8 +26,8 @@ import { CordSwatch, Lanyard } from './Lanyard'
 import { FootVideo } from './FootVideo'
 import { StickerFace } from './StickerFace'
 
-const BADGE_W = 320
-const BODY_H = 290
+const BADGE_W = 400
+const BODY_H = 340
 
 interface MakerProps {
   state: BadgeState
@@ -213,19 +213,19 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
 
         <div className="relative flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto md:flex-row md:items-stretch md:gap-8 md:overflow-hidden">
           {/* Badge LEFT — FigBuild composition */}
-          <aside className="animate-pop flex shrink-0 flex-col items-center justify-center md:w-[420px] lg:w-[460px]">
-            <div className="flex w-full max-w-[400px] flex-col items-center">
-              <Lanyard cord={state.cord} scale={1.25} />
+          <aside className="animate-pop flex shrink-0 flex-col items-center justify-center md:w-[480px] lg:w-[520px]">
+            <div className="flex w-full max-w-[440px] flex-col items-center">
+              <Lanyard cord={state.cord} scale={0.72} />
               <div
                 ref={badgeRef}
-                className={`relative -mt-12 overflow-hidden bg-white shadow-[0_18px_40px_rgba(0,0,0,0.1)] ${borderClass}`}
+                className={`relative -mt-8 overflow-hidden bg-white shadow-[0_18px_40px_rgba(0,0,0,0.1)] ${borderClass}`}
                 style={{ width: BADGE_W }}
               >
-                <div className="flex items-center justify-center gap-2 px-3 pt-4 pb-2">
-                  <span className="brand-chip brand-chip-rect text-[14px] tracking-tight uppercase">
+                <div className="flex items-center justify-center gap-2 px-3 pt-5 pb-2">
+                  <span className="brand-chip brand-chip-rect text-[17px] tracking-tight uppercase">
                     Common Ground
                   </span>
-                  <span className="brand-chip brand-chip-pill text-[14px]">{EVENT.year}</span>
+                  <span className="brand-chip brand-chip-pill text-[17px]">{EVENT.year}</span>
                 </div>
 
                 <div
@@ -239,7 +239,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                     onBlur={() => push(state)}
                     placeholder="write your name"
                     maxLength={22}
-                    className="font-hand absolute top-4 left-1/2 z-20 w-[88%] -translate-x-1/2 bg-transparent text-center text-4xl text-black outline-none placeholder:text-black/25"
+                    className="font-hand absolute top-5 left-1/2 z-20 w-[88%] -translate-x-1/2 bg-transparent text-center text-5xl text-black outline-none placeholder:text-black/25"
                   />
 
                   <canvas
@@ -277,7 +277,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                   })}
                 </div>
 
-                <div className="badge-foot relative mt-0 h-[168px] overflow-hidden bg-[#d8d8d8]">
+                <div className="badge-foot relative mt-0 h-[180px] overflow-hidden bg-[#d8d8d8]">
                   <FootVideo id={state.footVideo} />
                 </div>
               </div>
