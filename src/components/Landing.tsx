@@ -57,7 +57,7 @@ export function Landing({ onStart }: LandingProps) {
               })}
             </div>
 
-            <div className="badge-foot relative mx-0 h-[80px] overflow-hidden bg-[#d8d8d8]">
+            <div className="badge-foot relative mx-0 h-[150px] overflow-hidden bg-[#d8d8d8]">
               <FootVideo id={demo.footVideo} />
             </div>
           </div>

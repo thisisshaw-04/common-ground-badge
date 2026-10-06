@@ -277,7 +277,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                   })}
                 </div>
 
-                <div className="badge-foot relative mt-0 h-[88px] overflow-hidden bg-[#d8d8d8]">
+                <div className="badge-foot relative mt-0 h-[168px] overflow-hidden bg-[#d8d8d8]">
                   <FootVideo id={state.footVideo} />
                 </div>
               </div>
@@ -364,7 +364,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                 <p className="mb-2.5 text-[11px] text-[var(--muted)]">
                   Plays in the grey strip at the bottom of the card
                 </p>
-                <div className="grid grid-cols-4 gap-2">
+                <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
                   {(Object.keys(FOOT_VIDEOS) as FootVideoId[]).map((id) => {
                     const v = FOOT_VIDEOS[id]
                     return (
@@ -372,26 +372,26 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                         key={id}
                         type="button"
                         onClick={() => push({ ...state, footVideo: id })}
-                        className={`overflow-hidden rounded-xl text-left ring-offset-2 ${
+                        className={`overflow-hidden rounded-lg text-left ring-offset-2 ${
                           state.footVideo === id
                             ? 'ring-2 ring-[var(--blue)]'
                             : 'ring-1 ring-black/10'
                         }`}
                       >
-                        <div className="relative aspect-square bg-[#d8d8d8]">
+                        <div className="relative h-8 bg-[#d8d8d8] sm:h-9">
                           <video
                             src={`${import.meta.env.BASE_URL}foot-videos/${v.file}`}
                             muted
                             playsInline
                             preload="metadata"
-                            className="h-full w-full object-cover"
+                            className="h-full w-full object-cover object-center"
                           />
                           <span
-                            className="absolute bottom-1 left-1 h-2.5 w-2.5 rounded-full ring-1 ring-white/80"
+                            className="absolute top-1/2 left-1.5 h-2 w-2 -translate-y-1/2 rounded-full ring-1 ring-white/80"
                             style={{ background: v.swatch }}
                           />
                         </div>
-                        <p className="bg-white px-1.5 py-1 font-mono text-[9px] tracking-wide uppercase">
+                        <p className="bg-white px-1.5 py-0.5 font-mono text-[9px] tracking-wide uppercase">
                           {v.label}
                         </p>
                       </button>
