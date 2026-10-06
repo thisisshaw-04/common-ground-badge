@@ -1,7 +1,6 @@
 import type { FootVideoId } from '../lib/badge'
 import { FootVideo } from './FootVideo'
 
-const OUTLINE_SRC = `${import.meta.env.BASE_URL}foot-frame-outline.png`
 const MASK_SRC = `${import.meta.env.BASE_URL}foot-frame-mask.png`
 
 interface FootVideoFrameProps {
@@ -10,14 +9,21 @@ interface FootVideoFrameProps {
 }
 
 /**
- * Foot video clipped with a mask flooded from the outline asset,
- * then the same outline PNG stroked on top — no path/outline mismatch.
+ * Video masked to the brand silhouette. Outline is a drop-shadow of that
+ * same mask — one alpha shape, so fill and stroke can never leave a gap.
  */
 export function FootVideoFrame({ id, height }: FootVideoFrameProps) {
   return (
-    <div className="foot-frame relative w-full" style={{ height }}>
+    <div
+      className="foot-frame relative w-full"
+      style={{
+        height,
+        filter:
+          'drop-shadow(0 0 0.7px #111) drop-shadow(0 0 0.7px #111) drop-shadow(0 0 0.7px #111)',
+      }}
+    >
       <div
-        className="foot-frame-media absolute inset-0 overflow-hidden bg-transparent"
+        className="foot-frame-media absolute inset-0"
         style={{
           WebkitMaskImage: `url(${MASK_SRC})`,
           maskImage: `url(${MASK_SRC})`,
@@ -31,14 +37,6 @@ export function FootVideoFrame({ id, height }: FootVideoFrameProps) {
       >
         <FootVideo id={id} className="h-full w-full object-cover" />
       </div>
-
-      <img
-        src={OUTLINE_SRC}
-        alt=""
-        aria-hidden
-        draggable={false}
-        className="pointer-events-none absolute inset-0 z-[1] h-full w-full object-fill select-none"
-      />
     </div>
   )
 }
