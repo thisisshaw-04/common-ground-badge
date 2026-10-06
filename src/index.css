@@ -659,8 +659,7 @@ textarea {
 
 .foot-frame-media {
   z-index: 0;
-  -webkit-mask-mode: alpha;
-  mask-mode: alpha;
+  overflow: hidden;
 }
 
 /* legacy class names kept for any leftover refs */
