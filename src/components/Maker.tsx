@@ -392,38 +392,6 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                 </div>
               </Panel>
 
-              <Panel title="Stickers" className="sm:row-span-2">
-                <div className="mb-3 flex flex-wrap gap-1.5">
-                  {TABS.map((t) => (
-                    <button
-                      key={t.id}
-                      type="button"
-                      onClick={() => {
-                        setTab(t.id)
-                        setMode('stick')
-                      }}
-                      className={`border border-black/20 bg-white px-2.5 py-1.5 font-mono text-[10px] tracking-wide text-[var(--muted)] ${
-                        tab === t.id ? 'is-selected text-black' : ''
-                      }`}
-                    >
-                      {t.label}
-                    </button>
-                  ))}
-                </div>
-                <StickerRoll
-                  key={tab}
-                  stickers={STICKERS.filter((s) => s.tab === tab)}
-                  peelingId={peel?.def.id ?? null}
-                  onPeelStart={onPeelStart}
-                />
-                <div className="hairline mt-3 pt-2">
-                  <p className="text-[11px] text-[var(--muted)]">
-                    Peel a sticker from the roll · drop on the card · drag to move · double-click to
-                    delete
-                  </p>
-                </div>
-              </Panel>
-
               <Panel title="Foot video">
                 <p className="mb-3 text-[11px] text-[var(--muted)]">
                   Plays in the grey strip at the bottom of the card
@@ -453,6 +421,38 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                       </button>
                     )
                   })}
+                </div>
+              </Panel>
+
+              <Panel title="Stickers" className="sm:col-span-2">
+                <div className="mb-3 flex flex-wrap gap-1.5">
+                  {TABS.map((t) => (
+                    <button
+                      key={t.id}
+                      type="button"
+                      onClick={() => {
+                        setTab(t.id)
+                        setMode('stick')
+                      }}
+                      className={`border border-black/20 bg-white px-2.5 py-1.5 font-mono text-[10px] tracking-wide text-[var(--muted)] ${
+                        tab === t.id ? 'is-selected text-black' : ''
+                      }`}
+                    >
+                      {t.label}
+                    </button>
+                  ))}
+                </div>
+                <StickerRoll
+                  tabKey={tab}
+                  stickers={STICKERS.filter((s) => s.tab === tab)}
+                  peelingId={peel?.def.id ?? null}
+                  onPeelStart={onPeelStart}
+                />
+                <div className="hairline mt-3 pt-2">
+                  <p className="text-[11px] text-[var(--muted)]">
+                    Peel a sticker from the roll · drop on the card · drag to move · double-click to
+                    delete
+                  </p>
                 </div>
               </Panel>
             </div>
