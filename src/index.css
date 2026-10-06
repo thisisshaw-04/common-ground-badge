@@ -507,14 +507,8 @@ textarea {
 
 .foot-frame-media {
   z-index: 0;
-}
-
-.foot-frame-clip {
-  overflow: hidden;
-}
-
-.foot-frame-stroke {
-  z-index: 2;
+  -webkit-mask-mode: alpha;
+  mask-mode: alpha;
 }
 
 /* legacy class names kept for any leftover refs */
