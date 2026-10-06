@@ -1,16 +1,55 @@
-import { useId } from 'react'
+import { useId, useLayoutEffect, useRef, useState } from 'react'
 import type { FootVideoId } from '../lib/badge'
 import { FootVideo } from './FootVideo'
 
-/** Viewbox of the supplied frame outline (public/foot-frame-outline.png). */
-export const FOOT_FRAME_VB = { w: 853, h: 568 } as const
+/** Width of the supplied frame outline (public/foot-frame-outline.png), in its own units. */
+const OUTLINE_W = 853
+const STROKE = 1.5
 
 /**
- * Stroke centreline of the supplied frame outline, traced with
- * `node scripts/trace-foot-frame.mjs`. Clip and border share this path.
+ * Supplied outline rebuilt at the box's real pixel size: corners, the
+ * top-right step and the bottom-left step scale uniformly with width, only
+ * the straight runs stretch — so the shape never squashes into ovals.
  */
-export const FOOT_FRAME_PATH =
-  'M 1 284 L 1.1 38.4 L 1.8 31.4 L 3.8 24.9 L 5.8 21.1 L 8 17.4 L 12.2 12.4 L 19.1 6.6 L 23.5 4.5 L 28.4 2.7 L 34 1.5 L 40.5 1 L 406.7 0.9 L 554 1 L 568.8 1.7 L 582.2 3.1 L 598.5 6.1 L 617.4 11.4 L 714.9 44.1 L 732.8 49 L 746.1 51.8 L 753.7 52.8 L 767.7 53.9 L 812.7 54.2 L 822.2 55.5 L 827.1 57.4 L 833.8 60.5 L 838.8 64.8 L 841.7 67.9 L 845.3 72.9 L 848.2 78.3 L 850.1 84.2 L 851 92.8 L 851 284 L 851 521.7 L 850.9 529 L 850.3 533.6 L 848.8 540.2 L 848 542.3 L 844.9 548 L 840.7 553 L 837.6 556.1 L 832.1 560.2 L 827.9 562.5 L 820.1 564.8 L 810.6 565.6 L 803.7 565.7 L 301.2 565.5 L 278.6 565.1 L 266.5 563.9 L 254.5 562 L 248.5 560.7 L 236.6 557.8 L 132.8 530.4 L 113.5 526.3 L 95.9 524.2 L 90.1 523.9 L 81 523.7 L 35.2 523.8 L 28.5 523.2 L 22.5 522 L 19.9 521.1 L 15.6 518.9 L 11.9 516.2 L 8.8 513.2 L 6.1 509.9 L 3.1 504.4 L 1.5 498.2 L 1 493.8 Z'
+export function footFramePath(w: number, h: number) {
+  const s = w / OUTLINE_W
+  const i = STROKE / 2
+  const L = i
+  const R = w - i
+  const T = i
+  const B = h - i
+
+  const rTL = 39 * s
+  const rTR = 39 * s
+  const rBR = 46 * s
+  const rBL = 33 * s
+  const stepTop = 53 * s
+  const stepBot = 42 * s
+
+  const tx0 = R - 295 * s
+  const tx1 = R - 61 * s
+  const tdx = tx1 - tx0
+  const bx0 = L + 304 * s
+  const bx1 = L + 69 * s
+  const bdx = bx0 - bx1
+
+  const f = (v: number) => +v.toFixed(2)
+  return [
+    `M ${f(L)} ${f(T + rTL)}`,
+    `A ${f(rTL)} ${f(rTL)} 0 0 1 ${f(L + rTL)} ${f(T)}`,
+    `H ${f(tx0)}`,
+    `C ${f(tx0 + tdx * 0.5)} ${f(T)} ${f(tx1 - tdx * 0.5)} ${f(T + stepTop)} ${f(tx1)} ${f(T + stepTop)}`,
+    `H ${f(R - rTR)}`,
+    `A ${f(rTR)} ${f(rTR)} 0 0 1 ${f(R)} ${f(T + stepTop + rTR)}`,
+    `V ${f(B - rBR)}`,
+    `A ${f(rBR)} ${f(rBR)} 0 0 1 ${f(R - rBR)} ${f(B)}`,
+    `H ${f(bx0)}`,
+    `C ${f(bx0 - bdx * 0.5)} ${f(B)} ${f(bx1 + bdx * 0.5)} ${f(B - stepBot)} ${f(bx1)} ${f(B - stepBot)}`,
+    `H ${f(L + rBL)}`,
+    `A ${f(rBL)} ${f(rBL)} 0 0 1 ${f(L)} ${f(B - stepBot - rBL)}`,
+    'Z',
+  ].join(' ')
+}
 
 interface FootVideoFrameProps {
   id: FootVideoId
@@ -20,15 +59,27 @@ interface FootVideoFrameProps {
 export function FootVideoFrame({ id, height }: FootVideoFrameProps) {
   const uid = useId().replace(/:/g, '')
   const clipId = `foot-clip-${uid}`
-  const { w, h } = FOOT_FRAME_VB
+  const boxRef = useRef<HTMLDivElement>(null)
+  const [width, setWidth] = useState(380)
+
+  useLayoutEffect(() => {
+    const el = boxRef.current
+    if (!el) return
+    const update = () => setWidth(el.getBoundingClientRect().width || el.offsetWidth)
+    update()
+    const ro = new ResizeObserver(update)
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
+
+  const d = footFramePath(width, height)
 
   return (
-    <div className="foot-frame relative w-full" style={{ height }}>
-      {/* objectBoundingBox clip so the shape stretches with the video box */}
+    <div ref={boxRef} className="foot-frame relative w-full" style={{ height }}>
       <svg width="0" height="0" className="absolute" aria-hidden>
         <defs>
-          <clipPath id={clipId} clipPathUnits="objectBoundingBox">
-            <path d={FOOT_FRAME_PATH} transform={`scale(${1 / w} ${1 / h})`} />
+          <clipPath id={clipId} clipPathUnits="userSpaceOnUse">
+            <path d={d} />
           </clipPath>
         </defs>
       </svg>
@@ -41,19 +92,13 @@ export function FootVideoFrame({ id, height }: FootVideoFrameProps) {
       </div>
 
       <svg
-        className="pointer-events-none absolute inset-0 h-full w-full overflow-visible"
-        viewBox={`0 0 ${w} ${h}`}
-        preserveAspectRatio="none"
+        className="pointer-events-none absolute inset-0 overflow-visible"
+        width={width}
+        height={height}
+        viewBox={`0 0 ${width} ${height}`}
         aria-hidden
       >
-        <path
-          d={FOOT_FRAME_PATH}
-          fill="none"
-          stroke="#111"
-          strokeWidth="2.25"
-          strokeLinejoin="round"
-          vectorEffect="non-scaling-stroke"
-        />
+        <path d={d} fill="none" stroke="#111" strokeWidth={STROKE} strokeLinejoin="round" />
       </svg>
     </div>
   )
