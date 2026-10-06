@@ -12,7 +12,15 @@ export const EVENT = {
 export type CordId = 'ink' | 'signal' | 'flare' | 'acid'
 export type BorderId = 'none' | 'dashed' | 'track'
 export type StickerTab = 'role' | 'track' | 'vibe' | 'pronouns' | 'about'
-export type FootVideoId = 'signal' | 'weave' | 'flare' | 'spectrum'
+export type FootVideoId =
+  | 'ink'
+  | 'paper'
+  | 'violet'
+  | 'signal'
+  | 'flare'
+  | 'heat'
+  | 'acid'
+  | 'mint'
 
 /** Die-cut shapes — jagged/flower match FigBuild energy. */
 export type StickerShape = 'pill' | 'soft' | 'ticket' | 'tag' | 'jagged' | 'flower'
@@ -50,10 +58,14 @@ export const FOOT_VIDEOS: Record<
   FootVideoId,
   { label: string; file: string; swatch: string }
 > = {
-  signal: { label: 'Signal', file: 'signal.mp4', swatch: '#2fe08a' },
-  weave: { label: 'Weave', file: 'weave.mp4', swatch: '#111111' },
-  flare: { label: 'Flare', file: 'flare.mp4', swatch: '#ff5ec8' },
-  spectrum: { label: 'Spectrum', file: 'spectrum.mp4', swatch: '#4c54f5' },
+  ink: { label: 'Ink', file: 'ink.mp4', swatch: '#111111' },
+  paper: { label: 'Paper', file: 'paper.mp4', swatch: '#f0f0f0' },
+  violet: { label: 'Violet', file: 'violet.mp4', swatch: '#6b4cff' },
+  signal: { label: 'Signal', file: 'signal.mp4', swatch: '#ffe34a' },
+  flare: { label: 'Flare', file: 'flare.mp4', swatch: '#d44cff' },
+  heat: { label: 'Heat', file: 'heat.mp4', swatch: '#ff2a2a' },
+  acid: { label: 'Acid', file: 'acid.mp4', swatch: '#2ad4ff' },
+  mint: { label: 'Mint', file: 'mint.mp4', swatch: '#2fe08a' },
 }
 
 export function footVideoSrc(id: FootVideoId) {
@@ -119,7 +131,7 @@ export const DEFAULT_STATE: BadgeState = {
   name: '',
   cord: 'ink',
   border: 'none',
-  footVideo: 'signal',
+  footVideo: 'heat',
   stickers: [],
   drawingDataUrl: null,
 }
@@ -128,7 +140,7 @@ export const DEMO_STATE: BadgeState = {
   name: 'you',
   cord: 'ink',
   border: 'none',
-  footVideo: 'flare',
+  footVideo: 'heat',
   stickers: DEMO_STICKERS,
   drawingDataUrl: null,
 }

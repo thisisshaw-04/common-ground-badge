@@ -364,7 +364,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                 <p className="mb-2.5 text-[11px] text-[var(--muted)]">
                   Plays in the grey strip at the bottom of the card
                 </p>
-                <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                <div className="grid grid-cols-4 gap-2">
                   {(Object.keys(FOOT_VIDEOS) as FootVideoId[]).map((id) => {
                     const v = FOOT_VIDEOS[id]
                     return (
@@ -378,7 +378,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                             : 'ring-1 ring-black/10'
                         }`}
                       >
-                        <div className="relative h-14 bg-[#d8d8d8]">
+                        <div className="relative aspect-square bg-[#d8d8d8]">
                           <video
                             src={`${import.meta.env.BASE_URL}foot-videos/${v.file}`}
                             muted
@@ -391,7 +391,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                             style={{ background: v.swatch }}
                           />
                         </div>
-                        <p className="bg-white px-2 py-1.5 font-mono text-[10px] tracking-wide uppercase">
+                        <p className="bg-white px-1.5 py-1 font-mono text-[9px] tracking-wide uppercase">
                           {v.label}
                         </p>
                       </button>
