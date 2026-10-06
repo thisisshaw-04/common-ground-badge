@@ -68,10 +68,10 @@ export function Landing({ onStart }: LandingProps) {
         <div className="animate-pop mt-2 max-w-md text-center md:mt-0 md:text-left">
           <p className="text-lg text-black/70 md:text-xl">Welcome to</p>
           <div className="mt-3 flex flex-nowrap items-center justify-center gap-2 md:justify-start">
-            <span className="brand-chip brand-chip-rect text-[clamp(1.35rem,3.4vw,2.1rem)] tracking-tight uppercase">
-              Common Ground
+            <span className="brand-chip brand-chip-rect text-[clamp(1.25rem,3vw,1.85rem)] tracking-tight uppercase">
+              Common&nbsp;Ground
             </span>
-            <span className="brand-chip brand-chip-pill text-[clamp(1.35rem,3.4vw,2.1rem)]">
+            <span className="brand-chip brand-chip-pill text-[clamp(1.25rem,3vw,1.85rem)]">
               {EVENT.year}
             </span>
           </div>
