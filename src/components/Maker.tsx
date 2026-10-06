@@ -47,6 +47,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
   const drawing = useRef(false)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const dragUid = useRef<string | null>(null)
+  const dragLive = useRef<BadgeState | null>(null)
 
   const push = useCallback(
     (next: BadgeState) => {
@@ -161,6 +162,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
   const onStickerPointerDown = (e: ReactPointerEvent<HTMLButtonElement>, uid: string) => {
     if (mode === 'draw') return
     dragUid.current = uid
+    dragLive.current = state
     setDraggingUid(uid)
     setMode('stick')
     e.currentTarget.setPointerCapture(e.pointerId)
@@ -171,27 +173,25 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
     const card = badgeRef.current
     if (!card) return
     const rect = card.getBoundingClientRect()
-    const x = ((e.clientX - rect.left) / rect.width) * 100
-    const y = ((e.clientY - rect.top) / rect.height) * 100
-    onChange({
-      ...state,
-      stickers: state.stickers.map((s) =>
-        s.uid === uid
-          ? {
-              ...s,
-              x: Math.min(98, Math.max(2, x)),
-              y: Math.min(98, Math.max(2, y)),
-            }
-          : s,
-      ),
-    })
+    const x = Math.min(98, Math.max(2, ((e.clientX - rect.left) / rect.width) * 100))
+    const y = Math.min(98, Math.max(2, ((e.clientY - rect.top) / rect.height) * 100))
+    const base = dragLive.current ?? state
+    const next: BadgeState = {
+      ...base,
+      stickers: base.stickers.map((s) => (s.uid === uid ? { ...s, x, y } : s)),
+    }
+    dragLive.current = next
+    onChange(next)
   }
 
   const onStickerPointerUp = () => {
     if (!dragUid.current) return
     dragUid.current = null
     setDraggingUid(null)
-    push(state)
+    if (dragLive.current) {
+      push(dragLive.current)
+      dragLive.current = null
+    }
   }
 
   return (
