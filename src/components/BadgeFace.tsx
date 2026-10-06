@@ -7,8 +7,10 @@ interface BadgeFaceProps {
   width: number
   footVideo: FootVideoId
   border?: BorderId
-  /** White composition area (name, stickers, draw canvas). */
+  /** White composition area (name, draw canvas). */
   body: ReactNode
+  /** Full-card layer (stickers) — positioned over lockup, body, and foot. */
+  overlay?: ReactNode
   bodyHeight: number
   footHeight: number
   badgeRef?: RefObject<HTMLDivElement | null>
@@ -26,6 +28,7 @@ export function BadgeFace({
   footVideo,
   border = 'none',
   body,
+  overlay,
   bodyHeight,
   footHeight,
   badgeRef,
@@ -34,6 +37,7 @@ export function BadgeFace({
   return (
     <div
       ref={badgeRef}
+      data-badge-card
       className={`badge-shell badge-poster relative bg-white shadow-[0_18px_40px_rgba(0,0,0,0.1)] ${outerShellClass(border)} ${className}`}
       style={{ width }}
     >
@@ -49,7 +53,7 @@ export function BadgeFace({
         />
       </div>
 
-      {/* Interactive white field */}
+      {/* Interactive white field (name + draw) */}
       <div
         data-badge-body
         className="relative z-20 mx-4 overflow-hidden bg-white"
@@ -59,9 +63,19 @@ export function BadgeFace({
       </div>
 
       {/* Organic foot-video blob */}
-      <div className="badge-foot poster-foot relative z-50 px-4 pt-3 pb-4">
+      <div className="badge-foot poster-foot relative z-30 px-4 pt-3 pb-4">
         <FootVideoFrame id={footVideo} height={footHeight} />
       </div>
+
+      {/* Stickers — full card surface */}
+      {overlay ? (
+        <div
+          data-badge-stickers
+          className="pointer-events-none absolute inset-0 z-40 overflow-visible"
+        >
+          {overlay}
+        </div>
+      ) : null}
     </div>
   )
 }

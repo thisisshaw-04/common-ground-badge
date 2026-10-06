@@ -84,8 +84,9 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
     const placed: PlacedSticker = {
       uid: `${def.id}-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
       defId: def.id,
-      x: 18 + Math.random() * 50,
-      y: 28 + Math.random() * 40,
+      // Percent of the whole card — can land on lockup, body, or foot
+      x: 15 + Math.random() * 70,
+      y: 12 + Math.random() * 76,
       rotation: -18 + Math.random() * 36,
       trackId: String(100 + Math.floor(Math.random() * 800)).padStart(3, '0'),
     }
@@ -167,16 +168,20 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
 
   const onStickerPointerMove = (e: ReactPointerEvent<HTMLButtonElement>, uid: string) => {
     if (dragUid.current !== uid) return
-    const body = badgeRef.current?.querySelector('[data-badge-body]') as HTMLElement | null
-    if (!body) return
-    const rect = body.getBoundingClientRect()
+    const card = badgeRef.current
+    if (!card) return
+    const rect = card.getBoundingClientRect()
     const x = ((e.clientX - rect.left) / rect.width) * 100
     const y = ((e.clientY - rect.top) / rect.height) * 100
     onChange({
       ...state,
       stickers: state.stickers.map((s) =>
         s.uid === uid
-          ? { ...s, x: Math.min(92, Math.max(8, x)), y: Math.min(92, Math.max(8, y)) }
+          ? {
+              ...s,
+              x: Math.min(98, Math.max(2, x)),
+              y: Math.min(98, Math.max(2, y)),
+            }
           : s,
       ),
     })
@@ -321,7 +326,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                 </div>
                 <div className="hairline mt-3 pt-2">
                   <p className="text-[11px] text-[var(--muted)]">
-                    Tap to drop · drag on badge to move · double-click to delete
+                    Tap to paste anywhere on the card · drag to move · double-click to delete
                   </p>
                 </div>
               </Panel>
@@ -393,39 +398,38 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                       onPointerUp={onDrawPointerUp}
                       onPointerLeave={onDrawPointerUp}
                     />
-
-                    {state.stickers.map((s) => {
-                      const def = stickerById(s.defId)
-                      if (!def) return null
-                      return (
-                        <button
-                          key={s.uid}
-                          type="button"
-                          className={`absolute z-30 cursor-grab touch-none select-none active:cursor-grabbing ${
-                            draggingUid === s.uid ? 'z-40' : ''
-                          }`}
-                          style={{
-                            left: `${s.x}%`,
-                            top: `${s.y}%`,
-                            transform: `translate(-50%, -50%) rotate(${s.rotation}deg)`,
-                          }}
-                          onPointerDown={(e) => onStickerPointerDown(e, s.uid)}
-                          onPointerMove={(e) => onStickerPointerMove(e, s.uid)}
-                          onPointerUp={onStickerPointerUp}
-                          onPointerCancel={onStickerPointerUp}
-                          onDoubleClick={() => removeSticker(s.uid)}
-                        >
-                          <StickerFace
-                            def={def}
-                            compact
-                            large
-                            dragging={draggingUid === s.uid}
-                          />
-                        </button>
-                      )
-                    })}
                   </>
                 }
+                overlay={state.stickers.map((s) => {
+                  const def = stickerById(s.defId)
+                  if (!def) return null
+                  return (
+                    <button
+                      key={s.uid}
+                      type="button"
+                      className={`absolute cursor-grab touch-none select-none active:cursor-grabbing ${
+                        mode === 'draw' ? 'pointer-events-none' : 'pointer-events-auto'
+                      } ${draggingUid === s.uid ? 'z-50' : 'z-10'}`}
+                      style={{
+                        left: `${s.x}%`,
+                        top: `${s.y}%`,
+                        transform: `translate(-50%, -50%) rotate(${s.rotation}deg)`,
+                      }}
+                      onPointerDown={(e) => onStickerPointerDown(e, s.uid)}
+                      onPointerMove={(e) => onStickerPointerMove(e, s.uid)}
+                      onPointerUp={onStickerPointerUp}
+                      onPointerCancel={onStickerPointerUp}
+                      onDoubleClick={() => removeSticker(s.uid)}
+                    >
+                      <StickerFace
+                        def={def}
+                        compact
+                        large
+                        dragging={draggingUid === s.uid}
+                      />
+                    </button>
+                  )
+                })}
               />
 
               <div className="mt-4 flex gap-2" style={{ width: BADGE_W }}>
