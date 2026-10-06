@@ -106,59 +106,64 @@ textarea {
 }
 
 .page-fig {
-  background: #fff;
+  background: #ececec;
+}
+
+.panel-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.35rem;
 }
 
 .panel {
   position: relative;
-  background: var(--paper);
+  background: #e4e4e4;
   color: var(--ink);
-  border: 1px solid #111;
+  border: 1px solid #2a2a2a;
   border-radius: 0;
-  padding: 1.1rem 0.9rem 0.85rem;
+  padding: 1rem 0.9rem 0.9rem;
+  box-shadow: none;
 }
 
 .panel-title {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 2;
-  transform: translate(6px, -50%);
+  position: static;
+  transform: none;
   margin: 0;
-  padding: 0 5px;
-  background: #fff;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  padding: 0;
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: #111;
+  color: #222;
   line-height: 1.2;
   white-space: nowrap;
 }
 
 .track-box {
   position: relative;
-  border: 1px solid #111;
+  border: 1px solid #2a2a2a;
   border-radius: 0;
-  background: #fff;
-  overflow: visible;
+  background: #ededed;
+  overflow: hidden;
 }
 
 .track-box-label {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 3px;
+  left: 4px;
   z-index: 2;
-  transform: translate(4px, -50%);
-  padding: 0 4px;
-  background: #fff;
-  font-family: var(--font-mono);
+  transform: none;
+  padding: 0 3px;
+  background: rgba(255, 255, 255, 0.85);
+  font-family: var(--font-body);
   font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
+  font-weight: 600;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: #111;
+  color: #222;
   line-height: 1.15;
   white-space: nowrap;
   pointer-events: none;
@@ -166,7 +171,7 @@ textarea {
 
 .track-box.is-selected {
   outline: 2px solid var(--blue);
-  outline-offset: 2px;
+  outline-offset: 1px;
 }
 
 .brand-chip {

@@ -209,9 +209,9 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
         <div className="relative flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto lg:flex-row lg:items-start lg:gap-8 lg:overflow-hidden">
           {/* Adjustments LEFT — FigBuild 2-col grid */}
           <section className="animate-pop order-last min-h-0 min-w-0 flex-1 lg:order-none lg:overflow-y-auto lg:pr-1">
-            <div className="grid grid-cols-1 gap-x-4 gap-y-5 sm:grid-cols-2 sm:gap-y-6">
+            <div className="grid grid-cols-1 gap-x-5 gap-y-7 sm:grid-cols-2 sm:gap-y-8">
               <Panel title="Frame">
-                <div className="grid grid-cols-3 gap-2 pt-1">
+                <div className="grid grid-cols-3 gap-2">
                   {(
                     [
                       ['none', 'None'],
@@ -243,7 +243,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
               </Panel>
 
               <Panel title="Draw">
-                <div className="flex min-h-[5.5rem] items-center justify-center gap-2 pt-1">
+                <div className="flex min-h-[5.5rem] items-center justify-center gap-2">
                   <button
                     type="button"
                     onClick={() => setMode(mode === 'draw' ? 'stick' : 'draw')}
@@ -275,7 +275,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
               </Panel>
 
               <Panel title="Cords">
-                <div className="grid grid-cols-4 gap-1.5 pt-1">
+                <div className="grid grid-cols-4 gap-1.5">
                   {(Object.keys(CORDS) as CordId[]).map((id) => (
                     <button
                       key={id}
@@ -292,7 +292,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
               </Panel>
 
               <Panel title="Stickers" className="sm:row-span-2">
-                <div className="mb-3 flex flex-wrap gap-1.5 pt-1">
+                <div className="mb-3 flex flex-wrap gap-1.5">
                   {TABS.map((t) => (
                     <button
                       key={t.id}
@@ -334,7 +334,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
               </Panel>
 
               <Panel title="Foot video">
-                <p className="mb-3 pt-1 text-[11px] text-[var(--muted)]">
+                <p className="mb-3 text-[11px] text-[var(--muted)]">
                   Plays in the grey strip at the bottom of the card
                 </p>
                 <div className="grid grid-cols-2 gap-3">
@@ -478,9 +478,9 @@ function Panel({
   className?: string
 }) {
   return (
-    <div className={`panel ${className}`}>
+    <div className={`panel-wrap ${className}`}>
       <p className="panel-title">{title}</p>
-      {children}
+      <div className="panel">{children}</div>
     </div>
   )
 }
