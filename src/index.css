@@ -183,40 +183,40 @@ textarea {
   height: 10px;
 }
 
-.sticker-shell {
-  box-shadow: 2px 3px 0 rgba(0, 0, 0, 0.12);
+.sticker-nice {
+  position: relative;
+  border: 2.5px solid #111;
+  box-shadow:
+    0 0 0 3px #fff,
+    2px 3px 0 rgba(17, 17, 17, 0.14);
   transition: transform 0.15s ease;
 }
 
-.sticker-pill {
-  border: 2px solid #111;
+.sticker-nice-pill {
   border-radius: 999px;
 }
 
-.sticker-ticket {
-  border: 2px solid #111;
-  border-radius: 6px;
+.sticker-nice-soft {
+  border-radius: 1.85rem 2.6rem 1.7rem 2.9rem;
+  padding-inline: 1.1rem !important;
+  padding-block: 0.65rem !important;
+}
+
+.sticker-nice-ticket {
+  border-radius: 10px;
   mask-image:
-    radial-gradient(circle at 0 50%, transparent 5px, black 6px),
-    radial-gradient(circle at 100% 50%, transparent 5px, black 6px);
+    radial-gradient(circle at 0 50%, transparent 6px, black 7px),
+    radial-gradient(circle at 100% 50%, transparent 6px, black 7px);
   mask-composite: intersect;
   -webkit-mask-image:
-    radial-gradient(circle at 0 50%, transparent 5px, black 6px),
-    radial-gradient(circle at 100% 50%, transparent 5px, black 6px);
+    radial-gradient(circle at 0 50%, transparent 6px, black 7px),
+    radial-gradient(circle at 100% 50%, transparent 6px, black 7px);
   -webkit-mask-composite: source-in;
 }
 
-.sticker-banner {
-  border: 2px solid #111;
-  border-radius: 4px;
-  clip-path: polygon(0 12%, 100% 0, 100% 100%, 0 88%);
-}
-
-.sticker-tag {
-  border: 2px solid #111;
-  border-radius: 4px 12px 12px 4px;
-  clip-path: polygon(0 0, 78% 0, 100% 50%, 78% 100%, 0 100%);
-  padding-right: 1.1rem !important;
+.sticker-nice-tag {
+  border-radius: 8px 999px 999px 8px;
+  padding-right: 1.15rem !important;
 }
 
 .dashed-border {
