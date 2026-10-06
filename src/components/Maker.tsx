@@ -296,28 +296,33 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
     }
   }
 
+  const heading = (
+    <>
+      <button
+        type="button"
+        onClick={onBack}
+        className="text-sm font-medium text-black/45 hover:text-black"
+      >
+        ← Back
+      </button>
+      <h1 className="mt-1.5 text-[clamp(1.5rem,2.35vw,2.2rem)] leading-[1.1] font-bold tracking-[-0.03em] text-black">
+        Make your Common Ground Badge your own!
+      </h1>
+    </>
+  )
+
   return (
     <div
       className={`page-fig relative flex h-dvh flex-col overflow-hidden${isPeeling ? ' is-peeling-sticker' : ''}`}
     >
       <div className="relative mx-auto flex min-h-0 w-full max-w-[1280px] flex-1 flex-col px-4 pt-3 pb-4 sm:px-6 sm:pt-4">
-        <header className="animate-pop mb-2 shrink-0 sm:mb-3">
-          <button
-            type="button"
-            onClick={onBack}
-            className="text-sm font-medium text-black/45 hover:text-black"
-          >
-            ← Back
-          </button>
-          <h1 className="mt-1.5 text-[clamp(1.6rem,3.2vw,2.35rem)] leading-[1.1] font-bold tracking-[-0.03em] text-black">
-            Make your Common Ground Badge your own!
-          </h1>
-        </header>
+        <header className="animate-pop mb-2 shrink-0 sm:mb-3 lg:hidden">{heading}</header>
 
         <div className="relative flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto lg:flex-row lg:items-start lg:gap-8 lg:overflow-hidden">
           {/* Adjustments LEFT — FigBuild 2-col grid */}
-          <section className="animate-pop order-last min-h-0 min-w-0 flex-1 lg:order-none lg:overflow-y-auto lg:pr-1">
-            <div className="grid grid-cols-1 gap-x-5 gap-y-7 sm:grid-cols-2 sm:gap-y-8">
+          <section className="animate-pop order-last min-h-0 min-w-0 flex-1 lg:order-none lg:self-stretch lg:overflow-y-auto lg:pr-2 lg:pb-4">
+            <header className="mb-3 hidden lg:block">{heading}</header>
+            <div className="grid grid-cols-1 gap-x-5 gap-y-6 sm:grid-cols-2 sm:gap-y-5">
               <Panel title="Outer frame">
                 <div className="grid grid-cols-4 gap-2">
                   {(
@@ -393,10 +398,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
               </Panel>
 
               <Panel title="Foot video">
-                <p className="mb-3 text-[11px] text-[var(--muted)]">
-                  Plays in the grey strip at the bottom of the card
-                </p>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-2.5">
                   {FOOT_VIDEO_ORDER.map((id) => {
                     const v = FOOT_VIDEOS[id]
                     return (
@@ -471,7 +473,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
 
           {/* Badge RIGHT */}
           <aside className="animate-pop flex shrink-0 flex-col items-center lg:sticky lg:top-0 lg:w-[460px] xl:w-[500px]">
-            <div className="flex w-full max-w-[440px] -translate-y-3 flex-col items-center sm:-translate-y-5">
+            <div className="flex w-full max-w-[440px] flex-col items-center lg:-translate-y-2">
               <Lanyard cord={state.cord} scale={0.62} />
               <BadgeFace
                 badgeRef={badgeRef}
