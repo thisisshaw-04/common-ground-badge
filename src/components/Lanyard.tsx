@@ -11,35 +11,42 @@ interface LanyardProps {
   scale?: number
 }
 
-/** Photoreal braided-rope lanyard + metal clasp (generated product stills). */
+/**
+ * Braided rope cutout — straps bleed off the top so it reads as
+ * attached hardware, not a floating product photo.
+ */
 export function Lanyard({ cord, scale = 1 }: LanyardProps) {
-  const w = 200 * scale
-  const h = 150 * scale
+  const w = 220 * scale
+  const h = 128 * scale
 
   return (
     <div
-      className="relative flex flex-col items-center justify-end"
+      className="pointer-events-none relative overflow-hidden"
       style={{ width: w, height: h }}
+      aria-hidden
     >
       <img
         src={LANYARD_SRC[cord]}
         alt=""
         draggable={false}
-        className="pointer-events-none h-full w-full object-contain object-bottom select-none drop-shadow-[0_10px_18px_rgba(0,0,0,0.18)]"
+        className="absolute inset-x-0 -top-[18%] mx-auto h-[128%] w-[92%] max-w-none object-contain object-bottom select-none"
+        style={{
+          filter: 'drop-shadow(0 6px 8px rgba(0,0,0,0.16))',
+        }}
       />
     </div>
   )
 }
 
-/** Compact cord swatch for the picker — mini rope photo. */
+/** Compact cord swatch — strap texture crop, not full product shot. */
 export function CordSwatch({ cord }: { cord: CordId }) {
   return (
-    <span className="relative block h-10 w-8 overflow-hidden rounded-md bg-[#f3f3f3] ring-1 ring-black/5">
+    <span className="relative block h-11 w-9 overflow-hidden rounded-lg bg-transparent">
       <img
         src={LANYARD_SRC[cord]}
         alt=""
         draggable={false}
-        className="absolute inset-0 h-[140%] w-full object-cover object-top"
+        className="absolute top-[-10%] left-1/2 h-[160%] w-[220%] max-w-none -translate-x-1/2 object-cover object-[50%_35%] select-none"
       />
     </span>
   )
