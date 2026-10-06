@@ -1,4 +1,5 @@
 import { DEMO_STATE, EVENT, stickerById } from '../lib/badge'
+import { BadgeInnerFrame } from './BadgeFrame'
 import { DecoCorners } from './DecoCorners'
 import { FootVideo } from './FootVideo'
 import { Lanyard } from './Lanyard'
@@ -21,9 +22,10 @@ export function Landing({ onStart }: LandingProps) {
         <div className="animate-floaty flex shrink-0 -translate-y-2 scale-[0.88] flex-col items-center sm:scale-95 md:-translate-y-4 md:scale-100">
           <Lanyard cord={demo.cord} scale={0.58} />
           <div
-            className="relative -mt-9 overflow-hidden border-2 border-black bg-white shadow-[0_18px_40px_rgba(0,0,0,0.1)]"
+            className="badge-shell relative -mt-9 overflow-hidden bg-white shadow-[0_18px_40px_rgba(0,0,0,0.1)]"
             style={{ width: BADGE_W }}
           >
+            <BadgeInnerFrame border={demo.border} />
             <div className="flex items-center justify-center gap-2 px-3 pt-3 pb-1">
               <span className="brand-chip brand-chip-rect text-[17px] tracking-tight uppercase">
                 Common Ground

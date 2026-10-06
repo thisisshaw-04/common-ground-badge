@@ -21,6 +21,7 @@ import {
   type StickerDef,
   type StickerTab,
 } from '../lib/badge'
+import { BadgeInnerFrame, FrameSwatch } from './BadgeFrame'
 import { CordSwatch, Lanyard } from './Lanyard'
 import { FootVideo } from './FootVideo'
 import { StickerFace } from './StickerFace'
@@ -183,13 +184,6 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
     push(state)
   }
 
-  const borderClass =
-    state.border === 'dashed'
-      ? 'dashed-border'
-      : state.border === 'track'
-        ? 'track-border'
-        : 'none-border'
-
   return (
     <div className="page-fig relative flex h-dvh flex-col overflow-hidden">
       <div className="relative mx-auto flex min-h-0 w-full max-w-[1280px] flex-1 flex-col px-4 pt-3 pb-4 sm:px-6 sm:pt-4">
@@ -210,13 +204,14 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
           {/* Adjustments LEFT — FigBuild 2-col grid */}
           <section className="animate-pop order-last min-h-0 min-w-0 flex-1 lg:order-none lg:overflow-y-auto lg:pr-1">
             <div className="grid grid-cols-1 gap-x-5 gap-y-7 sm:grid-cols-2 sm:gap-y-8">
-              <Panel title="Frame">
-                <div className="grid grid-cols-3 gap-2">
+              <Panel title="Inner frame">
+                <div className="grid grid-cols-4 gap-2">
                   {(
                     [
                       ['none', 'None'],
                       ['dashed', 'Dash'],
                       ['track', 'Box'],
+                      ['wiggly', 'Wiggle'],
                     ] as [BorderId, string][]
                   ).map(([id, label]) => (
                     <button
@@ -227,15 +222,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                         state.border === id ? 'is-selected' : ''
                       }`}
                     >
-                      <span
-                        className={`block h-6 w-6 bg-transparent ${
-                          id === 'track'
-                            ? 'border border-black'
-                            : id === 'dashed'
-                              ? 'dashed-border !rounded-none'
-                              : 'none-border !rounded-none'
-                        }`}
-                      />
+                      <FrameSwatch border={id} />
                       <span className="font-mono text-[10px] uppercase tracking-wide">{label}</span>
                     </button>
                   ))}
@@ -371,9 +358,10 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
               <Lanyard cord={state.cord} scale={0.62} />
               <div
                 ref={badgeRef}
-                className={`relative -mt-10 overflow-hidden bg-white shadow-[0_18px_40px_rgba(0,0,0,0.1)] ${borderClass}`}
+                className="badge-shell relative -mt-10 overflow-hidden bg-white shadow-[0_18px_40px_rgba(0,0,0,0.1)]"
                 style={{ width: BADGE_W }}
               >
+                <BadgeInnerFrame border={state.border} />
                 <div className="flex items-center justify-center gap-2 px-3 pt-3 pb-1">
                   <span className="brand-chip brand-chip-rect text-[17px] tracking-tight uppercase">
                     Common Ground
