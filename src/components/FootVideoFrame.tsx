@@ -2,24 +2,26 @@ import { useId } from 'react'
 import type { FootVideoId } from '../lib/badge'
 import { FootVideo } from './FootVideo'
 
+/** viewBox matches the foot strip aspect (~1.83:1) so curves aren't stretched. */
+export const FOOT_FRAME_VB = { w: 366, h: 200 } as const
+
 /**
- * Organic foot-video frame traced from the brand mark:
- * flat top that curves down on the right, flat bottom that
- * scoops up on the left, soft rounded corners, thick black stroke.
- * viewBox 0 0 320 200
+ * Brand foot-video frame — exact 180° point symmetry around center.
+ * Flat top/bottom, tight TL+BR rounds, long soft TR+BL chamfers.
  */
 export const FOOT_FRAME_PATH =
-  'M 18 6 ' +
-  'H 205 ' +
-  'C 235 6 258 10 276 28 ' +
-  'C 294 46 310 52 314 76 ' +
-  'V 165 ' +
-  'C 314 184 300 194 278 196 ' +
-  'H 112 ' +
-  'C 82 196 58 188 42 164 ' +
-  'C 28 144 14 138 8 116 ' +
-  'V 40 ' +
-  'C 8 20 10 6 18 6 ' +
+  'M 12 100 ' +
+  'V 34 ' +
+  'C 12 18 16 10 32 10 ' +
+  'H 242 ' +
+  'C 280 10 311 26 334 52 ' +
+  'C 349 68 354 74 354 77 ' +
+  'V 166 ' +
+  'C 354 182 350 190 334 190 ' +
+  'H 124 ' +
+  'C 86 190 55 174 32 148 ' +
+  'C 17 132 12 126 12 123 ' +
+  'V 100 ' +
   'Z'
 
 interface FootVideoFrameProps {
@@ -30,6 +32,7 @@ interface FootVideoFrameProps {
 export function FootVideoFrame({ id, height }: FootVideoFrameProps) {
   const uid = useId().replace(/:/g, '')
   const clipId = `foot-clip-${id}-${uid}`
+  const { w, h } = FOOT_FRAME_VB
 
   return (
     <div className="foot-frame relative w-full" style={{ height }}>
@@ -39,7 +42,7 @@ export function FootVideoFrame({ id, height }: FootVideoFrameProps) {
             <clipPath id={clipId} clipPathUnits="objectBoundingBox">
               <path
                 d={FOOT_FRAME_PATH}
-                transform="scale(0.003125, 0.005)"
+                transform={`scale(${1 / w}, ${1 / h})`}
               />
             </clipPath>
           </defs>
@@ -54,7 +57,7 @@ export function FootVideoFrame({ id, height }: FootVideoFrameProps) {
 
       <svg
         className="foot-frame-stroke pointer-events-none absolute inset-0 h-full w-full overflow-visible"
-        viewBox="0 0 320 200"
+        viewBox={`0 0 ${w} ${h}`}
         preserveAspectRatio="none"
         aria-hidden
       >
@@ -62,8 +65,9 @@ export function FootVideoFrame({ id, height }: FootVideoFrameProps) {
           d={FOOT_FRAME_PATH}
           fill="none"
           stroke="#111"
-          strokeWidth="4.5"
+          strokeWidth="1.75"
           strokeLinejoin="round"
+          strokeLinecap="round"
           vectorEffect="non-scaling-stroke"
         />
       </svg>
