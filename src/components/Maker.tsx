@@ -347,12 +347,12 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
             </div>
           </section>
 
-          <aside className="animate-pop flex shrink-0 flex-col items-center justify-center md:w-[380px] lg:w-[400px]">
-            <div className="flex w-full max-w-[360px] flex-col items-center">
-              <Lanyard cord={state.cord} scale={1.15} />
+          <aside className="animate-pop flex shrink-0 flex-col items-center justify-center md:w-[460px] lg:w-[500px]">
+            <div className="flex w-full max-w-[460px] flex-col items-center">
+              <Lanyard cord={state.cord} scale={1.4} />
               <div
                 ref={badgeRef}
-                className={`relative -mt-5 overflow-hidden bg-white shadow-[0_22px_50px_rgba(0,0,0,0.14)] ${borderClass}`}
+                className={`relative -mt-14 overflow-hidden bg-white shadow-[0_22px_50px_rgba(0,0,0,0.14)] ${borderClass}`}
                 style={{ width: BADGE_W }}
               >
                 <div className="relative px-4 pt-4 pb-1.5 text-center">
