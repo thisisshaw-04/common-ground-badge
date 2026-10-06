@@ -67,11 +67,11 @@ export function BadgeFace({
         <FootVideoFrame id={footVideo} height={footHeight} />
       </div>
 
-      {/* Stickers — full card surface */}
+      {/* Stickers — topmost layer over lockup, body, foot, frames, everything */}
       {overlay ? (
         <div
           data-badge-stickers
-          className="pointer-events-none absolute inset-0 z-40 overflow-visible"
+          className="pointer-events-none absolute inset-0 z-[100] overflow-visible"
         >
           {overlay}
         </div>

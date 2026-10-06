@@ -25,6 +25,7 @@ import { BadgeFace } from './BadgeFace'
 import { FrameSwatch } from './BadgeFrame'
 import { CordSwatch, Lanyard } from './Lanyard'
 import { StickerFace } from './StickerFace'
+import { StickerRoll } from './StickerRoll'
 
 const BADGE_W = 400
 const BODY_H = 168
@@ -43,11 +44,19 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
   const [mode, setMode] = useState<'stick' | 'draw'>('stick')
   const [brush, setBrush] = useState<1 | 2 | 3>(2)
   const [draggingUid, setDraggingUid] = useState<string | null>(null)
+  const [peel, setPeel] = useState<{
+    def: StickerDef
+    x: number
+    y: number
+    overCard: boolean
+  } | null>(null)
   const [, setHistory] = useState<BadgeState[]>([state])
   const drawing = useRef(false)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const dragUid = useRef<string | null>(null)
   const dragLive = useRef<BadgeState | null>(null)
+  const peelDef = useRef<StickerDef | null>(null)
+  const peelPointerId = useRef<number | null>(null)
 
   const push = useCallback(
     (next: BadgeState) => {
@@ -81,13 +90,12 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
     push(blank)
   }
 
-  const placeSticker = (def: StickerDef) => {
+  const placeSticker = (def: StickerDef, x = 15 + Math.random() * 70, y = 12 + Math.random() * 76) => {
     const placed: PlacedSticker = {
       uid: `${def.id}-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
       defId: def.id,
-      // Percent of the whole card — can land on lockup, body, or foot
-      x: 15 + Math.random() * 70,
-      y: 12 + Math.random() * 76,
+      x: Math.min(98, Math.max(2, x)),
+      y: Math.min(98, Math.max(2, y)),
       rotation: -18 + Math.random() * 36,
       trackId: String(100 + Math.floor(Math.random() * 800)).padStart(3, '0'),
     }
@@ -97,6 +105,81 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
   const removeSticker = (uid: string) => {
     push({ ...state, stickers: state.stickers.filter((s) => s.uid !== uid) })
   }
+
+  const cardPercentFromPoint = (clientX: number, clientY: number) => {
+    const card = badgeRef.current
+    if (!card) return null
+    const rect = card.getBoundingClientRect()
+    if (
+      clientX < rect.left ||
+      clientX > rect.right ||
+      clientY < rect.top ||
+      clientY > rect.bottom
+    ) {
+      return null
+    }
+    return {
+      x: ((clientX - rect.left) / rect.width) * 100,
+      y: ((clientY - rect.top) / rect.height) * 100,
+    }
+  }
+
+  const onPeelStart = (def: StickerDef, e: ReactPointerEvent<HTMLButtonElement>) => {
+    setMode('stick')
+    peelDef.current = def
+    peelPointerId.current = e.pointerId
+    try {
+      e.currentTarget.setPointerCapture(e.pointerId)
+    } catch {
+      /* ignore — window listeners still drive the peel */
+    }
+    const over = cardPercentFromPoint(e.clientX, e.clientY)
+    setPeel({
+      def,
+      x: e.clientX,
+      y: e.clientY,
+      overCard: !!over,
+    })
+  }
+
+  const isPeeling = peel !== null
+
+  useEffect(() => {
+    if (!isPeeling) return
+
+    const onMove = (e: PointerEvent) => {
+      if (!peelDef.current || peelPointerId.current !== e.pointerId) return
+      e.preventDefault()
+      const over = cardPercentFromPoint(e.clientX, e.clientY)
+      setPeel({
+        def: peelDef.current,
+        x: e.clientX,
+        y: e.clientY,
+        overCard: !!over,
+      })
+    }
+
+    const onEnd = (e: PointerEvent) => {
+      if (!peelDef.current || peelPointerId.current !== e.pointerId) return
+      const def = peelDef.current
+      const over = cardPercentFromPoint(e.clientX, e.clientY)
+      peelDef.current = null
+      peelPointerId.current = null
+      setPeel(null)
+      if (over) placeSticker(def, over.x, over.y)
+    }
+
+    window.addEventListener('pointermove', onMove, { capture: true })
+    window.addEventListener('pointerup', onEnd, { capture: true })
+    window.addEventListener('pointercancel', onEnd, { capture: true })
+    return () => {
+      window.removeEventListener('pointermove', onMove, { capture: true })
+      window.removeEventListener('pointerup', onEnd, { capture: true })
+      window.removeEventListener('pointercancel', onEnd, { capture: true })
+    }
+    // Attach once per peel session; refresh when badge state changes mid-peel
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isPeeling, state])
 
   useEffect(() => {
     const c = canvasRef.current
@@ -195,7 +278,9 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
   }
 
   return (
-    <div className="page-fig relative flex h-dvh flex-col overflow-hidden">
+    <div
+      className={`page-fig relative flex h-dvh flex-col overflow-hidden${isPeeling ? ' is-peeling-sticker' : ''}`}
+    >
       <div className="relative mx-auto flex min-h-0 w-full max-w-[1280px] flex-1 flex-col px-4 pt-3 pb-4 sm:px-6 sm:pt-4">
         <header className="animate-pop mb-2 shrink-0 sm:mb-3">
           <button
@@ -306,27 +391,15 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                     </button>
                   ))}
                 </div>
-                <div className="sticker-sheet">
-                  <div className="sticker-sheet-row">
-                    {STICKERS.filter((s) => s.tab === tab).map((s) => (
-                      <button
-                        key={s.id}
-                        type="button"
-                        onClick={() => {
-                          setMode('stick')
-                          placeSticker(s)
-                        }}
-                        className="sticker-pick inline-flex shrink-0"
-                      >
-                        <StickerFace def={s} large />
-                      </button>
-                    ))}
-                  </div>
-                  <span className="sticker-sheet-peel" aria-hidden />
-                </div>
+                <StickerRoll
+                  stickers={STICKERS.filter((s) => s.tab === tab)}
+                  peelingId={peel?.def.id ?? null}
+                  onPeelStart={onPeelStart}
+                />
                 <div className="hairline mt-3 pt-2">
                   <p className="text-[11px] text-[var(--muted)]">
-                    Tap to paste anywhere on the card · drag to move · double-click to delete
+                    Peel a sticker from the roll · drop on the card · drag to move · double-click to
+                    delete
                   </p>
                 </div>
               </Panel>
@@ -409,7 +482,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                       type="button"
                       className={`absolute cursor-grab touch-none select-none active:cursor-grabbing ${
                         mode === 'draw' ? 'pointer-events-none' : 'pointer-events-auto'
-                      } ${draggingUid === s.uid ? 'z-50' : 'z-10'}`}
+                      } ${draggingUid === s.uid ? 'z-[120]' : 'z-[100]'}`}
                       style={{
                         left: `${s.x}%`,
                         top: `${s.y}%`,
@@ -459,6 +532,16 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
           </aside>
         </div>
       </div>
+
+      {peel ? (
+        <div
+          className={`sticker-peel-ghost ${peel.overCard ? 'is-over-card' : ''}`}
+          style={{ left: peel.x, top: peel.y }}
+          aria-hidden
+        >
+          <StickerFace def={peel.def} large />
+        </div>
+      ) : null}
     </div>
   )
 }
