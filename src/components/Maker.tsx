@@ -124,6 +124,9 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
     }
   }
 
+  const placeStickerRef = useRef(placeSticker)
+  placeStickerRef.current = placeSticker
+
   const onPeelStart = (def: StickerDef, e: ReactPointerEvent<HTMLButtonElement>) => {
     setMode('stick')
     peelDef.current = def
@@ -131,55 +134,45 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
     try {
       e.currentTarget.setPointerCapture(e.pointerId)
     } catch {
-      /* ignore — window listeners still drive the peel */
+      /* window listeners below still drive the peel */
     }
-    const over = cardPercentFromPoint(e.clientX, e.clientY)
+
+    // Attached synchronously so fast flicks can't outrun a React effect.
+    const onMove = (ev: PointerEvent) => {
+      if (!peelDef.current || peelPointerId.current !== ev.pointerId) return
+      ev.preventDefault()
+      setPeel({
+        def: peelDef.current,
+        x: ev.clientX,
+        y: ev.clientY,
+        overCard: !!cardPercentFromPoint(ev.clientX, ev.clientY),
+      })
+    }
+    const onEnd = (ev: PointerEvent) => {
+      if (peelPointerId.current !== ev.pointerId) return
+      window.removeEventListener('pointermove', onMove, true)
+      window.removeEventListener('pointerup', onEnd, true)
+      window.removeEventListener('pointercancel', onEnd, true)
+      const peeled = peelDef.current
+      const over = ev.type === 'pointerup' ? cardPercentFromPoint(ev.clientX, ev.clientY) : null
+      peelDef.current = null
+      peelPointerId.current = null
+      setPeel(null)
+      if (peeled && over) placeStickerRef.current(peeled, over.x, over.y)
+    }
+    window.addEventListener('pointermove', onMove, true)
+    window.addEventListener('pointerup', onEnd, true)
+    window.addEventListener('pointercancel', onEnd, true)
+
     setPeel({
       def,
       x: e.clientX,
       y: e.clientY,
-      overCard: !!over,
+      overCard: !!cardPercentFromPoint(e.clientX, e.clientY),
     })
   }
 
   const isPeeling = peel !== null
-
-  useEffect(() => {
-    if (!isPeeling) return
-
-    const onMove = (e: PointerEvent) => {
-      if (!peelDef.current || peelPointerId.current !== e.pointerId) return
-      e.preventDefault()
-      const over = cardPercentFromPoint(e.clientX, e.clientY)
-      setPeel({
-        def: peelDef.current,
-        x: e.clientX,
-        y: e.clientY,
-        overCard: !!over,
-      })
-    }
-
-    const onEnd = (e: PointerEvent) => {
-      if (!peelDef.current || peelPointerId.current !== e.pointerId) return
-      const def = peelDef.current
-      const over = cardPercentFromPoint(e.clientX, e.clientY)
-      peelDef.current = null
-      peelPointerId.current = null
-      setPeel(null)
-      if (over) placeSticker(def, over.x, over.y)
-    }
-
-    window.addEventListener('pointermove', onMove, { capture: true })
-    window.addEventListener('pointerup', onEnd, { capture: true })
-    window.addEventListener('pointercancel', onEnd, { capture: true })
-    return () => {
-      window.removeEventListener('pointermove', onMove, { capture: true })
-      window.removeEventListener('pointerup', onEnd, { capture: true })
-      window.removeEventListener('pointercancel', onEnd, { capture: true })
-    }
-    // Attach once per peel session; refresh when badge state changes mid-peel
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isPeeling, state])
 
   useEffect(() => {
     const c = canvasRef.current
