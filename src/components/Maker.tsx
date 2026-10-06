@@ -348,7 +348,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                   <button
                     type="button"
                     onClick={() => setMode(mode === 'draw' ? 'stick' : 'draw')}
-                    className={`border border-black bg-white px-3 py-2 text-xs font-semibold text-black/80 ${
+                    className={`option-btn border border-black bg-white px-3 py-2 text-xs font-semibold text-black/80 ${
                       mode === 'draw' ? 'is-selected' : ''
                     }`}
                   >
@@ -404,6 +404,15 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                         key={id}
                         type="button"
                         onClick={() => push({ ...state, footVideo: id })}
+                        onMouseEnter={(e) => {
+                          void e.currentTarget.querySelector('video')?.play().catch(() => {})
+                        }}
+                        onMouseLeave={(e) => {
+                          const vid = e.currentTarget.querySelector('video')
+                          if (!vid) return
+                          vid.pause()
+                          vid.currentTime = 0
+                        }}
                         className={`track-box text-left ${
                           state.footVideo === id ? 'is-selected' : ''
                         }`}
@@ -413,6 +422,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                           <video
                             src={`${import.meta.env.BASE_URL}foot-videos/${v.file}`}
                             muted
+                            loop
                             playsInline
                             preload="metadata"
                             className="h-full w-full object-cover object-center"
@@ -434,7 +444,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                         setTab(t.id)
                         setMode('stick')
                       }}
-                      className={`border border-black/20 bg-white px-2.5 py-1.5 font-mono text-[10px] tracking-wide text-[var(--muted)] ${
+                      className={`option-btn border border-black/20 bg-white px-2.5 py-1.5 font-mono text-[10px] tracking-wide text-[var(--muted)] ${
                         tab === t.id ? 'is-selected text-black' : ''
                       }`}
                     >

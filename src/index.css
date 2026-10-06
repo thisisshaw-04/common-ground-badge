@@ -8,6 +8,7 @@
   --muted: #8a8a8a;
   --yellow: #ffe34a;
   --ochre: #c4892a;
+  --select: #ff1fd1;
   --blue: #4c54f5;
   --coral: #ff4fd8;
   --mint: #39ffb6;
@@ -174,8 +175,50 @@ textarea {
 
 .track-box.is-selected,
 .is-selected {
-  outline: 1px solid var(--ochre);
+  outline: 2px solid var(--select);
   outline-offset: 2px;
+}
+
+/* Hover: lift with a hard shadow, press down on click */
+button.track-box,
+.option-btn {
+  cursor: pointer;
+  transition:
+    transform 0.14s ease,
+    box-shadow 0.14s ease,
+    border-color 0.14s ease;
+}
+
+button.track-box:hover,
+.option-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 3px 3px 0 #111;
+}
+
+button.track-box.is-selected:hover,
+.option-btn.is-selected:hover {
+  box-shadow: 3px 3px 0 var(--select);
+}
+
+button.track-box:active,
+.option-btn:active {
+  transform: translate(0, 0);
+  box-shadow: 1px 1px 0 #111;
+}
+
+button.track-box > svg,
+button.track-box > span:not(.track-box-label),
+button.track-box > div:not(.relative) {
+  transition: transform 0.18s ease;
+}
+
+button.track-box:hover > svg,
+button.track-box:hover > span:not(.track-box-label):first-child {
+  transform: scale(1.12) rotate(-4deg);
+}
+
+button.track-box:hover video {
+  filter: saturate(1.15);
 }
 
 .brand-chip {
