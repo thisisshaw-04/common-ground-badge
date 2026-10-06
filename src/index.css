@@ -228,9 +228,7 @@ button.track-box:hover video {
 .sticker-nice {
   position: relative;
   border: 2.5px solid #111;
-  box-shadow:
-    0 0 0 3px #fff,
-    2px 3px 0 rgba(17, 17, 17, 0.12);
+  box-shadow: 2px 3px 0 rgba(17, 17, 17, 0.12);
   transition: transform 0.15s ease;
 }
 
@@ -349,9 +347,7 @@ button.track-box:hover video {
 
 .sticker-nice-blob {
   border: 2.5px solid #111;
-  box-shadow:
-    0 0 0 3px #fff,
-    2px 3px 0 rgba(17, 17, 17, 0.12);
+  box-shadow: 2px 3px 0 rgba(17, 17, 17, 0.12);
   border-radius: 42% 58% 48% 52% / 55% 42% 58% 45%;
   min-width: 5.6rem;
   min-height: 3.8rem;
