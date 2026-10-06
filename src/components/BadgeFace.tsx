@@ -1,5 +1,5 @@
 import type { ReactNode, RefObject } from 'react'
-import { EVENT, type BorderId, type FootVideoId } from '../lib/badge'
+import { type BorderId, type FootVideoId } from '../lib/badge'
 import { BadgeOuterFrame, outerShellClass } from './BadgeFrame'
 import { FootVideo } from './FootVideo'
 
@@ -19,8 +19,8 @@ interface BadgeFaceProps {
 }
 
 /**
- * Common Ground poster lockup:
- * boxed COMMON / GROUND, hairline connectors, NEXALUNE / MAKEATHON / DATE,
+ * Common Ground poster lockup flush to the badge top:
+ * overlapping COMMON / GROUND frames, NEXALUNE / MAKEATHON / DATE,
  * framed bottom video panel, selectable outer frame.
  */
 export function BadgeFace({
@@ -41,27 +41,24 @@ export function BadgeFace({
     >
       <BadgeOuterFrame border={border} />
 
-      {/* Typographic lockup */}
-      <div className="poster-lockup relative z-10 px-4 pt-5 pb-3">
-        <p className="poster-meta poster-meta-tr">MAKEATHON</p>
+      {/* Typographic lockup — flush to top edge */}
+      <div className="poster-lockup relative z-10">
+        <div className="poster-stack">
+          <div className="poster-common-wrap">
+            <span className="poster-box poster-box-common">COMMON</span>
+            <p className="poster-meta poster-meta-nexalune">NEXALUNE</p>
+          </div>
 
-        <div className="poster-title-row">
-          <span className="poster-box poster-box-common">COMMON</span>
-          <span className="poster-rule poster-rule-h" aria-hidden />
-        </div>
-
-        <div className="poster-sub-row">
-          <p className="poster-meta">NEXALUNE</p>
-          <span className="poster-box poster-box-ground">GROUND</span>
+          <div className="poster-ground-wrap">
+            <p className="poster-meta poster-meta-makeathon">MAKEATHON</p>
+            <span className="poster-box poster-box-ground">GROUND</span>
+          </div>
         </div>
 
         <div className="poster-date-block">
           <p className="poster-meta">DATE</p>
           <span className="poster-box poster-box-date">{POSTER_DATE}</span>
-          <span className="poster-rule poster-rule-v" aria-hidden />
         </div>
-
-        <p className="poster-place">{EVENT.place.split('·')[0]?.trim()}</p>
       </div>
 
       {/* Interactive white field */}

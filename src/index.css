@@ -460,38 +460,51 @@ textarea {
 }
 
 .poster-lockup {
-  min-height: 8.25rem;
+  /* Flush to badge top — COMMON box shares the outer top edge */
+  padding: 0 1rem 0.75rem;
+  min-height: 10.5rem;
+}
+
+.poster-stack {
+  position: relative;
+  height: 6.6rem;
+}
+
+.poster-common-wrap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+
+.poster-ground-wrap {
+  position: absolute;
+  top: 2.35rem;
+  right: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }
 
 .poster-meta {
   margin: 0;
   font-size: 9px;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: #111;
   line-height: 1;
 }
 
-.poster-meta-tr {
-  position: absolute;
-  top: 1.25rem;
-  right: 1rem;
-}
-
-.poster-title-row {
-  display: flex;
-  align-items: stretch;
-  gap: 0;
-  margin-top: 0.15rem;
-}
-
-.poster-sub-row {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: end;
-  gap: 0.5rem 1rem;
+.poster-meta-nexalune {
   margin-top: 0.4rem;
+  margin-left: 0.05rem;
+}
+
+.poster-meta-makeathon {
+  margin-bottom: 0.35rem;
+  margin-right: 0.05rem;
 }
 
 .poster-box {
@@ -502,69 +515,44 @@ textarea {
   background: #fff;
   color: #111;
   font-weight: 800;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.045em;
   line-height: 1;
   text-transform: uppercase;
   white-space: nowrap;
 }
 
+/* Top border of COMMON is flush with the badge outer top */
 .poster-box-common {
-  font-size: clamp(1.45rem, 4.5vw, 1.95rem);
-  padding: 0.32em 0.4em 0.26em;
+  font-size: clamp(1.55rem, 5vw, 2.05rem);
+  padding: 0.38em 0.42em 0.3em;
+  border-top: none;
+  /* share the shell's top edge */
+  margin-top: 0;
+  box-shadow: 0 -1px 0 #111;
+}
+
+.badge-shell-wiggly .poster-box-common {
+  border-top: 1.5px solid #111;
+  box-shadow: none;
 }
 
 .poster-box-ground {
-  font-size: clamp(1.45rem, 4.5vw, 1.95rem);
-  padding: 0.32em 0.4em 0.26em;
-  margin-left: 0;
-  justify-self: end;
+  font-size: clamp(1.55rem, 5vw, 2.05rem);
+  padding: 0.38em 0.42em 0.3em;
 }
 
 .poster-box-date {
   display: block;
   width: fit-content;
-  font-size: 1rem;
-  padding: 0.4em 0.5em;
+  font-size: 1.05rem;
+  padding: 0.42em 0.5em;
   letter-spacing: -0.02em;
   margin-top: 0.28rem;
 }
 
-.poster-rule-h {
-  display: block;
-  flex: 1 1 auto;
-  height: auto;
-  min-height: 1px;
-  border-top: 1px solid #111;
-  margin-top: calc(0.5em + 0.32em);
-  align-self: flex-start;
-}
-
 .poster-date-block {
-  position: relative;
-  margin-top: 0.9rem;
+  margin-top: 0.35rem;
   width: fit-content;
-}
-
-.poster-rule-v {
-  position: absolute;
-  left: 50%;
-  top: calc(100% + 1px);
-  width: 1px;
-  height: 1.1rem;
-  background: #111;
-  transform: translateX(-50%);
-}
-
-.poster-place {
-  position: absolute;
-  right: 1rem;
-  bottom: 0.15rem;
-  margin: 0;
-  font-size: 8px;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #111;
 }
 
 .poster-name-input {
@@ -576,6 +564,7 @@ textarea {
 }
 
 .badge-inner-dashed {
+  border-top: none;
   border: 1.5px dashed #111;
 }
 
