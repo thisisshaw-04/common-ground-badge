@@ -416,8 +416,9 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                         className={`track-box text-left ${
                           state.footVideo === id ? 'is-selected' : ''
                         }`}
+                        aria-label={v.label}
+                        title={v.label}
                       >
-                        <span className="track-box-label">{v.label}</span>
                         <div className="relative h-8 overflow-hidden bg-[#d8d8d8] sm:h-9">
                           <video
                             src={`${import.meta.env.BASE_URL}foot-videos/${v.file}`}

@@ -154,25 +154,6 @@ textarea {
   overflow: hidden;
 }
 
-.track-box-label {
-  position: absolute;
-  top: 3px;
-  left: 4px;
-  z-index: 2;
-  transform: none;
-  padding: 0 3px;
-  background: rgba(255, 255, 255, 0.85);
-  font-family: var(--font-body);
-  font-size: 9px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: #222;
-  line-height: 1.15;
-  white-space: nowrap;
-  pointer-events: none;
-}
-
 .track-box.is-selected,
 .is-selected {
   outline: 2px solid var(--select);
@@ -207,13 +188,13 @@ button.track-box:active,
 }
 
 button.track-box > svg,
-button.track-box > span:not(.track-box-label),
+button.track-box > span,
 button.track-box > div:not(.relative) {
   transition: transform 0.18s ease;
 }
 
 button.track-box:hover > svg,
-button.track-box:hover > span:not(.track-box-label):first-child {
+button.track-box:hover > span:first-child {
   transform: scale(1.12) rotate(-4deg);
 }
 
