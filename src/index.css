@@ -325,7 +325,7 @@ textarea {
 .cta-blue {
   background: var(--blue);
   color: #fff;
-  border-radius: 14px;
+  border-radius: 0;
   font-weight: 700;
   box-shadow: 0 4px 0 #3138c4;
   transition:

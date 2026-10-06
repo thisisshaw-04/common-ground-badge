@@ -9,7 +9,6 @@ import {
 } from 'react'
 import {
   CORDS,
-  EVENT,
   FOOT_VIDEOS,
   STICKERS,
   TABS,
@@ -193,27 +192,183 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
 
   return (
     <div className="page-fig relative flex h-dvh flex-col overflow-hidden">
-      <div className="relative mx-auto flex min-h-0 w-full max-w-[1180px] flex-1 flex-col px-4 pt-4 pb-4 sm:px-6 sm:pt-5">
-        <header className="animate-pop mb-3 flex shrink-0 items-center justify-between gap-3">
+      <div className="relative mx-auto flex min-h-0 w-full max-w-[1280px] flex-1 flex-col px-4 pt-4 pb-4 sm:px-6 sm:pt-5">
+        <header className="animate-pop mb-4 shrink-0">
           <button
             type="button"
             onClick={onBack}
             className="text-sm font-medium text-black/45 hover:text-black"
           >
-            ← Home
+            ← Back
           </button>
-          <div className="flex flex-wrap items-center justify-center gap-1.5">
-            <span className="brand-chip brand-chip-rect text-[13px] uppercase tracking-tight">
-              Common Ground
-            </span>
-            <span className="brand-chip brand-chip-pill text-[13px]">{EVENT.year}</span>
-          </div>
-          <p className="hidden text-sm text-black/40 sm:block">Stick · doodle · lock in</p>
+          <h1 className="mt-2 text-[clamp(1.6rem,3.2vw,2.35rem)] leading-[1.1] font-bold tracking-[-0.03em] text-black">
+            Make your Common Ground Badge your own!
+          </h1>
         </header>
 
-        <div className="relative flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto md:flex-row md:items-stretch md:gap-8 md:overflow-hidden">
-          {/* Badge LEFT — FigBuild composition */}
-          <aside className="animate-pop flex shrink-0 flex-col items-center justify-center md:w-[480px] lg:w-[520px]">
+        <div className="relative flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto lg:flex-row lg:items-start lg:gap-8 lg:overflow-hidden">
+          {/* Adjustments LEFT — FigBuild 2-col grid */}
+          <section className="animate-pop order-last min-h-0 min-w-0 flex-1 lg:order-none lg:overflow-y-auto lg:pr-1">
+            <div className="grid grid-cols-1 gap-x-4 gap-y-5 sm:grid-cols-2 sm:gap-y-6">
+              <Panel title="Frame">
+                <div className="grid grid-cols-3 gap-2 pt-1">
+                  {(
+                    [
+                      ['none', 'None'],
+                      ['dashed', 'Dash'],
+                      ['track', 'Box'],
+                    ] as [BorderId, string][]
+                  ).map(([id, label]) => (
+                    <button
+                      key={id}
+                      type="button"
+                      onClick={() => push({ ...state, border: id })}
+                      className={`track-box flex aspect-square flex-col items-center justify-center gap-1 bg-[var(--panel)] ${
+                        state.border === id ? 'is-selected' : ''
+                      }`}
+                    >
+                      <span
+                        className={`block h-6 w-6 bg-transparent ${
+                          id === 'track'
+                            ? 'border border-black'
+                            : id === 'dashed'
+                              ? 'dashed-border !rounded-none'
+                              : 'none-border !rounded-none'
+                        }`}
+                      />
+                      <span className="font-mono text-[10px] uppercase tracking-wide">{label}</span>
+                    </button>
+                  ))}
+                </div>
+              </Panel>
+
+              <Panel title="Draw">
+                <div className="flex min-h-[5.5rem] items-center justify-center gap-2 pt-1">
+                  <button
+                    type="button"
+                    onClick={() => setMode(mode === 'draw' ? 'stick' : 'draw')}
+                    className={`border border-black px-3 py-2 text-xs font-semibold ${
+                      mode === 'draw' ? 'bg-[var(--blue)] text-white' : 'bg-white text-black/80'
+                    }`}
+                  >
+                    {mode === 'draw' ? 'On' : 'Draw'}
+                  </button>
+                  {([1, 2, 3] as const).map((size) => (
+                    <button
+                      key={size}
+                      type="button"
+                      onClick={() => {
+                        setBrush(size)
+                        setMode('draw')
+                      }}
+                      className={`track-box flex h-11 w-11 items-center justify-center bg-[var(--panel)] ${
+                        brush === size && mode === 'draw' ? 'is-selected' : ''
+                      }`}
+                    >
+                      <span
+                        className="rounded-full bg-black"
+                        style={{ width: size * 5, height: size * 5 }}
+                      />
+                    </button>
+                  ))}
+                </div>
+              </Panel>
+
+              <Panel title="Cords">
+                <div className="grid grid-cols-4 gap-1.5 pt-1">
+                  {(Object.keys(CORDS) as CordId[]).map((id) => (
+                    <button
+                      key={id}
+                      type="button"
+                      onClick={() => push({ ...state, cord: id })}
+                      className={`track-box flex aspect-square flex-col items-center justify-center bg-[var(--panel)] ${
+                        state.cord === id ? 'is-selected' : ''
+                      }`}
+                    >
+                      <CordSwatch cord={id} />
+                    </button>
+                  ))}
+                </div>
+              </Panel>
+
+              <Panel title="Stickers" className="sm:row-span-2">
+                <div className="mb-3 flex flex-wrap gap-1.5 pt-1">
+                  {TABS.map((t) => (
+                    <button
+                      key={t.id}
+                      type="button"
+                      onClick={() => {
+                        setTab(t.id)
+                        setMode('stick')
+                      }}
+                      className={`px-2.5 py-1.5 font-mono text-[10px] tracking-wide ${
+                        tab === t.id
+                          ? 'bg-black text-white'
+                          : 'border border-black/20 bg-white text-[var(--muted)]'
+                      }`}
+                    >
+                      {t.label}
+                    </button>
+                  ))}
+                </div>
+                <div className="flex flex-wrap items-center gap-x-2.5 gap-y-3">
+                  {STICKERS.filter((s) => s.tab === tab).map((s) => (
+                    <button
+                      key={s.id}
+                      type="button"
+                      onClick={() => {
+                        setMode('stick')
+                        placeSticker(s)
+                      }}
+                      className="inline-flex shrink-0 transition hover:-translate-y-0.5 hover:scale-105 active:scale-95"
+                    >
+                      <StickerFace def={s} />
+                    </button>
+                  ))}
+                </div>
+                <div className="hairline mt-3 pt-2">
+                  <p className="text-[11px] text-[var(--muted)]">
+                    Tap to drop · drag to move · double-click to delete
+                  </p>
+                </div>
+              </Panel>
+
+              <Panel title="Foot video">
+                <p className="mb-3 pt-1 text-[11px] text-[var(--muted)]">
+                  Plays in the grey strip at the bottom of the card
+                </p>
+                <div className="grid grid-cols-2 gap-3">
+                  {(Object.keys(FOOT_VIDEOS) as FootVideoId[]).map((id) => {
+                    const v = FOOT_VIDEOS[id]
+                    return (
+                      <button
+                        key={id}
+                        type="button"
+                        onClick={() => push({ ...state, footVideo: id })}
+                        className={`track-box text-left ${
+                          state.footVideo === id ? 'is-selected' : ''
+                        }`}
+                      >
+                        <span className="track-box-label">{v.label}</span>
+                        <div className="relative h-8 overflow-hidden bg-[#d8d8d8] sm:h-9">
+                          <video
+                            src={`${import.meta.env.BASE_URL}foot-videos/${v.file}`}
+                            muted
+                            playsInline
+                            preload="metadata"
+                            className="h-full w-full object-cover object-center"
+                          />
+                        </div>
+                      </button>
+                    )
+                  })}
+                </div>
+              </Panel>
+            </div>
+          </section>
+
+          {/* Badge RIGHT */}
+          <aside className="animate-pop flex shrink-0 flex-col items-center lg:sticky lg:top-0 lg:w-[460px] xl:w-[500px]">
             <div className="flex w-full max-w-[440px] flex-col items-center">
               <Lanyard cord={state.cord} scale={0.72} />
               <div
@@ -225,7 +380,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                   <span className="brand-chip brand-chip-rect text-[17px] tracking-tight uppercase">
                     Common Ground
                   </span>
-                  <span className="brand-chip brand-chip-pill text-[17px]">{EVENT.year}</span>
+                  <span className="brand-chip brand-chip-pill text-[17px]">2026</span>
                 </div>
 
                 <div
@@ -286,185 +441,27 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                 <button
                   type="button"
                   onClick={undo}
-                  className="flex-1 rounded-xl bg-[var(--panel)] py-2.5 text-sm font-semibold text-black ring-1 ring-black/10"
+                  className="flex-1 border border-black bg-[var(--panel)] py-2.5 text-sm font-semibold text-black"
                 >
                   Undo
                 </button>
                 <button
                   type="button"
                   onClick={clearAll}
-                  className="flex-1 rounded-xl bg-white py-2.5 text-sm font-semibold text-black/60 ring-1 ring-black/10"
+                  className="flex-1 border border-black/30 bg-white py-2.5 text-sm font-semibold text-black/60"
                 >
                   Clear
                 </button>
-                <button type="button" onClick={onDone} className="cta-blue flex-[1.4] py-2.5 text-sm">
+                <button
+                  type="button"
+                  onClick={onDone}
+                  className="cta-blue flex-[1.4] py-2.5 text-sm !rounded-none"
+                >
                   I&apos;m done!
                 </button>
               </div>
             </div>
           </aside>
-
-          {/* Tools RIGHT */}
-          <section className="animate-pop min-h-0 min-w-0 flex-1 md:overflow-y-auto md:pr-1">
-            <div className="mx-auto grid max-w-[640px] grid-cols-2 gap-x-3 gap-y-5 pb-2 sm:gap-x-3.5 sm:gap-y-6 lg:max-w-none">
-              <Panel title="Frame" className="col-span-2 sm:col-span-1">
-                <div className="grid grid-cols-3 gap-2 pt-1">
-                  {(
-                    [
-                      ['none', 'None'],
-                      ['dashed', 'Dash'],
-                      ['track', 'Box'],
-                    ] as [BorderId, string][]
-                  ).map(([id, label]) => (
-                    <button
-                      key={id}
-                      type="button"
-                      onClick={() => push({ ...state, border: id })}
-                      className={`track-box flex aspect-square flex-col items-center justify-center gap-1 bg-[var(--panel)] ${
-                        state.border === id ? 'is-selected' : ''
-                      }`}
-                    >
-                      <span
-                        className={`block h-6 w-6 bg-transparent ${
-                          id === 'track'
-                            ? 'border border-black'
-                            : id === 'dashed'
-                              ? 'dashed-border !rounded-none'
-                              : 'none-border !rounded-none'
-                        }`}
-                      />
-                      <span className="font-mono text-[10px] uppercase tracking-wide">{label}</span>
-                    </button>
-                  ))}
-                </div>
-              </Panel>
-
-              <Panel title="Cords" className="col-span-2 sm:col-span-1">
-                <div className="grid grid-cols-4 gap-1.5 pt-1">
-                  {(Object.keys(CORDS) as CordId[]).map((id) => (
-                    <button
-                      key={id}
-                      type="button"
-                      onClick={() => push({ ...state, cord: id })}
-                      className={`track-box flex aspect-square flex-col items-center justify-center bg-[var(--panel)] ${
-                        state.cord === id ? 'is-selected' : ''
-                      }`}
-                    >
-                      <CordSwatch cord={id} />
-                    </button>
-                  ))}
-                </div>
-              </Panel>
-
-              <Panel title="Foot video" className="col-span-2">
-                <p className="mb-3 pt-1 text-[11px] text-[var(--muted)]">
-                  Plays in the grey strip at the bottom of the card
-                </p>
-                <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-                  {(Object.keys(FOOT_VIDEOS) as FootVideoId[]).map((id) => {
-                    const v = FOOT_VIDEOS[id]
-                    return (
-                      <button
-                        key={id}
-                        type="button"
-                        onClick={() => push({ ...state, footVideo: id })}
-                        className={`track-box text-left ${
-                          state.footVideo === id ? 'is-selected' : ''
-                        }`}
-                      >
-                        <span className="track-box-label">{v.label}</span>
-                        <div className="relative h-8 overflow-hidden bg-[#d8d8d8] sm:h-9">
-                          <video
-                            src={`${import.meta.env.BASE_URL}foot-videos/${v.file}`}
-                            muted
-                            playsInline
-                            preload="metadata"
-                            className="h-full w-full object-cover object-center"
-                          />
-                        </div>
-                      </button>
-                    )
-                  })}
-                </div>
-              </Panel>
-
-              <Panel title="Stickers" className="col-span-2">
-                <div className="mb-3 flex flex-wrap gap-1.5 pt-1">
-                  {TABS.map((t) => (
-                    <button
-                      key={t.id}
-                      type="button"
-                      onClick={() => {
-                        setTab(t.id)
-                        setMode('stick')
-                      }}
-                      className={`px-2.5 py-1.5 font-mono text-[10px] tracking-wide ${
-                        tab === t.id
-                          ? 'bg-black text-white'
-                          : 'border border-black/20 bg-white text-[var(--muted)]'
-                      }`}
-                    >
-                      {t.label}
-                    </button>
-                  ))}
-                </div>
-                <div className="flex flex-wrap items-center gap-x-2.5 gap-y-3">
-                  {STICKERS.filter((s) => s.tab === tab).map((s) => (
-                    <button
-                      key={s.id}
-                      type="button"
-                      onClick={() => {
-                        setMode('stick')
-                        placeSticker(s)
-                      }}
-                      className="inline-flex shrink-0 transition hover:-translate-y-0.5 hover:scale-105 active:scale-95"
-                    >
-                      <StickerFace def={s} />
-                    </button>
-                  ))}
-                </div>
-                <div className="hairline mt-3 pt-2">
-                  <p className="text-[11px] text-[var(--muted)]">
-                    Tap to drop · drag to move · double-click to delete
-                  </p>
-                </div>
-              </Panel>
-
-              <Panel title="Draw" className="col-span-2">
-                <div className="flex min-h-[4.5rem] items-center justify-center gap-2 pt-1">
-                  <button
-                    type="button"
-                    onClick={() => setMode(mode === 'draw' ? 'stick' : 'draw')}
-                    className={`border border-black px-3 py-2 text-xs font-semibold ${
-                      mode === 'draw'
-                        ? 'bg-[var(--blue)] text-white'
-                        : 'bg-white text-black/80'
-                    }`}
-                  >
-                    {mode === 'draw' ? 'On' : 'Draw'}
-                  </button>
-                  {([1, 2, 3] as const).map((size) => (
-                    <button
-                      key={size}
-                      type="button"
-                      onClick={() => {
-                        setBrush(size)
-                        setMode('draw')
-                      }}
-                      className={`track-box flex h-11 w-11 items-center justify-center bg-[var(--panel)] ${
-                        brush === size && mode === 'draw' ? 'is-selected' : ''
-                      }`}
-                    >
-                      <span
-                        className="rounded-full bg-black"
-                        style={{ width: size * 5, height: size * 5 }}
-                      />
-                    </button>
-                  ))}
-                </div>
-              </Panel>
-            </div>
-          </section>
         </div>
       </div>
     </div>
