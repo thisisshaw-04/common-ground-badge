@@ -28,7 +28,7 @@ import { StickerFace } from './StickerFace'
 
 const BADGE_W = 400
 const BODY_H = 200
-const FOOT_H = 200
+const FOOT_H = 252
 
 interface MakerProps {
   state: BadgeState

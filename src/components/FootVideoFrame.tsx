@@ -2,26 +2,29 @@ import { useId } from 'react'
 import type { FootVideoId } from '../lib/badge'
 import { FootVideo } from './FootVideo'
 
-/** viewBox matches the foot strip aspect (~1.83:1) so curves aren't stretched. */
-export const FOOT_FRAME_VB = { w: 366, h: 200 } as const
+/**
+ * viewBox aspect ~1.51 matches the red brand mark silhouette.
+ */
+export const FOOT_FRAME_VB = { w: 400, h: 265 } as const
 
 /**
- * Brand foot-video frame — exact 180° point symmetry around center.
- * Flat top/bottom, tight TL+BR rounds, long soft TR+BL chamfers.
+ * Red brand foot frame — 180° point-symmetric around (200, 132.5).
+ * Flat top that sweeps down early into a long TR chamfer;
+ * matching BL scoop; tight TL+BR rounds. Traced from the red mark.
  */
 export const FOOT_FRAME_PATH =
-  'M 12 100 ' +
-  'V 34 ' +
-  'C 12 18 16 10 32 10 ' +
-  'H 242 ' +
-  'C 280 10 311 26 334 52 ' +
-  'C 349 68 354 74 354 77 ' +
-  'V 166 ' +
-  'C 354 182 350 190 334 190 ' +
-  'H 124 ' +
-  'C 86 190 55 174 32 148 ' +
-  'C 17 132 12 126 12 123 ' +
-  'V 100 ' +
+  'M 4 132.5 ' +
+  'V 24 ' +
+  'C 4 10 12 5 28 5 ' +
+  'H 210 ' +
+  'C 255 5 295 8 328 26 ' +
+  'C 355 40 385 48 396 60 ' +
+  'V 241 ' +
+  'C 396 255 388 260 372 260 ' +
+  'H 190 ' +
+  'C 145 260 105 257 72 239 ' +
+  'C 45 225 15 217 4 205 ' +
+  'V 132.5 ' +
   'Z'
 
 interface FootVideoFrameProps {
@@ -65,7 +68,7 @@ export function FootVideoFrame({ id, height }: FootVideoFrameProps) {
           d={FOOT_FRAME_PATH}
           fill="none"
           stroke="#111"
-          strokeWidth="1.75"
+          strokeWidth="1.1"
           strokeLinejoin="round"
           strokeLinecap="round"
           vectorEffect="non-scaling-stroke"

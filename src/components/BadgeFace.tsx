@@ -62,8 +62,8 @@ export function BadgeFace({
         {body}
       </div>
 
-      {/* Organic foot-video blob */}
-      <div className="badge-foot poster-foot relative z-30 px-4 pt-3 pb-4">
+      {/* Organic foot-video blob — 10px inset matches lockup */}
+      <div className="badge-foot poster-foot relative z-30 px-[10px] pt-3 pb-4">
         <FootVideoFrame id={footVideo} height={footHeight} />
       </div>
 
