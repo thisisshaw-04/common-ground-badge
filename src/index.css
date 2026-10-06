@@ -501,6 +501,22 @@ textarea {
   border-top: none !important;
 }
 
+.foot-frame {
+  isolation: isolate;
+}
+
+.foot-frame-media {
+  z-index: 0;
+}
+
+.foot-frame-clip {
+  overflow: hidden;
+}
+
+.foot-frame-stroke {
+  z-index: 2;
+}
+
 /* legacy class names kept for any leftover refs */
 .dashed-border {
   border: 1.5px dashed #171717;
@@ -524,7 +540,7 @@ textarea {
 .badge-foot {
   position: relative;
   z-index: 50;
-  background: #d8d8d8;
+  background: transparent;
   border-top: none;
 }
 

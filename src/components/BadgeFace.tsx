@@ -1,7 +1,7 @@
 import type { ReactNode, RefObject } from 'react'
 import { type BorderId, type FootVideoId } from '../lib/badge'
 import { BadgeOuterFrame, outerShellClass } from './BadgeFrame'
-import { FootVideo } from './FootVideo'
+import { FootVideoFrame } from './FootVideoFrame'
 
 interface BadgeFaceProps {
   width: number
@@ -58,14 +58,9 @@ export function BadgeFace({
         {body}
       </div>
 
-      {/* Framed foot video */}
-      <div className="relative z-50 px-4 pt-3 pb-4">
-        <div
-          className="badge-foot poster-foot relative overflow-hidden border border-black bg-[#d8d8d8]"
-          style={{ height: footHeight }}
-        >
-          <FootVideo id={footVideo} />
-        </div>
+      {/* Organic foot-video blob */}
+      <div className="badge-foot poster-foot relative z-50 px-4 pt-3 pb-4">
+        <FootVideoFrame id={footVideo} height={footHeight} />
       </div>
     </div>
   )
