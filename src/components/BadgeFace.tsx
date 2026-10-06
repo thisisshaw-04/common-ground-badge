@@ -1,6 +1,6 @@
 import type { ReactNode, RefObject } from 'react'
 import { EVENT, type BorderId, type FootVideoId } from '../lib/badge'
-import { BadgeInnerFrame } from './BadgeFrame'
+import { BadgeOuterFrame, outerShellClass } from './BadgeFrame'
 import { FootVideo } from './FootVideo'
 
 /** Poster date lockup — matches the Common Ground print system. */
@@ -21,7 +21,7 @@ interface BadgeFaceProps {
 /**
  * Common Ground poster lockup:
  * boxed COMMON / GROUND, hairline connectors, NEXALUNE / MAKEATHON / DATE,
- * framed bottom video panel sitting above any overlay lines.
+ * framed bottom video panel, selectable outer frame.
  */
 export function BadgeFace({
   width,
@@ -36,10 +36,10 @@ export function BadgeFace({
   return (
     <div
       ref={badgeRef}
-      className={`badge-shell badge-poster relative overflow-hidden bg-white shadow-[0_18px_40px_rgba(0,0,0,0.1)] ${className}`}
+      className={`badge-shell badge-poster relative bg-white shadow-[0_18px_40px_rgba(0,0,0,0.1)] ${outerShellClass(border)} ${className}`}
       style={{ width }}
     >
-      <BadgeInnerFrame border={border} />
+      <BadgeOuterFrame border={border} />
 
       {/* Typographic lockup */}
       <div className="poster-lockup relative z-10 px-4 pt-5 pb-3">
@@ -73,7 +73,7 @@ export function BadgeFace({
         {body}
       </div>
 
-      {/* Framed foot video — topmost over inner-frame lines */}
+      {/* Framed foot video */}
       <div className="relative z-50 px-4 pt-3 pb-4">
         <div
           className="badge-foot poster-foot relative overflow-hidden border border-black bg-[#d8d8d8]"

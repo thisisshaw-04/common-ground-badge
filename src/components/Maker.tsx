@@ -205,7 +205,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
           {/* Adjustments LEFT — FigBuild 2-col grid */}
           <section className="animate-pop order-last min-h-0 min-w-0 flex-1 lg:order-none lg:overflow-y-auto lg:pr-1">
             <div className="grid grid-cols-1 gap-x-5 gap-y-7 sm:grid-cols-2 sm:gap-y-8">
-              <Panel title="Inner frame">
+              <Panel title="Outer frame">
                 <div className="grid grid-cols-4 gap-2">
                   {(
                     [

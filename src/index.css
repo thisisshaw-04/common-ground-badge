@@ -299,15 +299,59 @@ textarea {
   box-shadow: 2px 3px 0 rgba(17, 17, 17, 0.12);
 }
 
-/* Outer badge shell — always thin + sharp corners */
+/* Outer badge shell — frame options drive the edge */
 .badge-shell {
+  border-radius: 0;
+  overflow: hidden;
+}
+
+.badge-poster {
+  font-family: var(--font-body);
+}
+
+.badge-shell-none {
   border: 1px solid #111;
+}
+
+.badge-shell-box {
+  border: 2px solid #111;
+}
+
+.badge-shell-dashed {
+  border: 2px dashed #111;
+}
+
+.badge-shell-wiggly {
+  border: none;
+  overflow: visible;
+}
+
+.badge-outer-frame {
+  overflow: visible;
+}
+
+.badge-inner-dashed {
+  border: 1.5px dashed #111;
+}
+
+.badge-inner-box {
+  border: 1.5px solid #111;
+}
+
+/* legacy class names kept for any leftover refs */
+.dashed-border {
+  border: 1.5px dashed #171717;
   border-radius: 0;
 }
 
-/* —— Poster typographic lockup —— */
-.badge-poster {
-  font-family: var(--font-body);
+.track-border {
+  border: 1.5px solid #111;
+  border-radius: 0;
+}
+
+.none-border {
+  border: 1px solid #171717;
+  border-radius: 0;
 }
 
 .poster-lockup {
