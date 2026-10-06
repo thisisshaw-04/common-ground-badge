@@ -12,7 +12,7 @@ https://thisisshaw-04.github.io/common-ground-badge/
 
 - One maker page — no forms, just stickers + drawing
 - Drag / peel stickers (role, track, vibe, pronouns, about)
-- Border styles, lanyard cords, checker backgrounds
+- Border styles, **Three.js woven-rope lanyard cords**, checker backgrounds
 - Scribble + handwritten name on the badge
 - Done screen with Story / Grid PNG download + social share
 
@@ -34,4 +34,4 @@ npm run preview
 
 ## Stack
 
-Vite · React · TypeScript · Tailwind CSS v4 · html-to-image
+Vite · React · TypeScript · Tailwind CSS v4 · Three.js (R3F rope lanyard) · html-to-image
