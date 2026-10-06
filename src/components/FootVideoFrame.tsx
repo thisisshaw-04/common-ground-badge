@@ -2,28 +2,28 @@ import { useId } from 'react'
 import type { FootVideoId } from '../lib/badge'
 import { FootVideo } from './FootVideo'
 
-/**
- * viewBox aspect ~1.51 matches the red brand mark silhouette.
- */
+/** viewBox aspect ~1.51 matches the red brand mark. */
 export const FOOT_FRAME_VB = { w: 400, h: 265 } as const
 
 /**
- * Red brand foot frame — 180° point-symmetric around (200, 132.5).
- * Flat top that sweeps down early into a long TR chamfer;
- * matching BL scoop; tight TL+BR rounds. Traced from the red mark.
+ * Soft brand foot frame — exact 180° point symmetry around (200, 132.5).
+ * Top gently slopes into a large soft TR round (from the close-up);
+ * BL is the precise rotation of that edge.
  */
 export const FOOT_FRAME_PATH =
-  'M 4 132.5 ' +
-  'V 24 ' +
-  'C 4 10 12 5 28 5 ' +
-  'H 210 ' +
-  'C 255 5 295 8 328 26 ' +
-  'C 355 40 385 48 396 60 ' +
-  'V 241 ' +
-  'C 396 255 388 260 372 260 ' +
-  'H 190 ' +
-  'C 145 260 105 257 72 239 ' +
-  'C 45 225 15 217 4 205 ' +
+  'M 6 132.5 ' +
+  'V 34 ' +
+  'C 6 14 18 6 38 6 ' +
+  'H 198 ' +
+  'C 238 6 275 10 312 26 ' +
+  'C 340 38 360 42 376 44 ' +
+  'C 388 46 394 54 394 68 ' +
+  'V 231 ' +
+  'C 394 251 382 259 362 259 ' +
+  'H 202 ' +
+  'C 162 259 125 255 88 239 ' +
+  'C 60 227 40 223 24 221 ' +
+  'C 12 219 6 211 6 197 ' +
   'V 132.5 ' +
   'Z'
 
