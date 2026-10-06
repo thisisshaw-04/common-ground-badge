@@ -124,7 +124,7 @@ textarea {
   position: relative;
   background: #ffffff;
   color: var(--ink);
-  border: 1px solid #2a2a2a;
+  border: 2px solid #2a2a2a;
   border-radius: 0;
   padding: 1rem 0.9rem 0.9rem;
   box-shadow: none;
@@ -613,15 +613,15 @@ button.track-box:not(.is-selected):hover video {
 }
 
 .badge-shell-none {
-  border: 1px solid #111;
-}
-
-.badge-shell-box {
   border: 2px solid #111;
 }
 
+.badge-shell-box {
+  border: 3px solid #111;
+}
+
 .badge-shell-dashed {
-  border: 2px dashed #111;
+  border: 3px dashed #111;
 }
 
 .badge-shell-wiggly {

@@ -108,7 +108,7 @@ export function BadgeOuterFrame({ border }: { border: BorderId }) {
         d={doodlePath(w, h, 7)}
         fill="none"
         stroke="#111"
-        strokeWidth="1.75"
+        strokeWidth="2.75"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
