@@ -1,19 +1,20 @@
 @import 'tailwindcss';
 
 :root {
-  --bg: #f4f4f5;
+  --bg: #ffffff;
   --ink: #111111;
   --paper: #ffffff;
-  --panel: #f0f0f2;
-  --muted: #6a6a6a;
-  --yellow: #ffe600;
-  --blue: #3d5afe;
-  --coral: #ff6b35;
-  --mint: #7dffb3;
-  --pink: #ff7ac3;
-  --sky: #5b8cff;
-  --font-display: 'Fraunces', Georgia, serif;
-  --font-body: 'Sora', system-ui, sans-serif;
+  --panel: #f6f6f7;
+  --muted: #8a8a8a;
+  --yellow: #ffe34a;
+  --blue: #4c54f5;
+  --coral: #ff4fd8;
+  --mint: #39ffb6;
+  --pink: #ff5ec8;
+  --sky: #4c54f5;
+  --lime: #c8ff4a;
+  --font-display: 'Outfit', system-ui, sans-serif;
+  --font-body: 'Outfit', system-ui, sans-serif;
   --font-hand: 'Caveat', cursive;
   --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
 }
@@ -45,7 +46,7 @@ textarea {
 }
 
 ::selection {
-  background: var(--yellow);
+  background: var(--lime);
   color: #111;
 }
 
@@ -66,16 +67,30 @@ textarea {
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-5px);
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes wiggle {
+  0%,
+  100% {
+    transform: rotate(-2deg);
+  }
+  50% {
+    transform: rotate(2deg);
   }
 }
 
 .animate-pop {
-  animation: pop-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: pop-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .animate-floaty {
-  animation: floaty 4.5s ease-in-out infinite;
+  animation: floaty 4.8s ease-in-out infinite;
+}
+
+.animate-wiggle {
+  animation: wiggle 5s ease-in-out infinite;
 }
 
 .font-display {
@@ -90,19 +105,15 @@ textarea {
   font-family: var(--font-mono);
 }
 
-.page-light {
-  background:
-    radial-gradient(ellipse 70% 50% at 8% 100%, rgba(125, 255, 179, 0.18), transparent 55%),
-    radial-gradient(ellipse 60% 45% at 92% 100%, rgba(255, 122, 195, 0.16), transparent 55%),
-    var(--bg);
+.page-fig {
+  background: #fff;
 }
 
 .panel {
   background: var(--paper);
   color: var(--ink);
-  border: 1px solid rgba(17, 17, 17, 0.08);
-  border-radius: 16px;
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8) inset;
+  border: 1.5px solid rgba(17, 17, 17, 0.1);
+  border-radius: 18px;
 }
 
 .panel-title {
@@ -114,73 +125,26 @@ textarea {
   color: var(--muted);
 }
 
-/* Rectangular CV tracking box */
-.track-rect {
-  border: 1.5px solid #111;
-  border-radius: 0;
-  box-sizing: border-box;
+.brand-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #111;
+  color: #fff;
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
 }
 
-.track-corner {
-  position: absolute;
-  width: 7px;
-  height: 7px;
-  border-color: #111;
-  border-style: solid;
+.brand-chip-rect {
+  border-radius: 6px;
+  padding: 0.45em 0.7em;
 }
 
-.track-corner.tl {
-  top: -1px;
-  left: -1px;
-  border-width: 2px 0 0 2px;
-}
-
-.track-corner.tr {
-  top: -1px;
-  right: -1px;
-  border-width: 2px 2px 0 0;
-}
-
-.track-corner.bl {
-  bottom: -1px;
-  left: -1px;
-  border-width: 0 0 2px 2px;
-}
-
-.track-corner.br {
-  bottom: -1px;
-  right: -1px;
-  border-width: 0 2px 2px 0;
-}
-
-.track-label {
-  font-family: var(--font-mono);
-  font-size: 8px;
-  letter-spacing: 0.08em;
-  color: #111;
-  background: rgba(255, 255, 255, 0.92);
-  padding: 1px 4px;
-  text-transform: uppercase;
-}
-
-.crosshair::before,
-.crosshair::after {
-  content: '';
-  position: absolute;
-  background: rgba(255, 255, 255, 0.9);
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.crosshair::before {
-  width: 10px;
-  height: 1px;
-}
-
-.crosshair::after {
-  width: 1px;
-  height: 10px;
+.brand-chip-pill {
+  border-radius: 999px;
+  padding: 0.45em 0.85em;
 }
 
 .sticker-nice {
@@ -188,7 +152,7 @@ textarea {
   border: 2.5px solid #111;
   box-shadow:
     0 0 0 3px #fff,
-    2px 3px 0 rgba(17, 17, 17, 0.14);
+    2px 3px 0 rgba(17, 17, 17, 0.12);
   transition: transform 0.15s ease;
 }
 
@@ -197,9 +161,38 @@ textarea {
 }
 
 .sticker-nice-soft {
-  border-radius: 1.85rem 2.6rem 1.7rem 2.9rem;
-  padding-inline: 1.1rem !important;
-  padding-block: 0.65rem !important;
+  border-radius: 1.4rem 2.4rem 1.5rem 2.8rem / 1.8rem 1.3rem 2.6rem 1.5rem;
+  padding-inline: 1.05rem !important;
+  padding-block: 0.6rem !important;
+}
+
+.sticker-nice-jagged {
+  clip-path: polygon(
+    4% 12%,
+    14% 2%,
+    28% 8%,
+    42% 1%,
+    58% 7%,
+    72% 0%,
+    88% 6%,
+    98% 18%,
+    100% 38%,
+    96% 55%,
+    100% 72%,
+    92% 88%,
+    74% 100%,
+    55% 94%,
+    38% 100%,
+    22% 93%,
+    8% 98%,
+    0% 80%,
+    3% 58%,
+    0% 35%
+  );
+  border: none;
+  box-shadow: 2px 3px 0 rgba(17, 17, 17, 0.12);
+  padding-inline: 1.15rem !important;
+  padding-block: 0.75rem !important;
 }
 
 .sticker-nice-ticket {
@@ -219,26 +212,88 @@ textarea {
   padding-right: 1.15rem !important;
 }
 
+.sticker-nice-flower {
+  clip-path: polygon(
+    50% 0%,
+    62% 18%,
+    85% 12%,
+    78% 35%,
+    100% 50%,
+    78% 65%,
+    85% 88%,
+    62% 82%,
+    50% 100%,
+    38% 82%,
+    15% 88%,
+    22% 65%,
+    0% 50%,
+    22% 35%,
+    15% 12%,
+    38% 18%
+  );
+  border: none;
+  aspect-ratio: 1;
+  min-width: 4.2rem;
+  min-height: 4.2rem;
+  box-shadow: 2px 3px 0 rgba(17, 17, 17, 0.12);
+}
+
 .dashed-border {
   border: 2px dashed #171717;
   border-radius: 12px;
 }
 
 .track-border {
-  border: 1.5px solid #111;
-  border-radius: 2px;
+  border: 2px solid #111;
+  border-radius: 4px;
 }
 
 .none-border {
-  border: 1.5px solid #171717;
-  border-radius: 14px;
+  border: 2px solid #171717;
+  border-radius: 16px;
 }
 
 .hairline {
   border-top: 1px solid rgba(17, 17, 17, 0.1);
 }
 
-.event-bar {
-  background: var(--yellow);
-  color: #111;
+.badge-check {
+  background-color: #3d5afe;
+  background-image:
+    linear-gradient(45deg, #2fe08a 25%, transparent 25%),
+    linear-gradient(-45deg, #2fe08a 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #2fe08a 75%),
+    linear-gradient(-45deg, transparent 75%, #2fe08a 75%);
+  background-size: 28px 28px;
+  background-position:
+    0 0,
+    0 14px,
+    14px -14px,
+    -14px 0;
+}
+
+.cta-blue {
+  background: var(--blue);
+  color: #fff;
+  border-radius: 14px;
+  font-weight: 700;
+  box-shadow: 0 4px 0 #3138c4;
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease;
+}
+
+.cta-blue:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 0 #3138c4;
+}
+
+.cta-blue:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #3138c4;
+}
+
+.deco-cluster {
+  pointer-events: none;
+  user-select: none;
 }

@@ -22,7 +22,7 @@ export function DoneScreen({ state, badgeNode, onEdit }: DoneProps) {
       const root = document.createElement('div')
       root.style.width = `${width}px`
       root.style.height = `${height}px`
-      root.style.background = '#f4f4f5'
+      root.style.background = '#ffffff'
       root.style.display = 'flex'
       root.style.alignItems = 'center'
       root.style.justifyContent = 'center'
@@ -86,25 +86,23 @@ export function DoneScreen({ state, badgeNode, onEdit }: DoneProps) {
   }
 
   return (
-    <div className="page-light flex h-dvh flex-col overflow-hidden">
+    <div className="page-fig flex h-dvh flex-col overflow-hidden">
       <main className="relative mx-auto flex min-h-0 w-full max-w-3xl flex-1 flex-col items-center overflow-y-auto px-4 py-6 text-center sm:py-8">
         <div className="animate-pop">
-          <p className="font-mono text-[11px] tracking-[0.22em] text-[var(--muted)] uppercase">
-            You did it
-          </p>
-          <h1 className="mt-2 text-4xl font-bold tracking-tight text-[var(--ink)] sm:text-5xl">
-            your badge is ready
-          </h1>
-          <p className="mx-auto mt-3 max-w-md text-[var(--muted)]">
-            Save it for stories, post it everywhere, then show up on {EVENT.date}{' '}
-            at {EVENT.place}.
+          <p className="text-lg text-black/55">Nice.</p>
+          <div className="mt-3 flex flex-wrap items-center justify-center gap-2">
+            <span className="brand-chip brand-chip-rect text-2xl uppercase tracking-tight sm:text-3xl">
+              Your badge
+            </span>
+            <span className="brand-chip brand-chip-pill text-2xl sm:text-3xl">is ready</span>
+          </div>
+          <p className="mx-auto mt-4 max-w-md text-black/55">
+            Save it for stories, post it everywhere, then show up on {EVENT.date} at{' '}
+            {EVENT.place}.
           </p>
         </div>
 
-        <div
-          ref={previewRef}
-          className="animate-floaty mt-6 scale-[0.92] sm:scale-100"
-        >
+        <div ref={previewRef} className="animate-floaty mt-6 scale-[0.88] sm:scale-100">
           {badgeNode ? (
             <div
               className="pointer-events-none"
@@ -114,8 +112,7 @@ export function DoneScreen({ state, badgeNode, onEdit }: DoneProps) {
                   clone.querySelectorAll('input').forEach((input) => {
                     const span = document.createElement('div')
                     span.className = input.className
-                    span.textContent =
-                      (input as HTMLInputElement).value || 'your name'
+                    span.textContent = (input as HTMLInputElement).value || 'your name'
                     input.replaceWith(span)
                   })
                   clone.querySelectorAll('canvas').forEach((c) => {
@@ -134,12 +131,12 @@ export function DoneScreen({ state, badgeNode, onEdit }: DoneProps) {
           ) : null}
         </div>
 
-        <div className="animate-pop mt-6 grid w-full max-w-sm gap-2 pb-4">
+        <div className="animate-pop mt-6 grid w-full max-w-sm gap-2.5 pb-8">
           <button
             type="button"
             disabled={!!busy}
             onClick={() => exportPng('story')}
-            className="rounded-full bg-[var(--blue)] px-4 py-3.5 text-sm font-semibold text-white disabled:opacity-60"
+            className="cta-blue px-4 py-3.5 text-sm disabled:opacity-60"
           >
             {busy === 'story' ? 'Saving…' : 'Save 9:16 Story'}
           </button>
@@ -147,21 +144,21 @@ export function DoneScreen({ state, badgeNode, onEdit }: DoneProps) {
             type="button"
             disabled={!!busy}
             onClick={() => exportPng('grid')}
-            className="rounded-full bg-white px-4 py-3.5 text-sm font-semibold text-black ring-1 ring-black/10 disabled:opacity-60"
+            className="rounded-xl bg-white px-4 py-3.5 text-sm font-semibold text-black ring-2 ring-black/15 disabled:opacity-60"
           >
             {busy === 'grid' ? 'Saving…' : 'Save 3:4 Grid'}
           </button>
           <button
             type="button"
             onClick={share}
-            className="rounded-full bg-[var(--panel)] px-4 py-3.5 text-sm font-semibold text-black ring-1 ring-black/10"
+            className="rounded-xl bg-[var(--panel)] px-4 py-3.5 text-sm font-semibold text-black ring-1 ring-black/10"
           >
             {copied ? 'Copied link!' : 'Share to socials'}
           </button>
           <button
             type="button"
             onClick={tweet}
-            className="rounded-full px-4 py-3 text-sm font-medium text-[var(--muted)] hover:text-black"
+            className="rounded-xl px-4 py-3 text-sm font-medium text-black/45 hover:text-black"
           >
             Post on X / Twitter
           </button>
@@ -169,7 +166,7 @@ export function DoneScreen({ state, badgeNode, onEdit }: DoneProps) {
             href={EVENT.luma}
             target="_blank"
             rel="noreferrer"
-            className="text-sm text-[var(--muted)] underline decoration-[var(--blue)]/40 underline-offset-2 hover:text-[var(--blue)]"
+            className="text-sm text-black/45 underline decoration-[var(--blue)]/40 underline-offset-2 hover:text-[var(--blue)]"
           >
             Event on Luma
           </a>
@@ -182,17 +179,6 @@ export function DoneScreen({ state, badgeNode, onEdit }: DoneProps) {
           </button>
         </div>
       </main>
-      <div className="event-bar relative z-20 shrink-0 px-4 py-2.5 sm:px-6">
-        <div className="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-x-4 gap-y-1 text-[13px] sm:text-sm">
-          <p className="font-semibold tracking-tight">
-            <span className="font-display italic font-medium">{EVENT.name}</span>
-            <span className="mx-2 font-black uppercase">{EVENT.subtitle}</span>
-          </p>
-          <p className="font-mono text-[11px] tracking-wide text-black/70 uppercase sm:text-xs">
-            {EVENT.date} · {EVENT.year} · {EVENT.place}
-          </p>
-        </div>
-      </div>
     </div>
   )
 }

@@ -1,22 +1,25 @@
 import { useRef, useState } from 'react'
 import { DoneScreen } from './components/DoneScreen'
+import { Landing } from './components/Landing'
 import { Maker } from './components/Maker'
 import { DEFAULT_STATE, type BadgeState } from './lib/badge'
 
-type Screen = 'make' | 'done'
+type Screen = 'land' | 'make' | 'done'
 
 export default function App() {
-  const [screen, setScreen] = useState<Screen>('make')
+  const [screen, setScreen] = useState<Screen>('land')
   const [state, setState] = useState<BadgeState>(DEFAULT_STATE)
   const badgeRef = useRef<HTMLDivElement>(null)
 
   return (
-    <div className="page-light relative min-h-dvh overflow-x-hidden">
+    <div className="page-fig relative min-h-dvh overflow-x-hidden">
+      {screen === 'land' ? <Landing onStart={() => setScreen('make')} /> : null}
       <div className={screen === 'make' ? 'block' : 'hidden'}>
         <Maker
           state={state}
           onChange={setState}
           onDone={() => setScreen('done')}
+          onBack={() => setScreen('land')}
           badgeRef={badgeRef}
         />
       </div>

@@ -10,10 +10,9 @@ https://thisisshaw-04.github.io/common-ground-badge/
 
 ## Features
 
-- One maker page — no forms, just stickers + drawing
-- Drag / peel stickers (role, track, vibe, pronouns, about)
-- Border styles, **Three.js woven-rope lanyard cords**, checker backgrounds
-- Scribble + handwritten name on the badge
+- FigBuild-style landing — badge left, welcome + CTA right, corner sticker clusters
+- Maker with stickers, doodle, cords & borders
+- Three.js woven-rope lanyard cords
 - Done screen with Story / Grid PNG download + social share
 
 ## Run locally

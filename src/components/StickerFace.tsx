@@ -1,7 +1,5 @@
 import type { StickerDef } from '../lib/badge'
 
-/** Polished die-cut stickers — content-sized, white rim, type always fits. */
-
 function linesFor(label: string): string[] {
   if (label.includes('×')) {
     const [a, b] = label.split('×').map((s) => s.trim())
@@ -30,7 +28,11 @@ export function StickerFace({ def, compact }: { def: StickerDef; compact?: boole
         ? 'sticker-nice sticker-nice-ticket'
         : def.shape === 'tag'
           ? 'sticker-nice sticker-nice-tag'
-          : 'sticker-nice sticker-nice-soft'
+          : def.shape === 'jagged'
+            ? 'sticker-nice sticker-nice-jagged'
+            : def.shape === 'flower'
+              ? 'sticker-nice sticker-nice-flower'
+              : 'sticker-nice sticker-nice-soft'
 
   return (
     <span

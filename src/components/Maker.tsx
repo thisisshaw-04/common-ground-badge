@@ -23,17 +23,18 @@ import {
 import { CordSwatch, Lanyard } from './Lanyard'
 import { StickerFace } from './StickerFace'
 
-const BADGE_W = 340
-const BODY_H = 300
+const BADGE_W = 320
+const BODY_H = 290
 
 interface MakerProps {
   state: BadgeState
   onChange: (next: BadgeState) => void
   onDone: () => void
+  onBack: () => void
   badgeRef: RefObject<HTMLDivElement | null>
 }
 
-export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
+export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps) {
   const [tab, setTab] = useState<StickerTab>('role')
   const [mode, setMode] = useState<'stick' | 'draw'>('stick')
   const [brush, setBrush] = useState<1 | 2 | 3>(2)
@@ -120,14 +121,15 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
     const ctx = c.getContext('2d')
     if (!ctx) return
     const rect = c.getBoundingClientRect()
-    const x = ((e.clientX - rect.left) / rect.width) * c.width
-    const y = ((e.clientY - rect.top) / rect.height) * c.height
+    ctx.strokeStyle = '#111'
+    ctx.lineWidth = brush * 2.2
     ctx.lineCap = 'round'
     ctx.lineJoin = 'round'
-    ctx.strokeStyle = '#ffe600'
-    ctx.lineWidth = brush === 1 ? 3 : brush === 2 ? 7 : 14
     ctx.beginPath()
-    ctx.moveTo(x, y)
+    ctx.moveTo(
+      ((e.clientX - rect.left) / rect.width) * c.width,
+      ((e.clientY - rect.top) / rect.height) * c.height,
+    )
   }
 
   const onDrawPointerMove = (e: ReactPointerEvent<HTMLCanvasElement>) => {
@@ -137,9 +139,10 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
     const ctx = c.getContext('2d')
     if (!ctx) return
     const rect = c.getBoundingClientRect()
-    const x = ((e.clientX - rect.left) / rect.width) * c.width
-    const y = ((e.clientY - rect.top) / rect.height) * c.height
-    ctx.lineTo(x, y)
+    ctx.lineTo(
+      ((e.clientX - rect.left) / rect.width) * c.width,
+      ((e.clientY - rect.top) / rect.height) * c.height,
+    )
     ctx.stroke()
   }
 
@@ -149,22 +152,15 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
     saveDrawing()
   }
 
-  const onStickerPointerDown = (
-    e: ReactPointerEvent<HTMLButtonElement>,
-    uid: string,
-  ) => {
+  const onStickerPointerDown = (e: ReactPointerEvent<HTMLButtonElement>, uid: string) => {
     if (mode === 'draw') return
-    e.stopPropagation()
     dragUid.current = uid
     e.currentTarget.setPointerCapture(e.pointerId)
   }
 
-  const onStickerPointerMove = (
-    e: ReactPointerEvent<HTMLButtonElement>,
-    uid: string,
-  ) => {
+  const onStickerPointerMove = (e: ReactPointerEvent<HTMLButtonElement>, uid: string) => {
     if (dragUid.current !== uid) return
-    const body = badgeRef.current?.querySelector('[data-badge-body]')
+    const body = badgeRef.current?.querySelector('[data-badge-body]') as HTMLElement | null
     if (!body) return
     const rect = body.getBoundingClientRect()
     const x = ((e.clientX - rect.left) / rect.width) * 100
@@ -173,11 +169,7 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
       ...state,
       stickers: state.stickers.map((s) =>
         s.uid === uid
-          ? {
-              ...s,
-              x: Math.min(88, Math.max(6, x)),
-              y: Math.min(88, Math.max(8, y)),
-            }
+          ? { ...s, x: Math.min(92, Math.max(8, x)), y: Math.min(92, Math.max(8, y)) }
           : s,
       ),
     })
@@ -186,32 +178,132 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
   const onStickerPointerUp = () => {
     if (!dragUid.current) return
     dragUid.current = null
-    setHistory((h) => [...h.slice(-30), state])
+    push(state)
   }
 
   const borderClass =
-    state.border === 'track'
-      ? 'track-border'
-      : state.border === 'dashed'
-        ? 'dashed-border'
+    state.border === 'dashed'
+      ? 'dashed-border'
+      : state.border === 'track'
+        ? 'track-border'
         : 'none-border'
 
   return (
-    <div className="page-light relative flex h-dvh flex-col overflow-hidden">
-      <div className="relative mx-auto flex min-h-0 w-full max-w-[1180px] flex-1 flex-col px-4 pt-4 pb-2 sm:px-6 sm:pt-5">
-        <header className="animate-pop mb-4 flex shrink-0 items-start justify-between gap-3">
-          <div>
-            <p className="font-mono text-[10px] tracking-[0.2em] text-[var(--muted)] uppercase">
-              {EVENT.name} · {EVENT.year}
-            </p>
-            <h1 className="mt-1 text-[clamp(1.7rem,3vw,2.4rem)] leading-[1.08] font-bold tracking-[-0.03em] text-[var(--ink)]">
-              Make your badge your own!
-            </h1>
+    <div className="page-fig relative flex h-dvh flex-col overflow-hidden">
+      <div className="relative mx-auto flex min-h-0 w-full max-w-[1180px] flex-1 flex-col px-4 pt-4 pb-4 sm:px-6 sm:pt-5">
+        <header className="animate-pop mb-3 flex shrink-0 items-center justify-between gap-3">
+          <button
+            type="button"
+            onClick={onBack}
+            className="text-sm font-medium text-black/45 hover:text-black"
+          >
+            ← Home
+          </button>
+          <div className="flex flex-wrap items-center justify-center gap-1.5">
+            <span className="brand-chip brand-chip-rect text-[13px] uppercase tracking-tight">
+              Common Ground
+            </span>
+            <span className="brand-chip brand-chip-pill text-[13px]">{EVENT.year}</span>
           </div>
-          <p className="pt-2 text-sm text-[var(--muted)]">Stickers · doodle · lock it in</p>
+          <p className="hidden text-sm text-black/40 sm:block">Stick · doodle · lock in</p>
         </header>
 
-        <div className="relative flex min-h-0 flex-1 flex-col-reverse gap-4 overflow-y-auto md:flex-row md:items-stretch md:gap-6 md:overflow-hidden lg:gap-8">
+        <div className="relative flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto md:flex-row md:items-stretch md:gap-8 md:overflow-hidden">
+          {/* Badge LEFT — FigBuild composition */}
+          <aside className="animate-pop flex shrink-0 flex-col items-center justify-center md:w-[420px] lg:w-[460px]">
+            <div className="flex w-full max-w-[400px] flex-col items-center">
+              <Lanyard cord={state.cord} scale={1.25} />
+              <div
+                ref={badgeRef}
+                className={`relative -mt-12 overflow-hidden bg-white shadow-[0_18px_40px_rgba(0,0,0,0.1)] ${borderClass}`}
+                style={{ width: BADGE_W }}
+              >
+                <div className="flex items-center justify-center gap-2 px-3 pt-4 pb-2">
+                  <span className="brand-chip brand-chip-rect text-[14px] tracking-tight uppercase">
+                    Common Ground
+                  </span>
+                  <span className="brand-chip brand-chip-pill text-[14px]">{EVENT.year}</span>
+                </div>
+
+                <div
+                  data-badge-body
+                  className="relative mx-3 overflow-hidden bg-white"
+                  style={{ height: BODY_H }}
+                >
+                  <input
+                    value={state.name}
+                    onChange={(e) => onChange({ ...state, name: e.target.value })}
+                    onBlur={() => push(state)}
+                    placeholder="write your name"
+                    maxLength={22}
+                    className="font-hand absolute top-4 left-1/2 z-20 w-[88%] -translate-x-1/2 bg-transparent text-center text-4xl text-black outline-none placeholder:text-black/25"
+                  />
+
+                  <canvas
+                    ref={canvasRef}
+                    className={`absolute inset-0 z-10 h-full w-full ${
+                      mode === 'draw' ? 'cursor-crosshair' : 'pointer-events-none'
+                    }`}
+                    onPointerDown={onDrawPointerDown}
+                    onPointerMove={onDrawPointerMove}
+                    onPointerUp={onDrawPointerUp}
+                    onPointerLeave={onDrawPointerUp}
+                  />
+
+                  {state.stickers.map((s) => {
+                    const def = stickerById(s.defId)
+                    if (!def) return null
+                    return (
+                      <button
+                        key={s.uid}
+                        type="button"
+                        className="absolute z-30 touch-none select-none"
+                        style={{
+                          left: `${s.x}%`,
+                          top: `${s.y}%`,
+                          transform: `translate(-50%, -50%) rotate(${s.rotation}deg)`,
+                        }}
+                        onPointerDown={(e) => onStickerPointerDown(e, s.uid)}
+                        onPointerMove={(e) => onStickerPointerMove(e, s.uid)}
+                        onPointerUp={onStickerPointerUp}
+                        onDoubleClick={() => removeSticker(s.uid)}
+                      >
+                        <StickerFace def={def} compact />
+                      </button>
+                    )
+                  })}
+                </div>
+
+                <div className="badge-check relative mt-1 h-[68px]">
+                  <span className="absolute top-3 left-3 inline-flex h-8 w-8 items-center justify-center rounded-full bg-[#ffe34a] text-base shadow-sm">
+                    ✦
+                  </span>
+                </div>
+              </div>
+
+              <div className="mt-4 flex w-full gap-2">
+                <button
+                  type="button"
+                  onClick={undo}
+                  className="flex-1 rounded-xl bg-[var(--panel)] py-2.5 text-sm font-semibold text-black ring-1 ring-black/10"
+                >
+                  Undo
+                </button>
+                <button
+                  type="button"
+                  onClick={clearAll}
+                  className="flex-1 rounded-xl bg-white py-2.5 text-sm font-semibold text-black/60 ring-1 ring-black/10"
+                >
+                  Clear
+                </button>
+                <button type="button" onClick={onDone} className="cta-blue flex-[1.4] py-2.5 text-sm">
+                  I&apos;m done!
+                </button>
+              </div>
+            </div>
+          </aside>
+
+          {/* Tools RIGHT */}
           <section className="animate-pop min-h-0 min-w-0 flex-1 md:overflow-y-auto md:pr-1">
             <div className="mx-auto grid max-w-[640px] grid-cols-2 gap-3 pb-2 sm:gap-3.5 lg:max-w-none">
               <Panel title="Frame" className="col-span-2 sm:col-span-1">
@@ -220,7 +312,7 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
                     [
                       ['none', 'None'],
                       ['dashed', 'Dash'],
-                      ['track', 'BBox'],
+                      ['track', 'Box'],
                     ] as [BorderId, string][]
                   ).map(([id, label]) => (
                     <button
@@ -249,7 +341,7 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
               </Panel>
 
               <Panel title="Cords" className="col-span-2 sm:col-span-1">
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-4 gap-1.5">
                   {(Object.keys(CORDS) as CordId[]).map((id) => (
                     <button
                       key={id}
@@ -346,135 +438,7 @@ export function Maker({ state, onChange, onDone, badgeRef }: MakerProps) {
               </Panel>
             </div>
           </section>
-
-          <aside className="animate-pop flex shrink-0 flex-col items-center justify-center md:w-[460px] lg:w-[500px]">
-            <div className="flex w-full max-w-[460px] flex-col items-center">
-              <Lanyard cord={state.cord} scale={1.4} />
-              <div
-                ref={badgeRef}
-                className={`relative -mt-14 overflow-hidden bg-white shadow-[0_22px_50px_rgba(0,0,0,0.14)] ${borderClass}`}
-                style={{ width: BADGE_W }}
-              >
-                <div className="relative px-4 pt-4 pb-1.5 text-center">
-                  <p className="font-display text-[28px] leading-[0.88] font-bold tracking-[-0.03em] text-black uppercase">
-                    COMMON
-                  </p>
-                  <p className="font-display text-[28px] leading-[0.88] font-bold tracking-[-0.03em] text-black uppercase">
-                    GROUND
-                  </p>
-                  <p className="mt-2 font-mono text-[9px] tracking-[0.18em] text-black/40 uppercase">
-                    ID · BADGE · {EVENT.year}
-                  </p>
-                </div>
-
-                <div
-                  data-badge-body
-                  className="relative mx-3 mb-1 overflow-hidden rounded-sm bg-[#f4f4f2]"
-                  style={{ height: BODY_H }}
-                >
-                  <input
-                    value={state.name}
-                    onChange={(e) => onChange({ ...state, name: e.target.value })}
-                    onBlur={() => push(state)}
-                    placeholder="tap to write your name"
-                    maxLength={22}
-                    className="font-hand absolute top-3 left-1/2 z-20 w-[88%] -translate-x-1/2 bg-transparent text-center text-4xl text-black outline-none placeholder:text-black/30"
-                  />
-
-                  <canvas
-                    ref={canvasRef}
-                    className={`absolute inset-0 z-10 h-full w-full ${
-                      mode === 'draw' ? 'cursor-crosshair' : 'pointer-events-none'
-                    }`}
-                    onPointerDown={onDrawPointerDown}
-                    onPointerMove={onDrawPointerMove}
-                    onPointerUp={onDrawPointerUp}
-                    onPointerLeave={onDrawPointerUp}
-                  />
-
-                  {state.stickers.map((s) => {
-                    const def = stickerById(s.defId)
-                    if (!def) return null
-                    return (
-                      <button
-                        key={s.uid}
-                        type="button"
-                        className="absolute z-30 touch-none select-none"
-                        style={{
-                          left: `${s.x}%`,
-                          top: `${s.y}%`,
-                          transform: `translate(-50%, -50%) rotate(${s.rotation}deg)`,
-                        }}
-                        onPointerDown={(e) => onStickerPointerDown(e, s.uid)}
-                        onPointerMove={(e) => onStickerPointerMove(e, s.uid)}
-                        onPointerUp={onStickerPointerUp}
-                        onDoubleClick={() => removeSticker(s.uid)}
-                      >
-                        <span className="relative inline-block">
-                          <span className="track-label absolute -top-3.5 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap">
-                            ID: {s.trackId}
-                          </span>
-                          <StickerFace def={def} compact />
-                        </span>
-                      </button>
-                    )
-                  })}
-                </div>
-
-                <div className="flex items-end justify-between gap-3 px-4 pt-2 pb-4">
-                  <p className="font-display text-left text-[11px] leading-tight font-bold tracking-wide text-black uppercase">
-                    {EVENT.subtitle}
-                  </p>
-                  <p className="font-mono text-[8px] tracking-[0.14em] text-black/40 uppercase">
-                    {EVENT.date}
-                  </p>
-                </div>
-              </div>
-
-              <div className="mt-3 flex w-full gap-2">
-                <button
-                  type="button"
-                  onClick={undo}
-                  className="flex-1 rounded-full bg-white py-2.5 text-sm font-semibold text-black shadow-sm ring-1 ring-black/10"
-                >
-                  Undo
-                </button>
-                <button
-                  type="button"
-                  onClick={clearAll}
-                  className="flex-1 rounded-full bg-white/70 py-2.5 text-sm font-semibold text-black/70 ring-1 ring-black/10"
-                >
-                  Clear
-                </button>
-                <button
-                  type="button"
-                  onClick={onDone}
-                  className="flex-[1.35] rounded-full bg-[var(--blue)] py-2.5 text-sm font-semibold text-white shadow-[0_4px_0_#2a3fc7] transition active:translate-y-0.5 active:shadow-none"
-                >
-                  I&apos;m done!
-                </button>
-              </div>
-            </div>
-          </aside>
         </div>
-      </div>
-
-      <EventBar />
-    </div>
-  )
-}
-
-function EventBar() {
-  return (
-    <div className="event-bar relative z-20 shrink-0 px-4 py-2.5 sm:px-6">
-      <div className="mx-auto flex max-w-[1180px] flex-wrap items-center justify-between gap-x-4 gap-y-1 text-[13px] sm:text-sm">
-        <p className="font-semibold tracking-tight">
-          <span className="font-display italic font-medium">{EVENT.name}</span>
-          <span className="mx-2 font-black uppercase">{EVENT.subtitle}</span>
-        </p>
-        <p className="font-mono text-[11px] tracking-wide text-black/70 uppercase sm:text-xs">
-          {EVENT.date} · {EVENT.year} · {EVENT.place}
-        </p>
       </div>
     </div>
   )
