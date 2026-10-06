@@ -9,8 +9,8 @@ interface LandingProps {
 }
 
 const BADGE_W = 380
-const BODY_H = 180
-const FOOT_H = 240
+const BODY_H = 158
+const FOOT_H = 208
 
 export function Landing({ onStart }: LandingProps) {
   const demo = DEMO_STATE
