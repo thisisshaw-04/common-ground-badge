@@ -435,25 +435,25 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                 </div>
               </div>
 
-              <div className="mt-4 flex w-full gap-2">
+              <div className="mt-4 flex gap-2" style={{ width: BADGE_W }}>
                 <button
                   type="button"
                   onClick={undo}
-                  className="flex-1 border border-black bg-white py-2.5 text-sm font-semibold text-black"
+                  className="min-w-0 flex-1 border border-black bg-white py-2.5 text-sm font-semibold text-black"
                 >
                   Undo
                 </button>
                 <button
                   type="button"
                   onClick={clearAll}
-                  className="flex-1 border border-black/30 bg-white py-2.5 text-sm font-semibold text-black/60"
+                  className="min-w-0 flex-1 border border-black/30 bg-white py-2.5 text-sm font-semibold text-black/60"
                 >
                   Clear
                 </button>
                 <button
                   type="button"
                   onClick={onDone}
-                  className="cta-blue flex-[1.4] py-2.5 text-sm !rounded-none"
+                  className="cta-blue min-w-0 flex-[1.4] py-2.5 text-sm !rounded-none"
                 >
                   I&apos;m done!
                 </button>
