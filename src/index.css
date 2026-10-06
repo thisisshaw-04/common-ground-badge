@@ -460,51 +460,22 @@ textarea {
 }
 
 .poster-lockup {
-  /* Flush to badge top — COMMON box shares the outer top edge */
-  padding: 0 1rem 0.75rem;
-  min-height: 10.5rem;
-}
-
-.poster-stack {
-  position: relative;
-  height: 6.6rem;
-}
-
-.poster-common-wrap {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 2;
-}
-
-.poster-ground-wrap {
-  position: absolute;
-  top: 2.35rem;
-  right: 0;
-  z-index: 3;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-}
-
-.poster-meta {
+  /* Image sits flush against the badge top edge */
   margin: 0;
-  font-size: 9px;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: #111;
-  line-height: 1;
+  padding: 0;
+  line-height: 0;
 }
 
-.poster-meta-nexalune {
-  margin-top: 0.4rem;
-  margin-left: 0.05rem;
-}
-
-.poster-meta-makeathon {
-  margin-bottom: 0.35rem;
-  margin-right: 0.05rem;
+.poster-lockup-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
 }
 
 .poster-box {
@@ -519,40 +490,7 @@ textarea {
   line-height: 1;
   text-transform: uppercase;
   white-space: nowrap;
-}
-
-/* Top border of COMMON is flush with the badge outer top */
-.poster-box-common {
-  font-size: clamp(1.55rem, 5vw, 2.05rem);
   padding: 0.38em 0.42em 0.3em;
-  border-top: none;
-  /* share the shell's top edge */
-  margin-top: 0;
-  box-shadow: 0 -1px 0 #111;
-}
-
-.badge-shell-wiggly .poster-box-common {
-  border-top: 1.5px solid #111;
-  box-shadow: none;
-}
-
-.poster-box-ground {
-  font-size: clamp(1.55rem, 5vw, 2.05rem);
-  padding: 0.38em 0.42em 0.3em;
-}
-
-.poster-box-date {
-  display: block;
-  width: fit-content;
-  font-size: 1.05rem;
-  padding: 0.42em 0.5em;
-  letter-spacing: -0.02em;
-  margin-top: 0.28rem;
-}
-
-.poster-date-block {
-  margin-top: 0.35rem;
-  width: fit-content;
 }
 
 .poster-name-input {
@@ -561,15 +499,6 @@ textarea {
 
 .poster-foot {
   border-top: none !important;
-}
-
-.badge-inner-dashed {
-  border-top: none;
-  border: 1.5px dashed #111;
-}
-
-.badge-inner-box {
-  border: 1.5px solid #111;
 }
 
 /* legacy class names kept for any leftover refs */

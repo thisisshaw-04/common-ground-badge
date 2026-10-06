@@ -3,9 +3,6 @@ import { type BorderId, type FootVideoId } from '../lib/badge'
 import { BadgeOuterFrame, outerShellClass } from './BadgeFrame'
 import { FootVideo } from './FootVideo'
 
-/** Poster date lockup — matches the Common Ground print system. */
-export const POSTER_DATE = '11.10.26'
-
 interface BadgeFaceProps {
   width: number
   footVideo: FootVideoId
@@ -18,10 +15,11 @@ interface BadgeFaceProps {
   className?: string
 }
 
+const LOCKUP_SRC = `${import.meta.env.BASE_URL}common-ground-lockup.png`
+
 /**
- * Common Ground poster lockup flush to the badge top:
- * overlapping COMMON / GROUND frames, NEXALUNE / MAKEATHON / DATE,
- * framed bottom video panel, selectable outer frame.
+ * Badge face with the Common Ground lockup image flush to the top,
+ * interactive body, framed foot video, and selectable outer frame.
  */
 export function BadgeFace({
   width,
@@ -41,24 +39,14 @@ export function BadgeFace({
     >
       <BadgeOuterFrame border={border} />
 
-      {/* Typographic lockup — flush to top edge */}
+      {/* Lockup image — flush to badge top */}
       <div className="poster-lockup relative z-10">
-        <div className="poster-stack">
-          <div className="poster-common-wrap">
-            <span className="poster-box poster-box-common">COMMON</span>
-            <p className="poster-meta poster-meta-nexalune">NEXALUNE</p>
-          </div>
-
-          <div className="poster-ground-wrap">
-            <p className="poster-meta poster-meta-makeathon">MAKEATHON</p>
-            <span className="poster-box poster-box-ground">GROUND</span>
-          </div>
-        </div>
-
-        <div className="poster-date-block">
-          <p className="poster-meta">DATE</p>
-          <span className="poster-box poster-box-date">{POSTER_DATE}</span>
-        </div>
+        <img
+          src={LOCKUP_SRC}
+          alt="Common Ground Makeathon"
+          className="poster-lockup-img"
+          draggable={false}
+        />
       </div>
 
       {/* Interactive white field */}
