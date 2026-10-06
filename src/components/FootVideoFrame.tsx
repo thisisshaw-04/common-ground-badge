@@ -74,9 +74,10 @@ export function FootVideoFrame({ id, height }: FootVideoFrameProps) {
           d={FOOT_FRAME_PATH}
           fill="none"
           stroke="#111"
-          strokeWidth="5"
+          strokeWidth="2.25"
           strokeLinejoin="round"
           strokeLinecap="round"
+          vectorEffect="non-scaling-stroke"
         />
       </svg>
     </div>
