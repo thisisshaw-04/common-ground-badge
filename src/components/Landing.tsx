@@ -1,5 +1,6 @@
 import { DEMO_STATE, EVENT, stickerById } from '../lib/badge'
 import { DecoCorners } from './DecoCorners'
+import { FootVideo } from './FootVideo'
 import { Lanyard } from './Lanyard'
 import { StickerFace } from './StickerFace'
 
@@ -56,10 +57,8 @@ export function Landing({ onStart }: LandingProps) {
               })}
             </div>
 
-            <div className="badge-check relative mx-0 mt-1 h-[72px]">
-              <span className="absolute top-3 left-3 inline-flex h-9 w-9 items-center justify-center rounded-full bg-[#ffe34a] text-lg shadow-sm">
-                ✦
-              </span>
+            <div className="badge-foot relative mx-0 h-[80px] overflow-hidden bg-[#d8d8d8]">
+              <FootVideo id={demo.footVideo} />
             </div>
           </div>
         </div>

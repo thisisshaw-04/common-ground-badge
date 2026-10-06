@@ -12,6 +12,7 @@ export const EVENT = {
 export type CordId = 'ink' | 'signal' | 'flare' | 'acid'
 export type BorderId = 'none' | 'dashed' | 'track'
 export type StickerTab = 'role' | 'track' | 'vibe' | 'pronouns' | 'about'
+export type FootVideoId = 'signal' | 'weave' | 'flare' | 'spectrum'
 
 /** Die-cut shapes — jagged/flower match FigBuild energy. */
 export type StickerShape = 'pill' | 'soft' | 'ticket' | 'tag' | 'jagged' | 'flower'
@@ -39,8 +40,25 @@ export interface BadgeState {
   name: string
   cord: CordId
   border: BorderId
+  footVideo: FootVideoId
   stickers: PlacedSticker[]
   drawingDataUrl: string | null
+}
+
+/** Videos shown in the grey foot strip at the bottom of the badge. */
+export const FOOT_VIDEOS: Record<
+  FootVideoId,
+  { label: string; file: string; swatch: string }
+> = {
+  signal: { label: 'Signal', file: 'signal.mp4', swatch: '#2fe08a' },
+  weave: { label: 'Weave', file: 'weave.mp4', swatch: '#111111' },
+  flare: { label: 'Flare', file: 'flare.mp4', swatch: '#ff5ec8' },
+  spectrum: { label: 'Spectrum', file: 'spectrum.mp4', swatch: '#4c54f5' },
+}
+
+export function footVideoSrc(id: FootVideoId) {
+  const base = import.meta.env.BASE_URL || '/'
+  return `${base}foot-videos/${FOOT_VIDEOS[id].file}`
 }
 
 export const CORDS: Record<
@@ -101,6 +119,7 @@ export const DEFAULT_STATE: BadgeState = {
   name: '',
   cord: 'ink',
   border: 'none',
+  footVideo: 'signal',
   stickers: [],
   drawingDataUrl: null,
 }
@@ -109,6 +128,7 @@ export const DEMO_STATE: BadgeState = {
   name: 'you',
   cord: 'ink',
   border: 'none',
+  footVideo: 'flare',
   stickers: DEMO_STICKERS,
   drawingDataUrl: null,
 }

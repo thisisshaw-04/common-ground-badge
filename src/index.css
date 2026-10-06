@@ -258,6 +258,11 @@ textarea {
   border-top: 1px solid rgba(17, 17, 17, 0.1);
 }
 
+.badge-foot {
+  background: #d8d8d8;
+  border-top: 1.5px solid #111;
+}
+
 .badge-check {
   background-color: #3d5afe;
   background-image:

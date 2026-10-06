@@ -10,17 +10,20 @@ import {
 import {
   CORDS,
   EVENT,
+  FOOT_VIDEOS,
   STICKERS,
   TABS,
   stickerById,
   type BadgeState,
   type BorderId,
   type CordId,
+  type FootVideoId,
   type PlacedSticker,
   type StickerDef,
   type StickerTab,
 } from '../lib/badge'
 import { CordSwatch, Lanyard } from './Lanyard'
+import { FootVideo } from './FootVideo'
 import { StickerFace } from './StickerFace'
 
 const BADGE_W = 320
@@ -274,10 +277,8 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                   })}
                 </div>
 
-                <div className="badge-check relative mt-1 h-[68px]">
-                  <span className="absolute top-3 left-3 inline-flex h-8 w-8 items-center justify-center rounded-full bg-[#ffe34a] text-base shadow-sm">
-                    ✦
-                  </span>
+                <div className="badge-foot relative mt-0 h-[88px] overflow-hidden bg-[#d8d8d8]">
+                  <FootVideo id={state.footVideo} />
                 </div>
               </div>
 
@@ -356,6 +357,46 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                       <CordSwatch cord={id} />
                     </button>
                   ))}
+                </div>
+              </Panel>
+
+              <Panel title="Foot video" className="col-span-2">
+                <p className="mb-2.5 text-[11px] text-[var(--muted)]">
+                  Plays in the grey strip at the bottom of the card
+                </p>
+                <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                  {(Object.keys(FOOT_VIDEOS) as FootVideoId[]).map((id) => {
+                    const v = FOOT_VIDEOS[id]
+                    return (
+                      <button
+                        key={id}
+                        type="button"
+                        onClick={() => push({ ...state, footVideo: id })}
+                        className={`overflow-hidden rounded-xl text-left ring-offset-2 ${
+                          state.footVideo === id
+                            ? 'ring-2 ring-[var(--blue)]'
+                            : 'ring-1 ring-black/10'
+                        }`}
+                      >
+                        <div className="relative h-14 bg-[#d8d8d8]">
+                          <video
+                            src={`${import.meta.env.BASE_URL}foot-videos/${v.file}`}
+                            muted
+                            playsInline
+                            preload="metadata"
+                            className="h-full w-full object-cover"
+                          />
+                          <span
+                            className="absolute bottom-1 left-1 h-2.5 w-2.5 rounded-full ring-1 ring-white/80"
+                            style={{ background: v.swatch }}
+                          />
+                        </div>
+                        <p className="bg-white px-2 py-1.5 font-mono text-[10px] tracking-wide uppercase">
+                          {v.label}
+                        </p>
+                      </button>
+                    )
+                  })}
                 </div>
               </Panel>
 
