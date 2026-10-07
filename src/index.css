@@ -930,11 +930,6 @@ button.track-box:not(.is-selected):hover video {
   background: #3530d8;
 }
 
-.deco-cluster {
-  pointer-events: none;
-  user-select: none;
-}
-
 .tape-item .sticker-nice-flower {
   min-width: 4.4rem;
   min-height: 4.4rem;
