@@ -69,7 +69,8 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
       const room = Math.max(0, avail - TRACK_LEFT - 8)
       const scale = Math.min(1, setW ? room / setW : 1, setH ? MAX_STICKER_H / setH : 1)
       const copies = setW ? Math.max(1, Math.ceil((avail + ROLL_W) / (setW * scale))) : 1
-      full.current = avail
+      /* Leave a sliver so the cut (left) edge of the tape sits inside the panel. */
+      full.current = Math.max(ROLL_W, avail - 8)
       setFit((f) => (f.scale === scale && f.copies === copies ? f : { scale, copies }))
       paint(len.current)
     }
