@@ -510,10 +510,23 @@ button.track-box:not(.is-selected):hover video {
   height: 80px;
   width: var(--strip-w);
   overflow: hidden;
-  background: #fff;
-  border: 1px solid #ececec;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.95) 0%,
+      rgba(255, 255, 255, 0.25) 16%,
+      transparent 32%,
+      rgba(170, 176, 186, 0.08) 58%,
+      rgba(255, 255, 255, 0.35) 78%,
+      rgba(130, 136, 146, 0.12) 100%
+    ),
+    linear-gradient(180deg, #f6f7f9 0%, #ffffff 42%, #eef0f3 100%);
+  border: 1px solid #e4e6ea;
   border-left: 0;
   border-radius: 0 20px 0 0;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.05);
 }
 
 /* Glossy cylinder on the wound end of the tape */
