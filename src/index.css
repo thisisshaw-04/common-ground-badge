@@ -268,7 +268,7 @@ button.track-box:not(.is-selected):hover video {
 .sticker-nice {
   position: relative;
   border: 0;
-  box-shadow: 0 2px 3px rgba(17, 17, 17, 0.14);
+  box-shadow: none;
   font-weight: 400;
   transition: transform 0.15s ease;
 }
@@ -335,7 +335,7 @@ button.track-box:not(.is-selected):hover video {
     0% 72%
   );
   border: none;
-  box-shadow: 0 2px 3px rgba(17, 17, 17, 0.14);
+  box-shadow: none;
   padding-inline: 1.35rem 1.55rem !important;
   padding-block: 0.55rem !important;
   border-radius: 0;
@@ -358,7 +358,7 @@ button.track-box:not(.is-selected):hover video {
   --bump-out: 0.6rem;
   border-radius: 5px;
   box-shadow: none;
-  filter: drop-shadow(0 2px 3px rgba(17, 17, 17, 0.14));
+  filter: none;
   padding-inline: 1.15rem !important;
   padding-block: 0.75rem !important;
   margin-inline: var(--bump-out);
@@ -389,7 +389,7 @@ button.track-box:not(.is-selected):hover video {
   border: 0;
   box-shadow: none;
   background: transparent;
-  filter: drop-shadow(0 2px 3px rgba(17, 17, 17, 0.14));
+  filter: none;
   min-width: 6.4rem;
   min-height: 4.4rem;
   padding-inline: 1.5rem !important;
@@ -400,7 +400,7 @@ button.track-box:not(.is-selected):hover video {
   border: 0;
   box-shadow: none;
   background: transparent;
-  filter: drop-shadow(0 2px 3px rgba(17, 17, 17, 0.14));
+  filter: none;
   min-width: 7.2rem;
   min-height: 3.8rem;
   padding-inline: 1.45rem !important;
@@ -411,7 +411,7 @@ button.track-box:not(.is-selected):hover video {
   border: 0;
   box-shadow: none;
   background: transparent;
-  filter: drop-shadow(0 2px 3px rgba(17, 17, 17, 0.14));
+  filter: none;
   aspect-ratio: 1;
   min-width: 4.8rem;
   min-height: 4.8rem;
@@ -422,7 +422,7 @@ button.track-box:not(.is-selected):hover video {
   border: 0;
   box-shadow: none;
   background: transparent;
-  filter: drop-shadow(0 2px 3px rgba(17, 17, 17, 0.14));
+  filter: none;
   aspect-ratio: 1;
   min-width: 5.2rem;
   min-height: 5.2rem;
@@ -445,7 +445,7 @@ button.track-box:not(.is-selected):hover video {
 .sticker-nice-flower {
   background: transparent;
   box-shadow: none;
-  filter: drop-shadow(0 2px 3px rgba(17, 17, 17, 0.14));
+  filter: none;
   aspect-ratio: 1;
   min-width: 4.8rem;
   min-height: 4.8rem;
@@ -477,7 +477,7 @@ button.track-box:not(.is-selected):hover video {
 }
 
 .sticker-nice-blob {
-  box-shadow: 0 2px 3px rgba(17, 17, 17, 0.14);
+  box-shadow: none;
   border-radius: 42% 58% 48% 52% / 55% 42% 58% 45%;
   min-width: 5.6rem;
   min-height: 3.8rem;
