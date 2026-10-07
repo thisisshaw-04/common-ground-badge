@@ -1,27 +1,45 @@
-import { useEffect, useLayoutEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react'
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type PointerEvent as ReactPointerEvent,
+} from 'react'
 import type { StickerDef } from '../lib/badge'
 import { StickerFace } from './StickerFace'
 
 interface StickerRollProps {
-  /** Changes when the category changes — triggers roll-up → swap → unroll. */
+  /** Changes when the category changes — triggers wind → swap → unroll. */
   tabKey: string
   stickers: StickerDef[]
   peelingId?: string | null
   onPeelStart: (def: StickerDef, e: ReactPointerEvent<HTMLButtonElement>) => void
 }
 
-const TRACK_LEFT = 4
-const TAPE_PAD_Y = 12
-const ROLL_UP_MS = 500
-const UNROLL_MS = 800
+/** Strip height — large enough for StickerFace `large` labels to read. */
+const TAPE_H = 96
+/** Outer paper diameter when the strip is fully out (thin remaining wrap). */
+const ROLL_MIN = 102
+/** Outer paper diameter when the strip is fully wound on. */
+const ROLL_MAX = 116
+/** Cardboard tube outer diameter — never animates. */
+const CORE = 52
+/** Tube hole — never animates. */
+const HOLE = 26
+/** Visible cylinder thickness on the right (¾ view). */
+const RIM = 10
+const CUT = 2
+const TRACK_PAD = 10
+const ROLL_UP_MS = 520
+const UNROLL_MS = 840
 
-const ease = (t: number) => {
-  const c = 1.001
-  return t < 0.5 ? (4 * t * t * t) / c : 1 - Math.pow(-2 * t + 2, 3) / 2
-}
+const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2)
 
 /**
- * Sticker tape: a white strip that winds onto a circular spool at the right.
+ * Washi tape: a paper strip of unique stickers feeding a side-on spool.
+ * The spool is a round face (kraft core + hole) with a short ¾ rim.
+ * Core and hole stay put; only the wound paper ring grows and shrinks.
  */
 export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }: StickerRollProps) {
   const stageRef = useRef<HTMLDivElement>(null)
@@ -37,23 +55,15 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
     if (!el) return
     len.current = v
     const wound = 1 - v
-    const tapeH = parseFloat(getComputedStyle(el).getPropertyValue('--tape-h')) || 128
-    /* Cardboard core stays put. Only the paper ring grows as tape winds on. */
-    const coreD = tapeH * 0.56
-    const ring = tapeH * (0.055 + wound * 0.2)
-    const outerD = Math.max(tapeH, coreD + ring * 2)
-    const coreVb = (50 * (coreD / outerD)).toFixed(3)
-    const w = outerD + v * Math.max(0, full.current - outerD)
+    const rollD = ROLL_MIN + wound * (ROLL_MAX - ROLL_MIN)
+    const faceCx = RIM + ROLL_MAX / 2
+    const stripRight = faceCx - rollD / 2
+    const w = v * Math.max(0, full.current)
     el.style.setProperty('--strip-w', `${w.toFixed(2)}px`)
-    el.style.setProperty('--roll-w', `${outerD.toFixed(2)}px`)
-    el.style.setProperty('--core-vb', coreVb)
+    el.style.setProperty('--strip-right', `${stripRight.toFixed(2)}px`)
+    el.style.setProperty('--roll-d', `${rollD.toFixed(2)}px`)
     el.style.setProperty('--wound', wound.toFixed(4))
-    const rx = coreVb
-    const ry = (Number(coreVb) * 0.78).toFixed(3)
-    el.querySelectorAll('.tape-roll-hole').forEach((hole) => {
-      hole.setAttribute('rx', rx)
-      hole.setAttribute('ry', ry)
-    })
+    el.style.setProperty('--spin', `${(wound * 28).toFixed(2)}px`)
   }
 
   const run = (to: number, ms: number) =>
@@ -80,12 +90,12 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
       const set = track.firstElementChild as HTMLElement | null
       const setW = set?.offsetWidth ?? 0
       const setH = set?.offsetHeight ?? 0
-      const stripH = stage.querySelector('.tape-strip')?.clientHeight ?? 108
-      const tapeH = parseFloat(getComputedStyle(stage).getPropertyValue('--tape-h')) || 128
-      const room = Math.max(0, avail - TRACK_LEFT - tapeH - 10)
-      const next = Math.min(setH ? (stripH - TAPE_PAD_Y) / setH : 1, setW ? room / setW : 1)
-      /* Hairline inset so the cut edge sits just inside the panel. */
-      full.current = Math.max(tapeH, avail - 1)
+      const faceCx = RIM + ROLL_MAX / 2
+      const stripRight = faceCx - ROLL_MIN / 2
+      full.current = Math.max(0, avail - stripRight - CUT)
+      const roomW = Math.max(0, full.current - TRACK_PAD * 2)
+      const roomH = TAPE_H - 18
+      const next = Math.min(1, setH ? roomH / setH : 1, setW ? roomW / setW : 1)
       setScale((s) => (Math.abs(s - next) < 0.002 ? s : next))
       paint(len.current)
     }
@@ -114,16 +124,32 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
 
   useEffect(() => () => void ++anim.current, [])
 
-  const uid = shown.key.replace(/[^a-z0-9]/gi, '') || 'roll'
-
   return (
     <div className="tape-bed">
-      <div ref={stageRef} className="tape-stage" aria-label="Sticker tape">
+      <div
+        ref={stageRef}
+        className="tape-stage"
+        aria-label="Sticker tape"
+        style={
+          {
+            '--tape-h': `${TAPE_H}px`,
+            '--roll-max': `${ROLL_MAX}px`,
+            '--roll-d': `${ROLL_MIN}px`,
+            '--rim': `${RIM}px`,
+            '--core': `${CORE}px`,
+            '--hole': `${HOLE}px`,
+            '--face-cx': `${RIM + ROLL_MAX / 2}px`,
+          } as CSSProperties
+        }
+      >
         <div className="tape-strip">
           <div
             ref={trackRef}
             className="tape-track"
-            style={{ left: TRACK_LEFT, transform: `translateY(-50%) scale(${scale})` }}
+            style={{
+              left: TRACK_PAD,
+              transform: `translateY(-50%) scale(${scale})`,
+            }}
           >
             <div className="tape-set">
               {shown.stickers.map((s) => {
@@ -147,40 +173,16 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
             </div>
           </div>
         </div>
-        <svg className="tape-roll" viewBox="0 0 100 100" shapeRendering="geometricPrecision" aria-hidden>
-          <defs>
-            <radialGradient id={`tape-rim-${uid}`} cx="48%" cy="28%" r="70%">
-              <stop offset="0" stopColor="#ffffff" />
-              <stop offset="0.55" stopColor="#f3f3f3" />
-              <stop offset="1" stopColor="#e4e4e4" />
-            </radialGradient>
-            <radialGradient id={`tape-hole-${uid}`} cx="50%" cy="36%" r="68%">
-              <stop offset="0" stopColor="#3a3a3a" />
-              <stop offset="0.42" stopColor="#7a7a7a" />
-              <stop offset="1" stopColor="#d4d4d4" />
-            </radialGradient>
-            <mask id={`tape-donut-${uid}`} maskUnits="userSpaceOnUse">
-              <rect width="100" height="100" fill="#000" />
-              <circle cx="50" cy="50" r="50" fill="#fff" />
-              <ellipse className="tape-roll-hole" cx="50" cy="50" rx="37" ry="28.9" fill="#000" />
-            </mask>
-          </defs>
-          <ellipse
-            className="tape-roll-hole"
-            cx="50"
-            cy="50"
-            rx="37"
-            ry="28.9"
-            fill={`url(#tape-hole-${uid})`}
-          />
-          <circle
-            cx="50"
-            cy="50"
-            r="50"
-            fill={`url(#tape-rim-${uid})`}
-            mask={`url(#tape-donut-${uid})`}
-          />
-        </svg>
+
+        <div className="tape-spool" aria-hidden>
+          <span className="tape-spool-rim" />
+          <span className="tape-spool-face">
+            <span className="tape-spool-paper" />
+            <span className="tape-spool-core" />
+            <span className="tape-spool-hole" />
+            <span className="tape-spool-glint" />
+          </span>
+        </div>
       </div>
     </div>
   )

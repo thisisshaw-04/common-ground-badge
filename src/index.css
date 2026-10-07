@@ -573,80 +573,187 @@ button.track-box:not(.is-selected):hover video {
   transform: scale(0.96);
 }
 
-/* —— FigBuild sticker tape: white strip with a rounded top-right and a grey-ring roll —— */
+/* —— Washi tape: paper strip + side-on spool with a short ¾ rim —— */
 .tape-bed {
-  padding: 0.35rem 0 1.1rem;
+  padding: 0.55rem 0 1.15rem;
   overflow: visible;
   user-select: none;
 }
 
 .tape-stage {
-  --tape-h: 128px;
-  --strip-w: 64px;
-  --roll-w: var(--tape-h);
-  --core-vb: 37;
+  --tape-h: 96px;
+  --roll-max: 116px;
+  --roll-d: 102px;
+  --rim: 10px;
+  --core: 52px;
+  --hole: 26px;
+  --face-cx: 68px;
+  --strip-w: 0px;
+  --strip-right: 17px;
   --wound: 0;
+  --spin: 0px;
   position: relative;
-  height: max(var(--tape-h), var(--roll-w));
+  height: var(--roll-max);
   overflow: visible;
 }
 
-/* Soft contact shadow under the paper strip */
 .tape-stage::before {
   content: '';
   position: absolute;
-  z-index: 1;
-  top: 8px;
-  right: calc(var(--roll-w) * 0.5);
-  height: calc(var(--tape-h) - 8px);
-  width: calc(var(--strip-w) - var(--roll-w) * 0.5 - 8px);
-  border-radius: 2px;
+  z-index: 0;
+  top: calc(50% + var(--tape-h) / 2 - 7px);
+  right: calc(var(--strip-right) + var(--roll-d) * 0.45);
+  width: var(--strip-w);
+  height: 10px;
   pointer-events: none;
-  box-shadow: 0 8px 14px -6px rgba(17, 17, 17, 0.12);
+  border-radius: 4px;
+  box-shadow: 0 8px 12px -6px rgba(17, 17, 17, 0.16);
 }
 
 .tape-strip {
   position: absolute;
   z-index: 2;
-  top: 0;
-  /* Stop at the spool’s center so the rectangle never cuts the circle. */
-  right: calc(var(--roll-w) * 0.5);
+  top: 50%;
+  right: var(--strip-right);
   height: var(--tape-h);
-  width: calc(var(--strip-w) - var(--roll-w) * 0.5);
-  overflow: hidden;
+  width: var(--strip-w);
+  transform: translateY(-50%);
+  overflow-x: clip;
+  overflow-y: visible;
   background:
     linear-gradient(
       180deg,
-      rgba(255, 255, 255, 0.85) 0%,
-      rgba(255, 255, 255, 0.2) 20%,
-      transparent 42%,
-      rgba(255, 255, 255, 0.25) 78%,
-      rgba(0, 0, 0, 0.03) 100%
-    ),
-    #ffffff;
-  border: 1px solid #e8e8e8;
-  border-left: 1px solid #bbb;
+      #ffffff 0%,
+      #fbfbfb 38%,
+      #f4f4f4 100%
+    );
+  border-top: 1px solid #ececec;
+  border-bottom: 1px solid #e4e4e4;
+  border-left: 1px solid #c6c6c6;
   border-right: 0;
   border-radius: 0;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  /*
+   * Cut a circular bite matching the spool face so the paper never
+   * squares off across the roll. Center is the face center, from the
+   * strip’s right edge: half the current outer diameter.
+   */
+  -webkit-mask-image: radial-gradient(
+    circle at calc(100% - var(--roll-d) * 0.5) 50%,
+    transparent calc(var(--roll-d) * 0.5 - 0.4px),
+    #000 calc(var(--roll-d) * 0.5)
+  );
+  mask-image: radial-gradient(
+    circle at calc(100% - var(--roll-d) * 0.5) 50%,
+    transparent calc(var(--roll-d) * 0.5 - 0.4px),
+    #000 calc(var(--roll-d) * 0.5)
+  );
 }
 
-.tape-roll {
+.tape-spool {
   position: absolute;
-  z-index: 6;
-  top: 0;
+  z-index: 4;
+  top: 50%;
   right: 0;
-  width: var(--roll-w);
-  height: var(--roll-w);
-  display: block;
-  overflow: visible;
+  width: calc(var(--rim) + var(--roll-max));
+  height: var(--roll-max);
+  transform: translateY(-50%);
   pointer-events: none;
-  filter: drop-shadow(0 2px 3px rgba(17, 17, 17, 0.08));
 }
 
-.tape-roll-hole {
-  rx: var(--core-vb);
-  ry: calc(var(--core-vb) * 0.78);
+.tape-spool-rim {
+  position: absolute;
+  top: 50%;
+  right: calc(var(--face-cx) - var(--rim));
+  width: var(--roll-d);
+  height: calc(var(--roll-d) - 4px);
+  transform: translate(50%, -50%);
+  border-radius: 50%;
+  background: linear-gradient(
+    90deg,
+    #d5d5d5 0%,
+    #f4f4f4 38%,
+    #e8e8e8 68%,
+    #c4c4c4 100%
+  );
+  box-shadow:
+    2px 2px 6px rgba(17, 17, 17, 0.12),
+    inset -1px 0 0 rgba(255, 255, 255, 0.5);
+}
+
+.tape-spool-face {
+  position: absolute;
+  top: 50%;
+  right: var(--face-cx);
+  width: var(--roll-d);
+  height: var(--roll-d);
+  transform: translate(50%, -50%);
+  border-radius: 50%;
+  overflow: hidden;
+  background: #f3f3f3;
+  box-shadow:
+    inset 0 0 0 1px rgba(17, 17, 17, 0.1),
+    0 1px 2px rgba(17, 17, 17, 0.06);
+}
+
+.tape-spool-paper {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    repeating-radial-gradient(
+      circle at 48% 44%,
+      #ffffff 0 2.4px,
+      #ececec 2.4px 3.2px,
+      #f7f7f7 3.2px 5.4px
+    );
+  background-position: var(--spin) 0;
+}
+
+.tape-spool-core {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--core);
+  height: var(--core);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background:
+    repeating-conic-gradient(
+      from 18deg,
+      rgba(90, 58, 24, 0.07) 0 6deg,
+      transparent 6deg 14deg
+    ),
+    radial-gradient(circle at 38% 32%, #e2c49a 0%, #c4a06a 48%, #a67c45 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(90, 58, 24, 0.28),
+    inset 0 2px 3px rgba(255, 255, 255, 0.28);
+}
+
+.tape-spool-hole {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--hole);
+  height: var(--hole);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 30%, #6a5040 0%, #3a2a20 58%, #241810 100%);
+  box-shadow:
+    inset 0 2px 5px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(90, 58, 24, 0.35);
+}
+
+.tape-spool-glint {
+  position: absolute;
+  inset: 8%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 32% 26%,
+    rgba(255, 255, 255, 0.55) 0 12%,
+    transparent 38%
+  );
+  pointer-events: none;
 }
 
 .tape-track {
@@ -663,8 +770,8 @@ button.track-box:not(.is-selected):hover video {
   display: flex;
   flex-shrink: 0;
   align-items: center;
-  gap: 0.75rem;
-  padding-right: 0.75rem;
+  gap: 0.7rem;
+  padding-right: 0.5rem;
 }
 
 .tape-item {
@@ -676,6 +783,8 @@ button.track-box:not(.is-selected):hover video {
   background: transparent;
   border: 0;
   padding: 0;
+  filter: none;
+  box-shadow: none;
   transition:
     transform 0.16s ease,
     filter 0.16s ease,
@@ -683,7 +792,7 @@ button.track-box:not(.is-selected):hover video {
 }
 
 .tape-item:hover {
-  transform: translateY(-3px) rotate(-3deg);
+  transform: translateY(-4px) rotate(-3deg);
   filter: drop-shadow(0 8px 10px rgba(0, 0, 0, 0.16));
 }
 
