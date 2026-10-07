@@ -11,7 +11,7 @@ export const EVENT = {
 
 export type CordId = 'ink' | 'signal' | 'flare' | 'acid'
 export type BorderId = 'none' | 'dashed' | 'dotted' | 'wiggly'
-export type StickerTab = 'role' | 'year' | 'track' | 'vibe' | 'pronouns' | 'about'
+export type StickerTab = 'role' | 'track' | 'vibe' | 'pronouns' | 'about'
 export type FootVideoId =
   | 'ink'
   | 'paper'
@@ -104,10 +104,6 @@ export const STICKERS: StickerDef[] = [
   { id: 'researcher', tab: 'role', label: 'RESEARCHER', color: '#2ad4ff', textColor: '#111', shape: 'bump', tilt: -3 },
   { id: 'wildcard', tab: 'role', label: 'WILDCARD', color: '#d44cff', textColor: '#fff', shape: 'bump', tilt: 5 },
   /* Year — FigBuild clover sheet */
-  { id: 'year1', tab: 'year', label: '1ST YEAR', color: '#c9b8ff', textColor: '#111', shape: 'blob', tilt: -4 },
-  { id: 'year2', tab: 'year', label: '2ND YEAR', color: '#ff2db8', textColor: '#111', shape: 'blob', tilt: 3 },
-  { id: 'year3', tab: 'year', label: '3RD YEAR', color: '#1ecf6a', textColor: '#111', shape: 'blob', tilt: -3 },
-  { id: 'year4', tab: 'year', label: '4TH YEAR', color: '#3b4cff', textColor: '#fff', shape: 'blob', tilt: 4 },
   { id: 'dxtech', tab: 'track', label: 'DESIGN × TECH', color: '#2fe08a', textColor: '#111', shape: 'ticket', tilt: -3 },
   { id: 'cxtech', tab: 'track', label: 'CULTURE × TECH', color: '#ffe34a', textColor: '#111', shape: 'ticket', tilt: 3 },
   { id: 'solo', tab: 'track', label: 'SOLO BUILDER', color: '#4c54f5', textColor: '#fff', shape: 'tag', tilt: -4 },
@@ -139,7 +135,6 @@ export const DEMO_STICKERS: PlacedSticker[] = [
 
 export const TABS: { id: StickerTab; label: string }[] = [
   { id: 'role', label: 'ROLE' },
-  { id: 'year', label: 'YEAR' },
   { id: 'track', label: 'TRACK' },
   { id: 'vibe', label: 'VIBE' },
   { id: 'pronouns', label: 'PRONOUNS' },
