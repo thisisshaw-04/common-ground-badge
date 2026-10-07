@@ -32,7 +32,7 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
   const full = useRef(0)
   const anim = useRef(0)
   const [shown, setShown] = useState({ key: tabKey, stickers })
-  const [fit, setFit] = useState({ scale: 1, height: 64 })
+  const [fit, setFit] = useState({ scale: 1, height: 64, copies: 1 })
 
   const paint = (v: number) => {
     const el = stageRef.current
@@ -67,13 +67,17 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
     if (!stage || !track) return
     const measure = () => {
       const avail = Math.max(0, stage.clientWidth - ROLL_D / 2)
-      const natural = track.offsetWidth
-      const naturalH = track.offsetHeight
+      const set = track.firstElementChild as HTMLElement | null
+      const setW = set?.offsetWidth ?? 0
+      const setH = set?.offsetHeight ?? 0
       const room = avail - TRACK_LEFT - ROLL_D / 2 - 6
-      const scale = Math.min(1, natural ? room / natural : 1, naturalH ? MAX_STICKER_H / naturalH : 1)
-      // Unroll only as much tape as this category needs.
-      full.current = Math.min(avail, TRACK_LEFT + natural * scale + ROLL_D / 2 + 14)
-      setFit({ scale, height: MAX_STICKER_H })
+      const scale = Math.min(1, setW ? room / setW : 1, setH ? MAX_STICKER_H / setH : 1)
+      // Repeat the set so the tape is filled right up to (and under) the roll.
+      const copies = setW ? Math.max(1, Math.ceil((avail - TRACK_LEFT + ROLL_D / 2) / (setW * scale))) : 1
+      full.current = avail
+      setFit((f) =>
+        f.scale === scale && f.copies === copies ? f : { scale, height: MAX_STICKER_H, copies },
+      )
       paint(len.current)
     }
     measure()
@@ -117,11 +121,14 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
           className="tape-track"
           style={{ left: TRACK_LEFT, transform: `translateY(-50%) scale(${fit.scale})` }}
         >
+          {Array.from({ length: fit.copies }, (_, copy) => (
+          <div key={copy} className="tape-set" aria-hidden={copy > 0 || undefined}>
           {shown.stickers.map((s) => {
             const peeling = peelingId === s.id
             return (
               <button
                 key={s.id}
+                tabIndex={copy > 0 ? -1 : undefined}
                 type="button"
                 className={`tape-item${peeling ? ' is-peeling' : ''}`}
                 aria-label={`Peel ${s.label} sticker`}
@@ -135,6 +142,8 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
               </button>
             )
           })}
+          </div>
+          ))}
         </div>
       </div>
       <span className="tape-roll" aria-hidden>

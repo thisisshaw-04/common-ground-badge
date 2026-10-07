@@ -506,9 +506,16 @@ button.track-box:not(.is-selected):hover video {
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
-  gap: 0.75rem;
   width: max-content;
   transform-origin: left center;
+}
+
+.tape-set {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 0.75rem;
+  padding-right: 0.75rem;
 }
 
 .tape-item {
