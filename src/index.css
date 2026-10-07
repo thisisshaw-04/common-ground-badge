@@ -580,13 +580,14 @@ button.track-box:not(.is-selected):hover video {
 }
 
 .tape-stage {
+  --tape-h: 128px;
   --strip-w: 64px;
   --roll-w: 64px;
   --wound: 0;
   --spin: 0px;
   --rim-h: calc(var(--roll-w) * 0.28);
   position: relative;
-  height: calc(80px + var(--rim-h) * 0.55);
+  height: calc(var(--tape-h) + var(--rim-h) * 0.55);
 }
 
 /* Soft contact shadow under the paper strip */
@@ -596,7 +597,7 @@ button.track-box:not(.is-selected):hover video {
   z-index: 1;
   top: 8px;
   right: 6px;
-  height: 72px;
+  height: calc(var(--tape-h) - 8px);
   width: calc(var(--strip-w) - 10px);
   border-radius: 2px;
   pointer-events: none;
@@ -608,7 +609,7 @@ button.track-box:not(.is-selected):hover video {
   z-index: 2;
   top: 0;
   right: 0;
-  height: 80px;
+  height: var(--tape-h);
   width: var(--strip-w);
   overflow: hidden;
   background:
@@ -667,14 +668,14 @@ button.track-box:not(.is-selected):hover video {
   top: 0;
   right: 0;
   width: var(--roll-w);
-  height: calc(80px + var(--rim-h) * 0.5);
+  height: calc(var(--tape-h) + var(--rim-h) * 0.5);
   pointer-events: none;
 }
 
 .tape-roll-cyl {
   position: absolute;
   z-index: 0;
-  top: 72px;
+  top: calc(var(--tape-h) - 8px);
   right: 0;
   width: 100%;
   height: 12px;
@@ -691,7 +692,7 @@ button.track-box:not(.is-selected):hover video {
   z-index: 3;
   left: 0;
   right: 0;
-  top: calc(80px - var(--rim-h) * 0.5);
+  top: calc(var(--tape-h) - var(--rim-h) * 0.5);
   width: var(--roll-w);
   height: var(--rim-h);
   display: block;
@@ -705,7 +706,7 @@ button.track-box:not(.is-selected):hover video {
   top: 6px;
   right: calc(var(--roll-w) * 0.38);
   width: 7px;
-  height: 68px;
+  height: calc(var(--tape-h) - 12px);
   pointer-events: none;
   border-radius: 50%;
   background: linear-gradient(
