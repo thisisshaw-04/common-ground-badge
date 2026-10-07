@@ -10,7 +10,7 @@ https://thisisshaw-04.github.io/common-ground-badge/
 
 ## Features
 
-- FigBuild-style landing — badge left, welcome + CTA right, 3D rocks in the bottom corners
+- FigBuild-style landing — badge left, welcome + CTA right
 - Maker with stickers, doodle, cords & borders
 - Three.js woven-rope lanyard cords
 - Done screen with Story / Grid PNG download + social share

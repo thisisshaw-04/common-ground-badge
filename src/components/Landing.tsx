@@ -1,6 +1,5 @@
 import { DEMO_STATE, EVENT, stickerById } from '../lib/badge'
 import { BadgeFace } from './BadgeFace'
-import { CornerRocks } from './CornerRocks'
 import { Lanyard } from './Lanyard'
 import { StickerFace } from './StickerFace'
 
@@ -78,8 +77,6 @@ export function Landing({ onStart }: LandingProps) {
           </button>
         </div>
       </main>
-
-      <CornerRocks />
 
       <footer className="relative z-30 px-4 py-4 text-center md:absolute md:inset-x-0 md:bottom-4 md:py-0">
         <p className="text-[12px] text-black/40">
