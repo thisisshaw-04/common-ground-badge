@@ -344,6 +344,17 @@ button.track-box:not(.is-selected):hover video {
   padding-block: 1rem !important;
 }
 
+.sticker-nice-wave {
+  border: 0;
+  box-shadow: none;
+  background: transparent;
+  filter: drop-shadow(0 2px 3px rgba(17, 17, 17, 0.14));
+  min-width: 7.2rem;
+  min-height: 3.8rem;
+  padding-inline: 1.45rem !important;
+  padding-block: 0.9rem !important;
+}
+
 .sticker-shape-bg {
   position: absolute;
   inset: 0;

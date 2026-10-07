@@ -11,6 +11,39 @@ const BURST_POINTS = (() => {
   return pts.join(' ')
 })()
 
+/** Rounded rectangle with a shallow two-hump wave on the top and bottom. */
+const WAVE_D = (() => {
+  const w = 200
+  const h = 100
+  const r = 22
+  const amp = 10
+  const left = r
+  const right = w - r
+  const steps = 20
+  const top = (t: number) => 10 + amp * 0.5 * (1 - Math.cos(Math.PI * 2 * t))
+  const bot = (t: number) => h - 10 - amp * 0.5 * (1 - Math.cos(Math.PI * 2 * t))
+  const pts: string[] = [`M ${left.toFixed(1)} ${top(0).toFixed(1)}`]
+  for (let i = 1; i <= steps; i++) {
+    const t = i / steps
+    pts.push(`L ${(left + (right - left) * t).toFixed(1)} ${top(t).toFixed(1)}`)
+  }
+  pts.push(
+    `A ${r} ${r} 0 0 1 ${w.toFixed(1)} ${(top(1) + r).toFixed(1)}`,
+    `L ${w.toFixed(1)} ${(bot(1) - r).toFixed(1)}`,
+    `A ${r} ${r} 0 0 1 ${right.toFixed(1)} ${bot(1).toFixed(1)}`,
+  )
+  for (let i = steps - 1; i >= 0; i--) {
+    const t = i / steps
+    pts.push(`L ${(left + (right - left) * t).toFixed(1)} ${bot(t).toFixed(1)}`)
+  }
+  pts.push(
+    `A ${r} ${r} 0 0 1 0 ${(bot(0) - r).toFixed(1)}`,
+    `L 0 ${(top(0) + r).toFixed(1)}`,
+    `A ${r} ${r} 0 0 1 ${left.toFixed(1)} ${top(0).toFixed(1)}`,
+  )
+  return `${pts.join(' ')} Z`
+})()
+
 const FLOWER_D = (() => {
   const petals = 8
   const at = (r: number, a: number) =>
@@ -85,6 +118,8 @@ export function StickerFace({
                   ? 'sticker-nice sticker-nice-bump'
                   : def.shape === 'burst'
                     ? 'sticker-nice sticker-nice-burst'
+                    : def.shape === 'wave'
+                      ? 'sticker-nice sticker-nice-wave'
                   : 'sticker-nice sticker-nice-soft'
 
   return (
@@ -93,7 +128,10 @@ export function StickerFace({
         dragging ? 'sticker-dragging' : ''
       }`}
       style={{
-        background: def.shape === 'burst' || def.shape === 'flower' ? undefined : def.color,
+        background:
+          def.shape === 'burst' || def.shape === 'flower' || def.shape === 'wave'
+            ? undefined
+            : def.color,
         color: text,
         ['--sticker-tilt' as string]: `${tilt}deg`,
         transform: dragging
@@ -111,6 +149,11 @@ export function StickerFace({
       {def.shape === 'flower' && (
         <svg className="sticker-shape-bg" viewBox="0 0 100 100" aria-hidden>
           <path d={FLOWER_D} fill={def.color} />
+        </svg>
+      )}
+      {def.shape === 'wave' && (
+        <svg className="sticker-shape-bg" viewBox="0 0 200 100" preserveAspectRatio="none" aria-hidden>
+          <path d={WAVE_D} fill={def.color} />
         </svg>
       )}
       {lines.map((line, i) => (

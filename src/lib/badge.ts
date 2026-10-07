@@ -23,7 +23,7 @@ export type FootVideoId =
   | 'mint'
 
 /** Die-cut shapes — blob matches FigBuild clover stickers. */
-export type StickerShape = 'pill' | 'soft' | 'ticket' | 'tag' | 'jagged' | 'flower' | 'blob' | 'bump' | 'burst'
+export type StickerShape = 'pill' | 'soft' | 'ticket' | 'tag' | 'jagged' | 'flower' | 'blob' | 'bump' | 'burst' | 'wave'
 
 export interface StickerDef {
   id: string
@@ -104,10 +104,10 @@ export const STICKERS: StickerDef[] = [
   { id: 'researcher', tab: 'role', label: 'RESEARCHER', color: '#2ad4ff', textColor: '#111', shape: 'bump', tilt: -3 },
   { id: 'wildcard', tab: 'role', label: 'WILDCARD', color: '#d44cff', textColor: '#fff', shape: 'bump', tilt: 5 },
   /* Year — FigBuild clover sheet */
-  { id: 'dxtech', tab: 'track', label: 'DESIGN × TECH', color: '#2fe08a', textColor: '#111', shape: 'burst', tilt: -3 },
-  { id: 'cxtech', tab: 'track', label: 'CULTURE × TECH', color: '#ffe34a', textColor: '#111', shape: 'burst', tilt: 3 },
-  { id: 'solo', tab: 'track', label: 'SOLO BUILDER', color: '#4c54f5', textColor: '#fff', shape: 'burst', tilt: -4 },
-  { id: 'squad', tab: 'track', label: 'SQUAD UP', color: '#ff5ec8', textColor: '#111', shape: 'burst', tilt: 4 },
+  { id: 'dxtech', tab: 'track', label: 'DESIGN × TECH', color: '#2fe08a', textColor: '#111', shape: 'wave', tilt: -3 },
+  { id: 'cxtech', tab: 'track', label: 'CULTURE × TECH', color: '#ffe34a', textColor: '#111', shape: 'wave', tilt: 3 },
+  { id: 'solo', tab: 'track', label: 'SOLO BUILDER', color: '#4c54f5', textColor: '#fff', shape: 'wave', tilt: -4 },
+  { id: 'squad', tab: 'track', label: 'SQUAD UP', color: '#ff5ec8', textColor: '#111', shape: 'wave', tilt: 4 },
   { id: 'learn', tab: 'vibe', label: 'HERE TO LEARN', color: '#c8ff4a', textColor: '#111', shape: 'pill', tilt: -4 },
   { id: 'funvibe', tab: 'vibe', label: 'HERE 4 FUN', color: '#ff9a3c', textColor: '#111', shape: 'soft', tilt: 5 },
   { id: 'win', tab: 'vibe', label: 'HERE 2 WIN', color: '#ffe34a', textColor: '#111', shape: 'pill', tilt: -3 },
