@@ -321,123 +321,126 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
         <div className="relative flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto lg:flex-row lg:items-start lg:gap-8 lg:overflow-hidden">
           {/* Adjustments LEFT — FigBuild 2-col grid */}
           <section className="animate-pop order-last min-h-0 min-w-0 flex-1 lg:order-none lg:self-stretch lg:overflow-y-auto lg:pr-2 lg:pb-4">
-            <header className="mb-3 hidden lg:block">{heading}</header>
-            <div className="grid grid-cols-1 gap-x-5 gap-y-6 sm:grid-cols-2 sm:gap-y-5">
-              <Panel title="Outer frame">
-                <div className="grid grid-cols-4 gap-2">
-                  {(
-                    [
-                      ['none', 'None'],
-                      ['dashed', 'Dash'],
-                      ['track', 'Box'],
-                      ['wiggly', 'Wiggle'],
-                    ] as [BorderId, string][]
-                  ).map(([id, label]) => (
-                    <button
-                      key={id}
-                      type="button"
-                      onClick={() => push({ ...state, border: id })}
-                      className={`track-box flex aspect-square flex-col items-center justify-center gap-1 bg-[var(--panel)] ${
-                        state.border === id ? 'is-selected' : ''
-                      }`}
-                    >
-                      <FrameSwatch border={id} />
-                      <span className="font-mono text-[10px] uppercase tracking-wide">{label}</span>
-                    </button>
-                  ))}
+            <div className="flex flex-col gap-6 sm:gap-5">
+              <div className="grid grid-cols-1 gap-x-5 gap-y-6 sm:grid-cols-2 sm:items-start sm:gap-y-5">
+                <div className="flex min-w-0 flex-col gap-6 sm:gap-5">
+                  <header className="hidden lg:block">{heading}</header>
+                  <Panel title="Outer frame">
+                    <div className="grid grid-cols-4 gap-2">
+                      {(
+                        [
+                          ['none', 'None'],
+                          ['dashed', 'Dash'],
+                          ['track', 'Box'],
+                          ['wiggly', 'Wiggle'],
+                        ] as [BorderId, string][]
+                      ).map(([id, label]) => (
+                        <button
+                          key={id}
+                          type="button"
+                          onClick={() => push({ ...state, border: id })}
+                          className={`track-box flex aspect-square flex-col items-center justify-center gap-1 bg-[var(--panel)] ${
+                            state.border === id ? 'is-selected' : ''
+                          }`}
+                        >
+                          <FrameSwatch border={id} />
+                          <span className="font-mono text-[10px] uppercase tracking-wide">{label}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </Panel>
+                  <Panel title="Cords">
+                    <div className="grid grid-cols-4 gap-1.5">
+                      {(Object.keys(CORDS) as CordId[]).map((id) => (
+                        <button
+                          key={id}
+                          type="button"
+                          onClick={() => push({ ...state, cord: id })}
+                          className={`track-box flex aspect-square flex-col items-center justify-center bg-[var(--panel)] ${
+                            state.cord === id ? 'is-selected' : ''
+                          }`}
+                        >
+                          <CordSwatch cord={id} />
+                        </button>
+                      ))}
+                    </div>
+                  </Panel>
                 </div>
-              </Panel>
-
-              <Panel title="Draw">
-                <div className="flex min-h-[5.5rem] items-center justify-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setMode(mode === 'draw' ? 'stick' : 'draw')}
-                    className={`option-btn border border-black bg-white px-3 py-2 text-xs font-semibold text-black/80 ${
-                      mode === 'draw' ? 'is-selected' : ''
-                    }`}
-                  >
-                    {mode === 'draw' ? 'On' : 'Draw'}
-                  </button>
-                  {([1, 2, 3] as const).map((size) => (
-                    <button
-                      key={size}
-                      type="button"
-                      onClick={() => {
-                        setBrush(size)
-                        setMode('draw')
-                      }}
-                      className={`track-box flex h-11 w-11 items-center justify-center bg-[var(--panel)] ${
-                        brush === size && mode === 'draw' ? 'is-selected' : ''
-                      }`}
-                    >
-                      <span
-                        className="rounded-full bg-black"
-                        style={{ width: size * 5, height: size * 5 }}
-                      />
-                    </button>
-                  ))}
-                </div>
-              </Panel>
-
-              <Panel title="Cords">
-                <div className="grid grid-cols-4 gap-1.5">
-                  {(Object.keys(CORDS) as CordId[]).map((id) => (
-                    <button
-                      key={id}
-                      type="button"
-                      onClick={() => push({ ...state, cord: id })}
-                      className={`track-box flex aspect-square flex-col items-center justify-center bg-[var(--panel)] ${
-                        state.cord === id ? 'is-selected' : ''
-                      }`}
-                    >
-                      <CordSwatch cord={id} />
-                    </button>
-                  ))}
-                </div>
-              </Panel>
-
-              <Panel title="Foot video">
-                <div className="grid grid-cols-2 gap-2.5">
-                  {FOOT_VIDEO_ORDER.map((id) => {
-                    const v = FOOT_VIDEOS[id]
-                    return (
+                <div className="flex min-w-0 flex-col gap-6 sm:gap-5">
+                  <Panel title="Draw">
+                    <div className="flex min-h-[5.5rem] items-center justify-center gap-2">
                       <button
-                        key={id}
                         type="button"
-                        onClick={() => push({ ...state, footVideo: id })}
-                        onMouseEnter={(e) => {
-                          void e.currentTarget.querySelector('video')?.play().catch(() => {})
-                        }}
-                        onMouseLeave={(e) => {
-                          const vid = e.currentTarget.querySelector('video')
-                          if (!vid) return
-                          vid.pause()
-                          vid.currentTime = 0
-                        }}
-                        className={`track-box text-left ${
-                          state.footVideo === id ? 'is-selected' : ''
+                        onClick={() => setMode(mode === 'draw' ? 'stick' : 'draw')}
+                        className={`option-btn border border-black bg-white px-3 py-2 text-xs font-semibold text-black/80 ${
+                          mode === 'draw' ? 'is-selected' : ''
                         }`}
-                        aria-label={v.label}
-                        title={v.label}
                       >
-                        <div className="relative h-8 overflow-hidden bg-[#d8d8d8] sm:h-9">
-                          <video
-                            src={`${import.meta.env.BASE_URL}foot-videos/${v.file}`}
-                            muted
-                            loop
-                            playsInline
-                            preload="metadata"
-                            className="h-full w-full object-cover object-center"
-                          />
-                        </div>
+                        {mode === 'draw' ? 'On' : 'Draw'}
                       </button>
-                    )
-                  })}
+                      {([1, 2, 3] as const).map((size) => (
+                        <button
+                          key={size}
+                          type="button"
+                          onClick={() => {
+                            setBrush(size)
+                            setMode('draw')
+                          }}
+                          className={`track-box flex h-11 w-11 items-center justify-center bg-[var(--panel)] ${
+                            brush === size && mode === 'draw' ? 'is-selected' : ''
+                          }`}
+                        >
+                          <span
+                            className="rounded-full bg-black"
+                            style={{ width: size * 5, height: size * 5 }}
+                          />
+                        </button>
+                      ))}
+                    </div>
+                  </Panel>
+                  <Panel title="Foot video">
+                    <div className="grid grid-cols-2 gap-2.5">
+                      {FOOT_VIDEO_ORDER.map((id) => {
+                        const v = FOOT_VIDEOS[id]
+                        return (
+                          <button
+                            key={id}
+                            type="button"
+                            onClick={() => push({ ...state, footVideo: id })}
+                            onMouseEnter={(e) => {
+                              void e.currentTarget.querySelector('video')?.play().catch(() => {})
+                            }}
+                            onMouseLeave={(e) => {
+                              const vid = e.currentTarget.querySelector('video')
+                              if (!vid) return
+                              vid.pause()
+                              vid.currentTime = 0
+                            }}
+                            className={`track-box text-left ${
+                              state.footVideo === id ? 'is-selected' : ''
+                            }`}
+                            aria-label={v.label}
+                            title={v.label}
+                          >
+                            <div className="relative h-8 overflow-hidden bg-[#d8d8d8] sm:h-9">
+                              <video
+                                src={`${import.meta.env.BASE_URL}foot-videos/${v.file}`}
+                                muted
+                                loop
+                                playsInline
+                                preload="metadata"
+                                className="h-full w-full object-cover object-center"
+                              />
+                            </div>
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </Panel>
                 </div>
-              </Panel>
+              </div>
 
-              <Panel title="Stickers" className="sm:col-span-2">
+              <Panel title="Stickers">
                 <div className="mb-3 flex flex-wrap gap-1.5">
                   {TABS.map((t) => (
                     <button
