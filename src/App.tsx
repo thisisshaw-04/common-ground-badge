@@ -12,7 +12,7 @@ export default function App() {
   const badgeRef = useRef<HTMLDivElement>(null)
 
   return (
-    <div className="page-fig relative min-h-dvh overflow-x-hidden">
+    <div className="page-fig app-shell relative min-h-dvh overflow-x-hidden">
       {screen === 'land' ? <Landing onStart={() => setScreen('make')} /> : null}
       <div className={screen === 'make' ? 'block' : 'hidden'}>
         <Maker

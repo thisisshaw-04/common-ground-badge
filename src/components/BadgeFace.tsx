@@ -39,7 +39,7 @@ export function BadgeFace({
       ref={badgeRef}
       data-badge-card
       className={`badge-shell badge-poster relative bg-white shadow-[0_18px_40px_rgba(0,0,0,0.1)] ${outerShellClass(border)} ${className}`}
-      style={{ width }}
+      style={{ width, maxWidth: '100%' }}
     >
       <BadgeOuterFrame border={border} />
 

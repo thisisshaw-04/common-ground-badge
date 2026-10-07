@@ -87,7 +87,7 @@ export function DoneScreen({ state, badgeNode, onEdit }: DoneProps) {
 
   return (
     <div className="page-fig flex h-dvh flex-col overflow-hidden">
-      <main className="relative mx-auto flex min-h-0 w-full max-w-3xl flex-1 flex-col items-center overflow-y-auto px-4 py-6 text-center sm:py-8">
+      <main className="relative mx-auto flex min-h-0 w-full max-w-3xl flex-1 flex-col items-center overflow-y-auto px-2 py-6 text-center sm:px-4 sm:py-8">
         <div className="animate-pop">
           <p className="text-lg text-black/55">Nice.</p>
           <div className="mt-3 flex flex-wrap items-center justify-center gap-2">

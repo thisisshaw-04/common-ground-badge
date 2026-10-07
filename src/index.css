@@ -32,6 +32,9 @@
   --font-body: var(--font);
   --font-hand: var(--font);
   --font-mono: var(--font);
+  /* Shared page gutters + maker card preview width */
+  --page-gutter: clamp(1.25rem, 6vw, 5rem);
+  --badge-w: 410px;
 }
 
 * {
@@ -140,6 +143,21 @@ textarea {
 
 .page-fig {
   background: var(--bg);
+}
+
+/* Whole-app left/right gutters (landing + maker + done). */
+.app-shell {
+  padding-inline: var(--page-gutter);
+}
+
+@media (max-width: 1023px) {
+  .app-shell {
+    --page-gutter: clamp(1rem, 4.5vw, 2rem);
+  }
+}
+
+[data-badge-card] {
+  max-width: 100%;
 }
 
 .panel-wrap {
