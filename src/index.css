@@ -609,21 +609,14 @@ button.track-box:not(.is-selected):hover video {
   width: var(--roll-w);
   pointer-events: none;
   border-radius: 0 calc(var(--roll-w) * 0.3) 0 0;
-  background:
-    repeating-linear-gradient(
-      90deg,
-      transparent 0 12px,
-      rgba(0, 0, 0, 0.03) 12px 13px
-    ),
-    linear-gradient(
-      90deg,
-      transparent 0%,
-      rgba(255, 255, 255, 0.18) 22%,
-      rgba(255, 255, 255, 0.9) 40%,
-      rgba(255, 255, 255, 0.2) 56%,
-      rgba(0, 0, 0, 0.06) 100%
-    );
-  background-position: var(--spin) 0, 0 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.18) 22%,
+    rgba(255, 255, 255, 0.9) 40%,
+    rgba(255, 255, 255, 0.2) 56%,
+    rgba(0, 0, 0, 0.06) 100%
+  );
 }
 
 .tape-roll-face {
@@ -633,19 +626,12 @@ button.track-box:not(.is-selected):hover video {
   right: 0;
   width: var(--roll-w);
   height: 50px;
-  background:
-    repeating-linear-gradient(
-      90deg,
-      transparent 0 12px,
-      rgba(0, 0, 0, 0.03) 12px 13px
-    ),
-    linear-gradient(
-      90deg,
-      #fafafa 0%,
-      #ffffff 42%,
-      #f4f4f4 100%
-    );
-  background-position: var(--spin) 0, 0 0;
+  background: linear-gradient(
+    90deg,
+    #fafafa 0%,
+    #ffffff 42%,
+    #f4f4f4 100%
+  );
   border-radius: 0 calc(var(--roll-w) * 0.25) 0 0;
   box-shadow:
     1px 0 0 #e4e4e4,
