@@ -23,7 +23,7 @@ export type FootVideoId =
   | 'mint'
 
 /** Die-cut shapes — blob matches FigBuild clover stickers. */
-export type StickerShape = 'pill' | 'soft' | 'ticket' | 'tag' | 'jagged' | 'flower' | 'blob'
+export type StickerShape = 'pill' | 'soft' | 'ticket' | 'tag' | 'jagged' | 'flower' | 'blob' | 'bump'
 
 export interface StickerDef {
   id: string
@@ -97,12 +97,12 @@ export const CORDS: Record<
 
 export const STICKERS: StickerDef[] = [
   /* Roles — bubbly clover + foot-video colours */
-  { id: 'designer', tab: 'role', label: 'DESIGNER', color: '#ff2a2a', textColor: '#fff', shape: 'blob', tilt: -6 },
-  { id: 'developer', tab: 'role', label: 'DEVELOPER', color: '#2fe08a', textColor: '#111', shape: 'blob', tilt: 4 },
-  { id: 'maker', tab: 'role', label: 'MAKER', color: '#ffe34a', textColor: '#111', shape: 'blob', tilt: -5 },
-  { id: 'storyteller', tab: 'role', label: 'STORYTELLER', color: '#6b4cff', textColor: '#fff', shape: 'blob', tilt: 4 },
-  { id: 'researcher', tab: 'role', label: 'RESEARCHER', color: '#2ad4ff', textColor: '#111', shape: 'blob', tilt: -3 },
-  { id: 'wildcard', tab: 'role', label: 'WILDCARD', color: '#d44cff', textColor: '#fff', shape: 'blob', tilt: 5 },
+  { id: 'designer', tab: 'role', label: 'DESIGNER', color: '#ff2a2a', textColor: '#fff', shape: 'bump', tilt: -6 },
+  { id: 'developer', tab: 'role', label: 'DEVELOPER', color: '#2fe08a', textColor: '#111', shape: 'bump', tilt: 4 },
+  { id: 'maker', tab: 'role', label: 'MAKER', color: '#ffe34a', textColor: '#111', shape: 'bump', tilt: -5 },
+  { id: 'storyteller', tab: 'role', label: 'STORYTELLER', color: '#6b4cff', textColor: '#fff', shape: 'bump', tilt: 4 },
+  { id: 'researcher', tab: 'role', label: 'RESEARCHER', color: '#2ad4ff', textColor: '#111', shape: 'bump', tilt: -3 },
+  { id: 'wildcard', tab: 'role', label: 'WILDCARD', color: '#d44cff', textColor: '#fff', shape: 'bump', tilt: 5 },
   /* Year — FigBuild clover sheet */
   { id: 'year1', tab: 'year', label: '1ST YEAR', color: '#c9b8ff', textColor: '#111', shape: 'blob', tilt: -4 },
   { id: 'year2', tab: 'year', label: '2ND YEAR', color: '#ff2db8', textColor: '#111', shape: 'blob', tilt: 3 },

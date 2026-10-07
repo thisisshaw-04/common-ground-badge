@@ -57,7 +57,9 @@ export function StickerFace({
               ? 'sticker-nice sticker-nice-flower'
               : def.shape === 'blob'
                 ? 'sticker-nice sticker-nice-blob'
-                : 'sticker-nice sticker-nice-soft'
+                : def.shape === 'bump'
+                  ? 'sticker-nice sticker-nice-bump'
+                  : 'sticker-nice sticker-nice-soft'
 
   return (
     <span

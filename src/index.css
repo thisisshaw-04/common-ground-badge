@@ -297,6 +297,42 @@ button.track-box:not(.is-selected):hover video {
   -webkit-mask-composite: source-in;
 }
 
+.sticker-nice-bump {
+  --bump: 1.8rem;
+  --bump-out: 0.6rem;
+  border-radius: 5px;
+  box-shadow: none;
+  filter: drop-shadow(2px 3px 0 rgba(17, 17, 17, 0.12));
+  padding-inline: 1.15rem !important;
+  padding-block: 0.75rem !important;
+  margin-inline: var(--bump-out);
+}
+
+/* Side bumps: circles clipped to the part outside the body so the outline flows round them */
+.sticker-nice-bump::before,
+.sticker-nice-bump::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: var(--bump);
+  height: var(--bump);
+  margin-top: calc(var(--bump) / -2);
+  box-sizing: border-box;
+  border: 2.5px solid #111;
+  border-radius: 50%;
+  background: inherit;
+}
+
+.sticker-nice-bump::before {
+  left: calc(-2.5px - var(--bump-out));
+  clip-path: inset(-3px calc(100% - var(--bump-out) - 2.5px) -3px -3px);
+}
+
+.sticker-nice-bump::after {
+  right: calc(-2.5px - var(--bump-out));
+  clip-path: inset(-3px -3px -3px calc(100% - var(--bump-out) - 2.5px));
+}
+
 .sticker-nice-tag {
   border-radius: 8px 999px 999px 8px;
   padding-right: 1.15rem !important;
