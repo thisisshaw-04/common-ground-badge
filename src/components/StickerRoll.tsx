@@ -143,46 +143,26 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
             ))}
           </div>
         </div>
-        <span className="tape-roll-face" aria-hidden />
-        <span className="tape-roll-layers" aria-hidden />
-        <svg
-          className="tape-roll-rim"
-          viewBox="0 0 64 16"
-          preserveAspectRatio="none"
-          aria-hidden
-        >
-          <defs>
-            <radialGradient id={`tape-rim-${uid}`} cx="50%" cy="50%" r="50%">
-              <stop offset="0" stopColor="#fff" />
-              <stop offset="1" stopColor="#d9d9d9" />
-            </radialGradient>
-          </defs>
-          <ellipse cx="32" cy="8" rx="32" ry="8" fill={`url(#tape-rim-${uid})`} />
-        </svg>
-        <svg
-          className="tape-roll-spool"
-          viewBox="0 0 48 11"
-          preserveAspectRatio="none"
-          aria-hidden
-        >
-          <defs>
-            <linearGradient id={`tape-spool-${uid}`} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stopColor="#5a5a5a" />
-              <stop offset="0.97" stopColor="#fff" />
-            </linearGradient>
-          </defs>
-          <ellipse cx="24" cy="5.5" rx="24" ry="5.5" fill={`url(#tape-spool-${uid})`} />
-        </svg>
-        <svg className="tape-roll-shine" viewBox="0 0 10 76" preserveAspectRatio="none" aria-hidden>
-          <defs>
-            <linearGradient id={`tape-shine-${uid}`} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stopColor="#fff" stopOpacity="0.15" />
-              <stop offset="0.45" stopColor="#fff" stopOpacity="0.95" />
-              <stop offset="1" stopColor="#fff" stopOpacity="0.2" />
-            </linearGradient>
-          </defs>
-          <path d="M5 0C7.8 0 10 34 10 76H0C0 34 2.2 0 5 0Z" fill={`url(#tape-shine-${uid})`} />
-        </svg>
+        <div className="tape-roll" aria-hidden>
+          <span className="tape-roll-cyl" />
+          <svg className="tape-roll-end" viewBox="0 0 64 18" preserveAspectRatio="none">
+            <defs>
+              <radialGradient id={`tape-paper-${uid}`} cx="50%" cy="40%" r="55%">
+                <stop offset="0" stopColor="#ffffff" />
+                <stop offset="0.62" stopColor="#f2f2f2" />
+                <stop offset="1" stopColor="#d4d4d4" />
+              </radialGradient>
+              <linearGradient id={`tape-core-${uid}`} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stopColor="#5e5e5e" />
+                <stop offset="0.42" stopColor="#8d8d8d" />
+                <stop offset="1" stopColor="#f4f4f4" />
+              </linearGradient>
+            </defs>
+            <ellipse cx="32" cy="9" rx="31.6" ry="8.6" fill={`url(#tape-paper-${uid})`} />
+            <ellipse cx="32" cy="9" rx="24" ry="6.5" fill={`url(#tape-core-${uid})`} />
+          </svg>
+          <span className="tape-roll-shine" />
+        </div>
       </div>
     </div>
   )

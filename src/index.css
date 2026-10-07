@@ -546,22 +546,21 @@ button.track-box:not(.is-selected):hover video {
   --roll-w: 64px;
   --wound: 0;
   --spin: 0px;
-  --core-w: 48px;
-  --rim-h: calc(16px + var(--wound) * 5px);
+  --rim-h: calc(var(--roll-w) * 0.28);
   position: relative;
-  height: 104px;
+  height: calc(80px + var(--rim-h) * 0.55);
 }
 
-/* Soft contact shadow under the paper strip (strip itself clips its own shadow) */
+/* Soft contact shadow under the paper strip */
 .tape-stage::before {
   content: '';
   position: absolute;
   z-index: 1;
-  top: 6px;
-  right: 4px;
-  height: 74px;
-  width: calc(var(--strip-w) - 8px);
-  border-radius: 2px calc(var(--roll-w) * 0.28) 2px 2px;
+  top: 8px;
+  right: 6px;
+  height: 72px;
+  width: calc(var(--strip-w) - 10px);
+  border-radius: 2px;
   pointer-events: none;
   box-shadow: 0 8px 14px -6px rgba(17, 17, 17, 0.12);
 }
@@ -581,18 +580,16 @@ button.track-box:not(.is-selected):hover video {
       rgba(255, 255, 255, 0.2) 20%,
       transparent 42%,
       rgba(255, 255, 255, 0.25) 78%,
-      rgba(0, 0, 0, 0.035) 100%
+      rgba(0, 0, 0, 0.03) 100%
     ),
     #ffffff;
-  border: 1px solid #e6e6e6;
+  border: 1px solid #e8e8e8;
+  border-right-color: transparent;
   border-radius: 0 calc(var(--roll-w) * 0.31) 0 0;
-  box-shadow:
-    0 8px 14px -8px rgba(17, 17, 17, 0.18),
-    0 2px 4px -2px rgba(17, 17, 17, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95);
 }
 
-/* Cut end of the unrolled strip — a visible paper edge */
+/* Cut end of the unrolled strip */
 .tape-strip::before {
   content: '';
   position: absolute;
@@ -602,11 +599,10 @@ button.track-box:not(.is-selected):hover video {
   bottom: 0;
   width: 1px;
   pointer-events: none;
-  background: #dedede;
-  box-shadow: 1px 0 0 rgba(255, 255, 255, 0.9);
+  background: #e0e0e0;
 }
 
-/* Glossy cylinder on the wound end of the tape */
+/* Cylinder highlight painted on the wound end of the strip */
 .tape-strip::after {
   content: '';
   position: absolute;
@@ -620,94 +616,68 @@ button.track-box:not(.is-selected):hover video {
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(255, 255, 255, 0.18) 22%,
-    rgba(255, 255, 255, 0.9) 40%,
-    rgba(255, 255, 255, 0.2) 56%,
-    rgba(0, 0, 0, 0.06) 100%
+    rgba(255, 255, 255, 0.2) 28%,
+    rgba(255, 255, 255, 0.92) 44%,
+    rgba(255, 255, 255, 0.15) 62%,
+    rgba(0, 0, 0, 0.05) 100%
   );
 }
 
-.tape-roll-face {
+/* One object: cylinder + bottom cap + core, all sharing --roll-w */
+.tape-roll {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: var(--roll-w);
+  height: calc(80px + var(--rim-h) * 0.5);
+  pointer-events: none;
+}
+
+.tape-roll-cyl {
   position: absolute;
   z-index: 0;
-  top: 30px;
+  top: 72px;
   right: 0;
-  width: var(--roll-w);
-  height: 50px;
+  width: 100%;
+  height: 12px;
   background: linear-gradient(
     90deg,
-    #fafafa 0%,
+    #f6f6f6 0%,
     #ffffff 42%,
-    #f4f4f4 100%
+    #efefef 100%
   );
-  border-radius: 0 calc(var(--roll-w) * 0.25) 0 0;
-  box-shadow:
-    1px 0 0 #e4e4e4,
-    0 8px 12px -6px rgba(17, 17, 17, 0.16);
 }
 
-.tape-roll-rim {
+.tape-roll-end {
   position: absolute;
   z-index: 3;
+  left: 0;
   right: 0;
-  top: calc(80px - var(--rim-h) * 0.25);
+  top: calc(80px - var(--rim-h) * 0.5);
   width: var(--roll-w);
   height: var(--rim-h);
   display: block;
-}
-
-/* Concentric paper wraps on the rim — more rings as the roll fattens */
-.tape-roll-layers {
-  position: absolute;
-  z-index: 4;
-  right: 0;
-  top: calc(80px - var(--rim-h) * 0.25);
-  width: var(--roll-w);
-  height: var(--rim-h);
-  border-radius: 50%;
-  pointer-events: none;
-  background: repeating-radial-gradient(
-    50% 50% at 50% 50%,
-    rgb(255 255 255 / 0.28) 0 6px,
-    rgb(120 124 132 / 0.5) 6px 8px
-  );
-  -webkit-mask-image: radial-gradient(
-    50% 50% at 50% 50%,
-    transparent 0 28%,
-    #000 30%,
-    #000 92%,
-    transparent 96%
-  );
-  mask-image: radial-gradient(
-    50% 50% at 50% 50%,
-    transparent 0 28%,
-    #000 30%,
-    #000 92%,
-    transparent 96%
-  );
-  opacity: calc(0.18 + var(--wound) * 0.82);
-}
-
-.tape-roll-spool {
-  position: absolute;
-  z-index: 5;
-  right: calc((var(--roll-w) - var(--core-w)) / 2);
-  top: calc(80px - var(--rim-h) * 0.25 + var(--rim-h) * 0.3);
-  width: var(--core-w);
-  height: 11px;
-  display: block;
+  overflow: visible;
+  filter: drop-shadow(0 3px 4px rgba(17, 17, 17, 0.1));
 }
 
 .tape-roll-shine {
   position: absolute;
-  z-index: 6;
-  right: calc(var(--roll-w) * 0.34);
-  top: 3px;
-  width: calc(var(--roll-w) * 0.16);
-  height: 76px;
-  display: block;
+  z-index: 4;
+  top: 6px;
+  right: calc(var(--roll-w) * 0.38);
+  width: 7px;
+  height: 68px;
   pointer-events: none;
-  filter: blur(0.4px);
+  border-radius: 50%;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.8) 48%,
+    rgba(255, 255, 255, 0.12) 100%
+  );
+  filter: blur(0.6px);
+  opacity: 0.7;
 }
 
 .tape-track {
