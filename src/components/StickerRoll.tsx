@@ -1,5 +1,6 @@
 import {
   useEffect,
+  useId,
   useLayoutEffect,
   useRef,
   useState,
@@ -19,29 +20,32 @@ interface StickerRollProps {
 
 /** Strip height — large enough for StickerFace `large` labels to read. */
 const TAPE_H = 96
-/** Outer paper diameter when the strip is fully out (thin remaining wrap). */
-const ROLL_MIN = 102
-/** Outer paper diameter when the strip is fully wound on. */
-const ROLL_MAX = 116
-/** Cardboard tube outer diameter — never animates. */
-const CORE = 54
-/** Tube hole — never animates. */
-const HOLE = 30
-/** Visible cylinder thickness on the right (¾ view). */
-const RIM = 10
+/** Perspective squash of the circular end (width → height). */
+const SQUASH = 0.62
+/** Outer paper width when the strip is fully out. */
+const ROLL_MIN = 94
+/** Outer paper width when the strip is fully wound on. */
+const ROLL_MAX = 112
+/** Core hole width in px — never animates. Height = HOLE * SQUASH. */
+const HOLE = 62
 const CUT = 2
-const TRACK_PAD = 10
+const TRACK_PAD = 12
 const ROLL_UP_MS = 520
 const UNROLL_MS = 840
 
 const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2)
 
+function capH(rollD: number) {
+  return rollD * SQUASH
+}
+
 /**
- * Washi tape: a paper strip of unique stickers feeding a side-on spool.
- * The spool is a round face (kraft core + hole) with a short ¾ rim.
- * Core and hole stay put; only the wound paper ring grows and shrinks.
+ * Washi tape matching the reference: a white paper strip whose right end is
+ * a cylinder, with a perspective oval core sitting on the bottom of that end.
+ * Hole stays a fixed pixel size; only the white paper ring grows when winding.
  */
 export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }: StickerRollProps) {
+  const uid = useId().replace(/:/g, '')
   const stageRef = useRef<HTMLDivElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)
   const len = useRef(0)
@@ -56,14 +60,11 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
     len.current = v
     const wound = 1 - v
     const rollD = ROLL_MIN + wound * (ROLL_MAX - ROLL_MIN)
-    const faceCx = RIM + ROLL_MAX / 2
-    const stripRight = faceCx - rollD / 2
     const w = v * Math.max(0, full.current)
     el.style.setProperty('--strip-w', `${w.toFixed(2)}px`)
-    el.style.setProperty('--strip-right', `${stripRight.toFixed(2)}px`)
     el.style.setProperty('--roll-d', `${rollD.toFixed(2)}px`)
+    el.style.setProperty('--cap-h', `${capH(rollD).toFixed(2)}px`)
     el.style.setProperty('--wound', wound.toFixed(4))
-    el.style.setProperty('--spin', `${(wound * 28).toFixed(2)}px`)
   }
 
   const run = (to: number, ms: number) =>
@@ -90,13 +91,10 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
       const set = track.firstElementChild as HTMLElement | null
       const setW = set?.offsetWidth ?? 0
       const setH = set?.offsetHeight ?? 0
-      const faceCx = RIM + ROLL_MAX / 2
-      const stripRight = faceCx - ROLL_MIN / 2
-      full.current = Math.max(0, avail - stripRight - CUT)
-      /* Keep the unique set on the visible paper, not under the spool. */
-      const reserved = ROLL_MIN * 0.52 + 8
+      full.current = Math.max(0, avail - CUT)
+      const reserved = ROLL_MIN * 0.42
       const roomW = Math.max(0, full.current - TRACK_PAD - reserved)
-      const roomH = TAPE_H - 18
+      const roomH = TAPE_H - 20
       const next = Math.min(1, setH ? roomH / setH : 1, setW ? roomW / setW : 1)
       setScale((s) => (Math.abs(s - next) < 0.002 ? s : next))
       paint(len.current)
@@ -126,6 +124,9 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
 
   useEffect(() => () => void ++anim.current, [])
 
+  const holeH = HOLE * SQUASH
+  const hang = capH(ROLL_MAX) * 0.52
+
   return (
     <div className="tape-bed">
       <div
@@ -137,10 +138,10 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
             '--tape-h': `${TAPE_H}px`,
             '--roll-max': `${ROLL_MAX}px`,
             '--roll-d': `${ROLL_MIN}px`,
-            '--rim': `${RIM}px`,
-            '--core': `${CORE}px`,
-            '--hole': `${HOLE}px`,
-            '--face-cx': `${RIM + ROLL_MAX / 2}px`,
+            '--cap-h': `${capH(ROLL_MIN)}px`,
+            '--hang': `${hang}px`,
+            '--hole-w': `${HOLE}px`,
+            '--hole-h': `${holeH}px`,
           } as CSSProperties
         }
       >
@@ -176,14 +177,51 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
           </div>
         </div>
 
-        <div className="tape-spool" aria-hidden>
-          <span className="tape-spool-rim" />
-          <span className="tape-spool-face">
-            <span className="tape-spool-paper" />
-            <span className="tape-spool-glint" />
-            <span className="tape-spool-core" />
-            <span className="tape-spool-hole" />
-          </span>
+        <div className="tape-roll" aria-hidden>
+          <svg className="tape-roll-cap" viewBox="0 0 100 62" preserveAspectRatio="none">
+            <defs>
+              <radialGradient id={`tp-${uid}`} cx="46%" cy="28%" r="72%">
+                <stop offset="0" stopColor="#ffffff" />
+                <stop offset="0.42" stopColor="#f7f7f7" />
+                <stop offset="0.78" stopColor="#e8e8e8" />
+                <stop offset="1" stopColor="#c8c8c8" />
+              </radialGradient>
+            </defs>
+            <ellipse cx="50" cy="31" rx="49.4" ry="30.6" fill={`url(#tp-${uid})`} />
+            <ellipse
+              cx="50"
+              cy="31"
+              rx="49.4"
+              ry="30.6"
+              fill="none"
+              stroke="#cfcfcf"
+              strokeWidth="0.7"
+            />
+          </svg>
+          <svg
+            className="tape-roll-core"
+            viewBox="0 0 100 62"
+            preserveAspectRatio="none"
+            width={HOLE}
+            height={holeH}
+          >
+            <defs>
+              <linearGradient id={`lip-${uid}`} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stopColor="#f4f4f4" />
+                <stop offset="0.18" stopColor="#d0d0d0" />
+                <stop offset="0.55" stopColor="#8a8a8a" />
+                <stop offset="1" stopColor="#3a3a3a" />
+              </linearGradient>
+              <radialGradient id={`hole-${uid}`} cx="50%" cy="30%" r="72%">
+                <stop offset="0" stopColor="#6e6e6e" />
+                <stop offset="0.28" stopColor="#3f3f3f" />
+                <stop offset="0.62" stopColor="#1c1c1c" />
+                <stop offset="1" stopColor="#0a0a0a" />
+              </radialGradient>
+            </defs>
+            <ellipse cx="50" cy="31" rx="49.5" ry="30.7" fill={`url(#lip-${uid})`} />
+            <ellipse cx="50" cy="32.2" rx="44" ry="27.2" fill={`url(#hole-${uid})`} />
+          </svg>
         </div>
       </div>
     </div>

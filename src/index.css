@@ -591,27 +591,25 @@ button.track-box:not(.is-selected):hover video {
   transform: scale(0.96);
 }
 
-/* —— Washi tape: paper strip + side-on spool with a short ¾ rim —— */
+/* —— Washi tape: white cylinder + perspective oval core (reference match) —— */
 .tape-bed {
-  padding: 0.55rem 0 1.15rem;
+  padding: 0.45rem 0 calc(0.55rem + 28px);
   overflow: visible;
   user-select: none;
 }
 
 .tape-stage {
   --tape-h: 96px;
-  --roll-max: 116px;
-  --roll-d: 102px;
-  --rim: 10px;
-  --core: 54px;
-  --hole: 30px;
-  --face-cx: 68px;
+  --roll-max: 112px;
+  --roll-d: 94px;
+  --cap-h: 58px;
+  --hang: 30px;
+  --hole-w: 62px;
+  --hole-h: 38px;
   --strip-w: 0px;
-  --strip-right: 17px;
   --wound: 0;
-  --spin: 0px;
   position: relative;
-  height: var(--roll-max);
+  height: calc(var(--tape-h) + var(--hang));
   overflow: visible;
 }
 
@@ -619,157 +617,82 @@ button.track-box:not(.is-selected):hover video {
   content: '';
   position: absolute;
   z-index: 0;
-  top: calc(50% + var(--tape-h) / 2 - 7px);
-  right: calc(var(--strip-right) + var(--roll-d) * 0.45);
-  width: var(--strip-w);
-  height: 10px;
+  top: calc(var(--tape-h) - 6px);
+  right: calc(var(--roll-d) * 0.12);
+  width: calc(var(--strip-w) - var(--roll-d) * 0.2);
+  height: 14px;
   pointer-events: none;
-  border-radius: 4px;
-  box-shadow: 0 8px 12px -6px rgba(17, 17, 17, 0.16);
+  border-radius: 8px;
+  box-shadow: 0 10px 14px -8px rgba(17, 17, 17, 0.18);
 }
 
 .tape-strip {
   position: absolute;
   z-index: 2;
-  top: 50%;
-  right: var(--strip-right);
+  top: 0;
+  right: 0;
   height: var(--tape-h);
   width: var(--strip-w);
-  transform: translateY(-50%);
   overflow-x: clip;
   overflow-y: visible;
-  background:
-    linear-gradient(
-      180deg,
-      #ffffff 0%,
-      #fbfbfb 38%,
-      #f4f4f4 100%
-    );
+  background: linear-gradient(180deg, #ffffff 0%, #fbfbfb 42%, #f3f3f3 100%);
   border-top: 1px solid #ececec;
   border-bottom: 1px solid #e4e4e4;
-  border-left: 1px solid #c6c6c6;
+  border-left: 1px solid #c8c8c8;
   border-right: 0;
-  border-radius: 0;
+  border-radius: 0 calc(var(--tape-h) / 2) 0 0;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95);
-  /*
-   * Cut a circular bite matching the spool face so the paper never
-   * squares off across the roll. Center is the face center, from the
-   * strip’s right edge: half the current outer diameter.
-   */
-  -webkit-mask-image: radial-gradient(
-    circle at calc(100% - var(--roll-d) * 0.5) 50%,
-    transparent calc(var(--roll-d) * 0.5 - 0.4px),
-    #000 calc(var(--roll-d) * 0.5)
-  );
-  mask-image: radial-gradient(
-    circle at calc(100% - var(--roll-d) * 0.5) 50%,
-    transparent calc(var(--roll-d) * 0.5 - 0.4px),
-    #000 calc(var(--roll-d) * 0.5)
-  );
 }
 
-.tape-spool {
+/* Cylinder lighting on the wound end — washes the last sticker like the ref. */
+.tape-strip::after {
+  content: '';
   position: absolute;
   z-index: 4;
-  top: 50%;
+  top: 0;
   right: 0;
-  width: calc(var(--rim) + var(--roll-max));
-  height: var(--roll-max);
-  transform: translateY(-50%);
+  bottom: 0;
+  width: calc(var(--roll-d) * 0.58);
   pointer-events: none;
-}
-
-.tape-spool-rim {
-  position: absolute;
-  top: 50%;
-  right: calc(var(--face-cx) - var(--rim));
-  width: var(--roll-d);
-  height: calc(var(--roll-d) - 4px);
-  transform: translate(50%, -50%);
-  border-radius: 50%;
+  border-radius: 0 calc(var(--tape-h) / 2) 0 0;
   background: linear-gradient(
     90deg,
-    #d5d5d5 0%,
-    #f4f4f4 38%,
-    #e8e8e8 68%,
-    #c4c4c4 100%
+    transparent 0%,
+    rgba(255, 255, 255, 0.08) 28%,
+    rgba(255, 255, 255, 0.55) 48%,
+    rgba(255, 255, 255, 0.95) 62%,
+    rgba(255, 255, 255, 0.28) 78%,
+    rgba(0, 0, 0, 0.04) 100%
   );
-  box-shadow:
-    2px 2px 6px rgba(17, 17, 17, 0.12),
-    inset -1px 0 0 rgba(255, 255, 255, 0.5);
 }
 
-.tape-spool-face {
+.tape-roll {
   position: absolute;
-  top: 50%;
-  right: var(--face-cx);
+  z-index: 6;
+  top: calc(var(--tape-h) - var(--cap-h) * 0.52);
+  right: 0;
   width: var(--roll-d);
-  height: var(--roll-d);
-  transform: translate(50%, -50%);
-  border-radius: 50%;
-  overflow: hidden;
-  background: #f7f7f7;
-  box-shadow:
-    inset 0 0 0 1px rgba(17, 17, 17, 0.12),
-    0 1px 2px rgba(17, 17, 17, 0.06);
+  height: var(--cap-h);
+  pointer-events: none;
+  filter: drop-shadow(0 4px 5px rgba(17, 17, 17, 0.14));
 }
 
-.tape-spool-paper {
+.tape-roll-cap {
   position: absolute;
   inset: 0;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.5) 0 18%, transparent 48%),
-    repeating-radial-gradient(
-      circle at 50% 50%,
-      rgba(17, 17, 17, 0.03) 0 1px,
-      transparent 1px 9px
-    ),
-    #f6f6f6;
-  background-position:
-    0 0,
-    var(--spin) 0,
-    0 0;
+  display: block;
+  overflow: visible;
 }
 
-.tape-spool-core {
+.tape-roll-core {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: var(--core);
-  height: var(--core);
+  width: var(--hole-w);
+  height: var(--hole-h);
+  display: block;
+  overflow: visible;
   transform: translate(-50%, -50%);
-  border-radius: 50%;
-  background: linear-gradient(165deg, #d4b183 0%, #c0945e 50%, #a57846 100%);
-  box-shadow:
-    inset 0 0 0 1px rgba(90, 58, 24, 0.32),
-    inset 0 1px 1px rgba(255, 255, 255, 0.2);
-}
-
-.tape-spool-hole {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: var(--hole);
-  height: var(--hole);
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
-  background: #2a2118;
-  box-shadow:
-    inset 0 3px 6px rgba(0, 0, 0, 0.55),
-    0 0 0 1px rgba(90, 58, 24, 0.4);
-}
-
-.tape-spool-glint {
-  position: absolute;
-  inset: 6%;
-  border-radius: 50%;
-  pointer-events: none;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.28) 0 18%,
-    transparent 42%
-  );
 }
 
 .tape-track {
