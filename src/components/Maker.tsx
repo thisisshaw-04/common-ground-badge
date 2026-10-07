@@ -438,15 +438,8 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                   </Panel>
               </div>
 
-              <Panel
-                title="Stickers"
-                titleAside={
-                  <p className="shrink-0 text-right text-[11px] leading-[1.2] text-[var(--muted)]">
-                    Drag onto the card · double-click to delete
-                  </p>
-                }
-              >
-                <div className="mb-3 flex flex-wrap gap-1.5">
+              <Panel title="Stickers">
+                <div className="mb-3 flex flex-wrap items-center gap-1.5">
                   {TABS.map((t) => (
                     <button
                       key={t.id}
@@ -462,6 +455,9 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                       {t.label}
                     </button>
                   ))}
+                  <p className="ml-auto text-right text-[11px] text-[var(--muted)]">
+                    Drag onto the card · double-click to delete
+                  </p>
                 </div>
                 <StickerRoll
                   tabKey={tab}
@@ -588,20 +584,15 @@ function Panel({
   children,
   className = '',
   fill = false,
-  titleAside,
 }: {
   title: string
   children: ReactNode
   className?: string
   fill?: boolean
-  titleAside?: ReactNode
 }) {
   return (
     <div className={`panel-wrap min-w-0 ${fill ? 'h-full' : ''} ${className}`}>
-      <div className="flex items-baseline justify-between gap-3">
-        <p className="panel-title">{title}</p>
-        {titleAside}
-      </div>
+      <p className="panel-title">{title}</p>
       <div className={`panel ${fill ? 'flex flex-1 flex-col' : ''}`}>{children}</div>
     </div>
   )
