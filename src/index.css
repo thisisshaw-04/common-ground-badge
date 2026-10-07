@@ -186,6 +186,10 @@ button.track-box:not(.is-selected):active,
   box-shadow: 3px 3px 0 var(--select) !important;
 }
 
+.badge-edge-btn {
+  border: 1.5px solid #111;
+}
+
 .no-scrollbar {
   scrollbar-width: none;
 }

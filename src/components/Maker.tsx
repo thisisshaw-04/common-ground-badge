@@ -546,21 +546,21 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                   onClick={undo}
                   disabled={!canUndo}
                   title="Undo (Ctrl/⌘ Z)"
-                  className="option-btn min-w-0 flex-1 border border-black bg-white py-2.5 text-sm font-semibold text-black disabled:pointer-events-none disabled:border-black/20 disabled:text-black/30"
+                  className="option-btn badge-edge-btn min-w-0 flex-1 bg-white py-2.5 text-sm font-semibold text-black disabled:pointer-events-none disabled:border-black/20 disabled:text-black/30"
                 >
                   Undo
                 </button>
                 <button
                   type="button"
                   onClick={clearAll}
-                  className="option-btn min-w-0 flex-1 border border-black bg-white py-2.5 text-sm font-semibold text-black"
+                  className="option-btn badge-edge-btn min-w-0 flex-1 bg-white py-2.5 text-sm font-semibold text-black"
                 >
                   Clear
                 </button>
                 <button
                   type="button"
                   onClick={onDone}
-                  className="option-btn btn-done min-w-0 flex-[1.4] border-2 border-black bg-black py-2.5 text-sm font-bold text-white"
+                  className="option-btn btn-done badge-edge-btn min-w-0 flex-[1.4] bg-black py-2.5 text-sm font-bold text-white"
                 >
                   I&apos;m done!
                 </button>
