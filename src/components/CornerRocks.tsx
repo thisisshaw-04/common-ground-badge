@@ -1,5 +1,5 @@
-import { Component, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
-import { Canvas, useFrame, useThree } from '@react-three/fiber'
+import { Component, useEffect, useMemo, useState, type ReactNode } from 'react'
+import { Canvas } from '@react-three/fiber'
 import * as THREE from 'three'
 
 const ROCK_URL = `${import.meta.env.BASE_URL}rock.bin`
@@ -61,109 +61,43 @@ type RockPose = {
 }
 
 const LEFT_PILE: RockPose[] = [
-  { position: [0.08, 0, 0.06], rotation: [0.16, 0.52, 0.1], scale: 1 },
-  { position: [0.78, 0, -0.28], rotation: [0.46, -0.95, 0.2], scale: 0.6 },
-  { position: [-0.62, 0, 0.36], rotation: [-0.18, 1.28, -0.24], scale: 0.42 },
+  { position: [0.08, 0, 0], rotation: [0.06, 0.55, 0.03], scale: 1 },
+  { position: [0.72, 0, 0.18], rotation: [0.04, -0.85, -0.02], scale: 0.62 },
+  { position: [-0.22, 0, 0.42], rotation: [0.05, 1.35, 0.04], scale: 0.46 },
 ]
 
 const RIGHT_PILE: RockPose[] = [
-  { position: [-0.06, 0, 0.08], rotation: [0.2, -0.58, -0.12], scale: 1 },
-  { position: [-0.82, 0, -0.22], rotation: [0.48, 0.88, -0.14], scale: 0.56 },
-  { position: [0.55, 0, 0.4], rotation: [-0.22, -1.18, 0.26], scale: 0.46 },
+  { position: [-0.06, 0, 0], rotation: [0.05, -0.62, -0.03], scale: 1 },
+  { position: [-0.74, 0, 0.16], rotation: [0.04, 0.9, 0.02], scale: 0.6 },
+  { position: [0.2, 0, 0.44], rotation: [0.06, -1.25, 0.03], scale: 0.48 },
 ]
 
-function stoneMaterial() {
-  return new THREE.MeshStandardMaterial({
-    color: '#9a9184',
-    roughness: 0.9,
-    metalness: 0.05,
-  })
-}
-
-function RockMesh({
-  geometry,
-  pose,
-  material,
-}: {
-  geometry: THREE.BufferGeometry
-  pose: RockPose
-  material: THREE.MeshStandardMaterial
-}) {
-  const box = geometry.boundingBox!
-  const y = -box.min.y * pose.scale
-  return (
-    <mesh
-      geometry={geometry}
-      material={material}
-      position={[pose.position[0], y + pose.position[1], pose.position[2]]}
-      rotation={pose.rotation}
-      scale={pose.scale}
-    />
-  )
-}
-
-function ShadowDisk({ pose, geometry }: { pose: RockPose; geometry: THREE.BufferGeometry }) {
-  const box = geometry.boundingBox!
-  const rx = (box.max.x - box.min.x) * pose.scale * 0.4
-  const rz = (box.max.z - box.min.z) * pose.scale * 0.36
-  return (
-    <mesh
-      rotation={[-Math.PI / 2, 0, 0]}
-      position={[pose.position[0], 0.012, pose.position[2]]}
-      scale={[rx, rz, 1]}
-    >
-      <circleGeometry args={[1, 18]} />
-      <meshBasicMaterial color="#1a1814" transparent opacity={0.13} depthWrite={false} />
-    </mesh>
-  )
-}
-
-function Pile({
-  geometry,
-  poses,
-  sway,
-  material,
-}: {
-  geometry: THREE.BufferGeometry
-  poses: RockPose[]
-  sway: 1 | -1
-  material: THREE.MeshStandardMaterial
-}) {
-  const group = useRef<THREE.Group>(null)
-  useFrame(({ clock }) => {
-    if (!group.current) return
-    group.current.rotation.y = Math.sin(clock.elapsedTime * 0.28) * 0.04 * sway
-  })
-  return (
-    <group ref={group}>
-      {poses.map((pose, i) => (
-        <ShadowDisk key={`s${i}`} pose={pose} geometry={geometry} />
-      ))}
-      {poses.map((pose, i) => (
-        <RockMesh key={i} geometry={geometry} pose={pose} material={material} />
-      ))}
-    </group>
-  )
-}
-
-function CornerPiles() {
+function Pile({ poses }: { poses: RockPose[] }) {
   const geometry = useRockGeometry()
-  const { viewport } = useThree()
-  const material = useMemo(() => stoneMaterial(), [])
-  if (!geometry) return null
+  const material = useMemo(
+    () =>
+      new THREE.MeshStandardMaterial({
+        color: '#7a7368',
+        roughness: 0.91,
+        metalness: 0.05,
+      }),
+    [],
+  )
+  if (!geometry?.boundingBox) return null
 
-  const pileScale = Math.min(1.05, Math.max(0.72, viewport.width / 14))
-  const inset = 1.15 * pileScale
-  const x = Math.max(viewport.width / 2 - inset, inset)
-
+  const y0 = -geometry.boundingBox.min.y
   return (
-    <group position={[0, -0.85, 0]} scale={pileScale}>
-      <group position={[-x / pileScale, 0, 0]}>
-        <Pile geometry={geometry} poses={LEFT_PILE} sway={1} material={material} />
-      </group>
-      <group position={[x / pileScale, 0, 0]}>
-        <Pile geometry={geometry} poses={RIGHT_PILE} sway={-1} material={material} />
-      </group>
+    <group>
+      {poses.map((pose, i) => (
+        <mesh
+          key={i}
+          geometry={geometry}
+          material={material}
+          position={[pose.position[0], y0 * pose.scale, pose.position[2]]}
+          rotation={pose.rotation}
+          scale={pose.scale}
+        />
+      ))}
     </group>
   )
 }
@@ -181,17 +115,25 @@ class WebGLGate extends Component<{ children: ReactNode }, { failed: boolean }> 
   }
 }
 
-/** A few of the uploaded rocks, sitting in the bottom corners of the page. */
-export function CornerRocks() {
+function CornerCanvas({
+  side,
+  poses,
+}: {
+  side: 'left' | 'right'
+  poses: RockPose[]
+}) {
+  const camX = side === 'left' ? 2.15 : -2.15
   return (
     <div
-      className="pointer-events-none fixed inset-x-0 bottom-0 z-[12] h-[min(38vw,280px)]"
+      className={`pointer-events-none absolute bottom-0 z-[-1] h-[150px] w-[160px] overflow-hidden sm:h-[230px] sm:w-[250px] md:h-[260px] md:w-[280px] ${
+        side === 'left' ? 'left-0' : 'right-0'
+      }`}
       aria-hidden
     >
       <WebGLGate>
         <Canvas
           orthographic
-          camera={{ position: [0, 1.45, 8], zoom: 82, near: 0.1, far: 40 }}
+          camera={{ position: [camX, 3.1, 5.2], zoom: 56, near: 0.1, far: 40 }}
           dpr={[1, 1.5]}
           gl={{
             antialias: true,
@@ -201,17 +143,29 @@ export function CornerRocks() {
           }}
           onCreated={({ gl, camera }) => {
             gl.setClearColor(0x000000, 0)
-            camera.lookAt(0, 0, 0)
+            camera.lookAt(0.05 * (side === 'left' ? -1 : 1), 0.05, 0)
           }}
           style={{ background: 'transparent', width: '100%', height: '100%' }}
         >
-          <ambientLight intensity={0.72} />
-          <hemisphereLight args={['#f4f1ea', '#b9b3a8', 0.8]} />
-          <directionalLight position={[2.6, 3.8, 2.4]} intensity={1.4} color="#fff6e8" />
-          <directionalLight position={[-2, 1.1, 1.6]} intensity={0.42} color="#dce6ff" />
-          <CornerPiles />
+          <ambientLight intensity={0.78} />
+          <hemisphereLight args={['#f3eee6', '#9a948a', 0.65]} />
+          <directionalLight position={[2.4, 4, 2.4]} intensity={1.3} color="#fff4e4" />
+          <directionalLight position={[-1.8, 1, 1.4]} intensity={0.36} color="#d7e0f2" />
+          <group position={[side === 'left' ? -0.15 : 0.15, -0.95, 0]} scale={0.82}>
+            <Pile poses={poses} />
+          </group>
         </Canvas>
       </WebGLGate>
     </div>
+  )
+}
+
+/** A few of the uploaded rocks, sitting in the bottom corners of the page. */
+export function CornerRocks() {
+  return (
+    <>
+      <CornerCanvas side="left" poses={LEFT_PILE} />
+      <CornerCanvas side="right" poses={RIGHT_PILE} />
+    </>
   )
 }

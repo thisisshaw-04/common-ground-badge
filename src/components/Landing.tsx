@@ -1,5 +1,6 @@
 import { DEMO_STATE, EVENT, stickerById } from '../lib/badge'
 import { BadgeFace } from './BadgeFace'
+import { CornerRocks } from './CornerRocks'
 import { Lanyard } from './Lanyard'
 import { StickerFace } from './StickerFace'
 
@@ -15,8 +16,8 @@ export function Landing({ onStart }: LandingProps) {
   const demo = DEMO_STATE
 
   return (
-    <div className="page-fig relative flex min-h-dvh flex-col">
-      <main className="relative z-20 mx-auto flex w-full max-w-[1120px] flex-col items-center px-5 pt-6 pb-28 md:min-h-0 md:flex-1 md:flex-row md:items-center md:justify-between md:gap-10 md:px-10 md:pb-24 lg:gap-16">
+    <div className="relative isolate flex min-h-dvh flex-col">
+      <main className="relative z-20 isolate mx-auto flex w-full max-w-[1120px] flex-col items-center px-5 pt-6 pb-28 md:min-h-0 md:flex-1 md:flex-row md:items-center md:justify-between md:gap-10 md:px-10 md:pb-24 lg:gap-16">
         <div className="animate-floaty flex shrink-0 -translate-y-2 scale-[0.72] flex-col items-center sm:scale-90 md:-translate-y-4 md:scale-100">
           <Lanyard cord={demo.cord} scale={0.7} />
           <BadgeFace
@@ -77,6 +78,8 @@ export function Landing({ onStart }: LandingProps) {
           </button>
         </div>
       </main>
+
+      <CornerRocks />
 
       <footer className="relative z-30 px-4 py-4 text-center md:absolute md:inset-x-0 md:bottom-4 md:py-0">
         <p className="text-[12px] text-black/40">

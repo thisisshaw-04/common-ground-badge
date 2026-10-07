@@ -1,5 +1,4 @@
 import { useRef, useState } from 'react'
-import { CornerRocks } from './components/CornerRocks'
 import { DoneScreen } from './components/DoneScreen'
 import { Landing } from './components/Landing'
 import { Maker } from './components/Maker'
@@ -14,7 +13,6 @@ export default function App() {
 
   return (
     <div className="page-fig relative min-h-dvh overflow-x-hidden">
-      <CornerRocks />
       {screen === 'land' ? <Landing onStart={() => setScreen('make')} /> : null}
       <div className={screen === 'make' ? 'block' : 'hidden'}>
         <Maker
