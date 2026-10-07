@@ -466,8 +466,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                 />
                 <div className="hairline mt-3 pt-2">
                   <p className="text-[11px] text-[var(--muted)]">
-                    Peel a sticker from the roll · drop on the card · drag to move · double-click to
-                    delete
+                    Drag onto the card · double-click to delete
                   </p>
                 </div>
               </Panel>
