@@ -82,7 +82,7 @@ const FLOWER_D = (() => {
   return `${d} Z`
 })()
 
-function linesFor(label: string, shape?: string): string[] {
+function linesFor(label: string): string[] {
   if (label.includes('×')) {
     const [a, b] = label.split('×').map((s) => s.trim())
     return [a, b]
@@ -116,7 +116,7 @@ export function StickerFace({
 }) {
   const text = def.textColor ?? '#111'
   const tilt = def.tilt ?? 0
-  const lines = linesFor(def.label, def.shape)
+  const lines = linesFor(def.label)
   const size = large ? 'large' : compact ? 'compact' : 'normal'
   const round = def.shape === 'flower' || def.shape === 'star' || def.shape === 'sun'
   const pad = round
