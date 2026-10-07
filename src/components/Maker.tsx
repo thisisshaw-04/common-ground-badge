@@ -439,7 +439,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
               </div>
 
               <Panel title="Stickers">
-                <div className="mb-3 flex flex-wrap gap-1.5">
+                <div className="mb-3 flex flex-wrap items-center gap-1.5">
                   {TABS.map((t) => (
                     <button
                       key={t.id}
@@ -455,6 +455,9 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                       {t.label}
                     </button>
                   ))}
+                  <p className="ml-auto text-right text-[11px] text-[var(--muted)]">
+                    Drag onto the card · double-click to delete
+                  </p>
                 </div>
                 <StickerRoll
                   tabKey={tab}
@@ -462,11 +465,6 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                   peelingId={peel?.def.id ?? null}
                   onPeelStart={onPeelStart}
                 />
-                <div className="mt-3">
-                  <p className="text-[11px] text-[var(--muted)]">
-                    Drag onto the card · double-click to delete
-                  </p>
-                </div>
               </Panel>
             </div>
           </section>
