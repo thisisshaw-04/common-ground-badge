@@ -15,8 +15,8 @@ const BURST_POINTS = (() => {
 const WAVE_D = (() => {
   const w = 200
   const h = 100
-  const r = 22
-  const amp = 10
+  const r = 24
+  const amp = 12
   const left = r
   const right = w - r
   const steps = 20
