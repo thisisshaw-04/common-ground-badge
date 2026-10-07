@@ -17,14 +17,19 @@ interface StickerRollProps {
 }
 
 const TAPE_H = 96
-const ROLL_MIN = 88
-const ROLL_MAX = 104
-const CORE = 40
-const HOLE = 22
+/** Cylinder diameter = strip height so the right end is a true side-on roll. */
+const ROLL = TAPE_H
+/** Flattened end-cap (looking slightly down at the tube). */
+const SQUASH = 0.42
+const HOLE_W = 58
+const HOLE_H = HOLE_W * SQUASH
 const CUT = 2
-const PAD = 12
+const PAD = 14
 const CLOSE_MS = 280
 const OPEN_MS = 560
+
+const capH = ROLL * SQUASH
+const hang = capH * 0.7
 
 const easeOut = (t: number) => 1 - Math.pow(1 - t, 3)
 const easeIn = (t: number) => t * t * t
@@ -42,13 +47,7 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
     const el = stageRef.current
     if (!el) return
     feed.current = v
-    const wound = 1 - v
-    const rollD = ROLL_MIN + wound * (ROLL_MAX - ROLL_MIN)
-    const stripRight = ROLL_MAX / 2 - rollD / 2
     el.style.setProperty('--strip-w', `${(v * Math.max(0, full.current)).toFixed(2)}px`)
-    el.style.setProperty('--strip-right', `${stripRight.toFixed(2)}px`)
-    el.style.setProperty('--roll-d', `${rollD.toFixed(2)}px`)
-    el.style.setProperty('--wound', wound.toFixed(4))
   }
 
   const run = (to: number, ms: number, ease: (t: number) => number) =>
@@ -74,10 +73,9 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
       const set = track.firstElementChild as HTMLElement | null
       const setW = set?.offsetWidth ?? 0
       const setH = set?.offsetHeight ?? 0
-      const stripRight = ROLL_MAX / 2 - ROLL_MIN / 2
-      full.current = Math.max(0, stage.clientWidth - stripRight - CUT)
-      const roomW = Math.max(0, full.current - PAD - ROLL_MIN * 0.5)
-      const roomH = TAPE_H - 22
+      full.current = Math.max(0, stage.clientWidth - CUT)
+      const roomW = Math.max(0, full.current - PAD - ROLL * 0.06)
+      const roomH = TAPE_H - 20
       const next = Math.min(1, setH ? roomH / setH : 1, setW ? roomW / setW : 1)
       setScale((s) => (Math.abs(s - next) < 0.002 ? s : next))
       paint(feed.current)
@@ -95,7 +93,7 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
     }
     let cancelled = false
     void (async () => {
-      const ok = await run(0.06, CLOSE_MS, easeIn)
+      const ok = await run(0.08, CLOSE_MS, easeIn)
       if (!ok || cancelled) return
       setShown({ key: tabKey, stickers })
     })()
@@ -116,10 +114,11 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
         style={
           {
             '--tape-h': `${TAPE_H}px`,
-            '--roll-max': `${ROLL_MAX}px`,
-            '--roll-d': `${ROLL_MIN}px`,
-            '--core': `${CORE}px`,
-            '--hole': `${HOLE}px`,
+            '--roll-d': `${ROLL}px`,
+            '--cap-h': `${capH}px`,
+            '--hang': `${hang}px`,
+            '--hole-w': `${HOLE_W}px`,
+            '--hole-h': `${HOLE_H}px`,
           } as CSSProperties
         }
       >
@@ -156,7 +155,6 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
         </div>
         <div className="tape-roll" aria-hidden>
           <span className="tape-roll-paper" />
-          <span className="tape-roll-core" />
           <span className="tape-roll-hole" />
         </div>
       </div>
