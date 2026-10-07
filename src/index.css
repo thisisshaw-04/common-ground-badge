@@ -374,6 +374,18 @@ button.track-box:not(.is-selected):hover video {
   padding-block: 0.85rem !important;
 }
 
+.sticker-nice-star {
+  border: 0;
+  box-shadow: none;
+  background: transparent;
+  filter: drop-shadow(0 2px 3px rgba(17, 17, 17, 0.14));
+  aspect-ratio: 398 / 386;
+  min-width: 5.6rem;
+  min-height: 5.4rem;
+  padding-inline: 1.15rem !important;
+  padding-block: 1.15rem !important;
+}
+
 .sticker-shape-bg {
   position: absolute;
   inset: 0;
@@ -956,4 +968,9 @@ button.track-box:not(.is-selected):hover video {
 .tape-item .sticker-nice-flower {
   min-width: 4.4rem;
   min-height: 4.4rem;
+}
+
+.tape-item .sticker-nice-star {
+  min-width: 5.2rem;
+  min-height: 5rem;
 }

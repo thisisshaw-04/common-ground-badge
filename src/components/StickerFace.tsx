@@ -65,6 +65,10 @@ const SUN_D = (() => {
   return `${d} Z`
 })()
 
+/** Soft 8-point star from the track die-cut. */
+const STAR_D =
+  'M129.413 44.9844C156.772 -14.3294 241.072 -14.3294 268.431 44.9844C279.727 69.474 302.935 86.3362 329.717 89.5117C394.582 97.2025 420.632 177.377 372.676 221.726C352.875 240.037 344.011 267.32 349.267 293.772C361.996 357.839 293.796 407.389 236.799 375.484C213.266 362.312 184.578 362.312 161.045 375.484C104.047 407.389 35.8474 357.839 48.5771 293.772C53.8332 267.32 44.9683 240.037 25.168 221.726C-22.7886 177.377 3.26168 97.2025 68.127 89.5117C94.9086 86.3362 118.117 69.474 129.413 44.9844Z'
+
 const FLOWER_D = (() => {
   const petals = 8
   const at = (r: number, a: number) =>
@@ -93,7 +97,7 @@ function linesFor(label: string, shape?: string): string[] {
     return b ? [a, b] : [label]
   }
   const parts = label.split(' ')
-  if (parts.length >= 2 && (label.length > 10 || shape === 'flower')) {
+  if (parts.length >= 2 && (label.length > 10 || shape === 'flower' || shape === 'star')) {
     return [parts[0], parts.slice(1).join(' ')]
   }
   return [label]
@@ -148,6 +152,8 @@ export function StickerFace({
                       ? 'sticker-nice sticker-nice-wave'
                       : def.shape === 'sun'
                         ? 'sticker-nice sticker-nice-sun'
+                        : def.shape === 'star'
+                          ? 'sticker-nice sticker-nice-star'
                   : 'sticker-nice sticker-nice-soft'
 
   return (
@@ -160,7 +166,8 @@ export function StickerFace({
           def.shape === 'burst' ||
           def.shape === 'flower' ||
           def.shape === 'wave' ||
-          def.shape === 'sun'
+          def.shape === 'sun' ||
+          def.shape === 'star'
             ? undefined
             : def.color,
         color: text,
@@ -190,6 +197,11 @@ export function StickerFace({
       {def.shape === 'sun' && (
         <svg className="sticker-shape-bg" viewBox="0 0 100 100" aria-hidden>
           <path d={SUN_D} fill={def.color} />
+        </svg>
+      )}
+      {def.shape === 'star' && (
+        <svg className="sticker-shape-bg" viewBox="0 0 398 386" overflow="visible" aria-hidden>
+          <path d={STAR_D} fill={def.color} />
         </svg>
       )}
       {lines.map((line, i) => (

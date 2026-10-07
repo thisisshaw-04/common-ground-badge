@@ -23,7 +23,7 @@ export type FootVideoId =
   | 'mint'
 
 /** Die-cut shapes — blob matches FigBuild clover stickers. */
-export type StickerShape = 'pill' | 'soft' | 'ticket' | 'tag' | 'jagged' | 'flower' | 'blob' | 'bump' | 'burst' | 'wave' | 'sun'
+export type StickerShape = 'pill' | 'soft' | 'ticket' | 'tag' | 'jagged' | 'flower' | 'blob' | 'bump' | 'burst' | 'wave' | 'sun' | 'star'
 
 export interface StickerDef {
   id: string
@@ -111,10 +111,10 @@ export const STICKERS: StickerDef[] = [
   { id: 'maker', tab: 'role', label: 'MAKER', ...STICKER_SWATCH.red, shape: 'bump', tilt: -5 },
   { id: 'storyteller', tab: 'role', label: 'STORYTELLER', ...STICKER_SWATCH.magenta, shape: 'bump', tilt: 4 },
   { id: 'researcher', tab: 'role', label: 'RESEARCHER', ...STICKER_SWATCH.red, shape: 'bump', tilt: -3 },
-  { id: 'dxtech', tab: 'track', label: 'DESIGN × TECH', ...STICKER_SWATCH.cyan, shape: 'wave', tilt: -3 },
-  { id: 'cxtech', tab: 'track', label: 'CULTURE × TECH', ...STICKER_SWATCH.blue, shape: 'wave', tilt: 3 },
-  { id: 'solo', tab: 'track', label: 'SOLO BUILDER', ...STICKER_SWATCH.cyan, shape: 'wave', tilt: -4 },
-  { id: 'squad', tab: 'track', label: 'SQUAD UP', ...STICKER_SWATCH.blue, shape: 'wave', tilt: 4 },
+  { id: 'dxtech', tab: 'track', label: 'DESIGN × TECH', ...STICKER_SWATCH.cyan, shape: 'star', tilt: -3 },
+  { id: 'cxtech', tab: 'track', label: 'CULTURE × TECH', ...STICKER_SWATCH.blue, shape: 'star', tilt: 3 },
+  { id: 'solo', tab: 'track', label: 'SOLO BUILDER', ...STICKER_SWATCH.cyan, shape: 'star', tilt: -4 },
+  { id: 'squad', tab: 'track', label: 'SQUAD UP', ...STICKER_SWATCH.blue, shape: 'star', tilt: 4 },
   { id: 'learn', tab: 'vibe', label: 'HERE TO LEARN', ...STICKER_SWATCH.red, shape: 'sun', tilt: -4 },
   { id: 'funvibe', tab: 'vibe', label: 'HERE 4 FUN', ...STICKER_SWATCH.ochre, shape: 'sun', tilt: 5 },
   { id: 'win', tab: 'vibe', label: 'HERE 2 WIN', ...STICKER_SWATCH.magenta, shape: 'sun', tilt: -3 },
