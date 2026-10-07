@@ -1,6 +1,5 @@
 import {
   useEffect,
-  useId,
   useLayoutEffect,
   useRef,
   useState,
@@ -21,13 +20,13 @@ interface StickerRollProps {
 /** Strip height — large enough for StickerFace `large` labels to read. */
 const TAPE_H = 96
 /** Perspective squash of the circular end (width → height). */
-const SQUASH = 0.62
+const SQUASH = 0.7
 /** Outer paper width when the strip is fully out. */
-const ROLL_MIN = 94
+const ROLL_MIN = 92
 /** Outer paper width when the strip is fully wound on. */
-const ROLL_MAX = 112
+const ROLL_MAX = 108
 /** Core hole width in px — never animates. Height = HOLE * SQUASH. */
-const HOLE = 62
+const HOLE = 72
 const CUT = 2
 const TRACK_PAD = 12
 const ROLL_UP_MS = 520
@@ -45,7 +44,6 @@ function capH(rollD: number) {
  * Hole stays a fixed pixel size; only the white paper ring grows when winding.
  */
 export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }: StickerRollProps) {
-  const uid = useId().replace(/:/g, '')
   const stageRef = useRef<HTMLDivElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)
   const len = useRef(0)
@@ -92,7 +90,7 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
       const setW = set?.offsetWidth ?? 0
       const setH = set?.offsetHeight ?? 0
       full.current = Math.max(0, avail - CUT)
-      const reserved = ROLL_MIN * 0.42
+      const reserved = ROLL_MIN * 0.18
       const roomW = Math.max(0, full.current - TRACK_PAD - reserved)
       const roomH = TAPE_H - 20
       const next = Math.min(1, setH ? roomH / setH : 1, setW ? roomW / setW : 1)
@@ -125,7 +123,7 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
   useEffect(() => () => void ++anim.current, [])
 
   const holeH = HOLE * SQUASH
-  const hang = capH(ROLL_MAX) * 0.52
+  const hang = capH(ROLL_MAX) * 0.5
 
   return (
     <div className="tape-bed">
@@ -177,51 +175,10 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
           </div>
         </div>
 
+        <span className="tape-cyl-shine" />
         <div className="tape-roll" aria-hidden>
-          <svg className="tape-roll-cap" viewBox="0 0 100 62" preserveAspectRatio="none">
-            <defs>
-              <radialGradient id={`tp-${uid}`} cx="46%" cy="28%" r="72%">
-                <stop offset="0" stopColor="#ffffff" />
-                <stop offset="0.42" stopColor="#f7f7f7" />
-                <stop offset="0.78" stopColor="#e8e8e8" />
-                <stop offset="1" stopColor="#c8c8c8" />
-              </radialGradient>
-            </defs>
-            <ellipse cx="50" cy="31" rx="49.4" ry="30.6" fill={`url(#tp-${uid})`} />
-            <ellipse
-              cx="50"
-              cy="31"
-              rx="49.4"
-              ry="30.6"
-              fill="none"
-              stroke="#cfcfcf"
-              strokeWidth="0.7"
-            />
-          </svg>
-          <svg
-            className="tape-roll-core"
-            viewBox="0 0 100 62"
-            preserveAspectRatio="none"
-            width={HOLE}
-            height={holeH}
-          >
-            <defs>
-              <linearGradient id={`lip-${uid}`} x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0" stopColor="#f4f4f4" />
-                <stop offset="0.18" stopColor="#d0d0d0" />
-                <stop offset="0.55" stopColor="#8a8a8a" />
-                <stop offset="1" stopColor="#3a3a3a" />
-              </linearGradient>
-              <radialGradient id={`hole-${uid}`} cx="50%" cy="30%" r="72%">
-                <stop offset="0" stopColor="#6e6e6e" />
-                <stop offset="0.28" stopColor="#3f3f3f" />
-                <stop offset="0.62" stopColor="#1c1c1c" />
-                <stop offset="1" stopColor="#0a0a0a" />
-              </radialGradient>
-            </defs>
-            <ellipse cx="50" cy="31" rx="49.5" ry="30.7" fill={`url(#lip-${uid})`} />
-            <ellipse cx="50" cy="32.2" rx="44" ry="27.2" fill={`url(#hole-${uid})`} />
-          </svg>
+          <span className="tape-roll-paper" />
+          <span className="tape-roll-hole" />
         </div>
       </div>
     </div>
