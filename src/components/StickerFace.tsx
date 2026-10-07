@@ -11,7 +11,20 @@ const BURST_POINTS = (() => {
   return pts.join(' ')
 })()
 
-function linesFor(label: string): string[] {
+const FLOWER_D = (() => {
+  const petals = 8
+  const at = (r: number, a: number) =>
+    `${(50 + r * Math.cos(a)).toFixed(2)} ${(50 + r * Math.sin(a)).toFixed(2)}`
+  const step = (Math.PI * 2) / petals
+  let d = `M ${at(34, -Math.PI / 2)}`
+  for (let i = 0; i < petals; i++) {
+    const a = -Math.PI / 2 + i * step
+    d += ` C ${at(58, a + step * 0.12)} ${at(58, a + step * 0.88)} ${at(34, a + step)}`
+  }
+  return `${d} Z`
+})()
+
+function linesFor(label: string, shape?: string): string[] {
   if (label.includes('×')) {
     const [a, b] = label.split('×').map((s) => s.trim())
     return [`${a} ×`, b]
@@ -21,7 +34,7 @@ function linesFor(label: string): string[] {
     return b ? [a, b] : [label]
   }
   const parts = label.split(' ')
-  if (parts.length >= 2 && label.length > 10) {
+  if (parts.length >= 2 && (label.length > 10 || shape === 'flower')) {
     return [parts[0], parts.slice(1).join(' ')]
   }
   return [label]
@@ -40,7 +53,7 @@ export function StickerFace({
 }) {
   const text = def.textColor ?? '#111'
   const tilt = def.tilt ?? 0
-  const lines = linesFor(def.label)
+  const lines = linesFor(def.label, def.shape)
   const size = large ? 'large' : compact ? 'compact' : 'normal'
   const pad =
     size === 'large'
@@ -80,7 +93,7 @@ export function StickerFace({
         dragging ? 'sticker-dragging' : ''
       }`}
       style={{
-        background: def.shape === 'burst' ? undefined : def.color,
+        background: def.shape === 'burst' || def.shape === 'flower' ? undefined : def.color,
         color: text,
         ['--sticker-tilt' as string]: `${tilt}deg`,
         transform: dragging
@@ -91,15 +104,13 @@ export function StickerFace({
       }}
     >
       {def.shape === 'burst' && (
-        <svg className="sticker-burst-bg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden>
-          <polygon
-            points={BURST_POINTS}
-            fill={def.color}
-            stroke="#111"
-            strokeWidth="2.5"
-            strokeLinejoin="round"
-            vectorEffect="non-scaling-stroke"
-          />
+        <svg className="sticker-shape-bg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden>
+          <polygon points={BURST_POINTS} fill={def.color} strokeLinejoin="round" />
+        </svg>
+      )}
+      {def.shape === 'flower' && (
+        <svg className="sticker-shape-bg" viewBox="0 0 100 100" aria-hidden>
+          <path d={FLOWER_D} fill={def.color} />
         </svg>
       )}
       {lines.map((line, i) => (
