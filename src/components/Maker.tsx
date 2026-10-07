@@ -43,6 +43,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
   const [tab, setTab] = useState<StickerTab>('role')
   const [mode, setMode] = useState<'stick' | 'draw'>('stick')
   const [brush, setBrush] = useState<1 | 2 | 3>(2)
+  const [stroke, setStroke] = useState<'round' | 'sketch'>('round')
   const [draggingUid, setDraggingUid] = useState<string | null>(null)
   const [peel, setPeel] = useState<{
     def: StickerDef
@@ -52,6 +53,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
   } | null>(null)
   const [canUndo, setCanUndo] = useState(false)
   const drawing = useRef(false)
+  const drawPt = useRef<{ x: number; y: number } | null>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const paintedUrl = useRef<string | null | undefined>(undefined)
   const dragUid = useRef<string | null>(null)
@@ -221,6 +223,46 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
     push({ ...state, drawingDataUrl: url })
   }
 
+  const canvasPoint = (e: ReactPointerEvent<HTMLCanvasElement>, c: HTMLCanvasElement) => {
+    const rect = c.getBoundingClientRect()
+    return {
+      x: ((e.clientX - rect.left) / rect.width) * c.width,
+      y: ((e.clientY - rect.top) / rect.height) * c.height,
+    }
+  }
+
+  const sketchSegment = (
+    ctx: CanvasRenderingContext2D,
+    x0: number,
+    y0: number,
+    x1: number,
+    y1: number,
+  ) => {
+    const dx = x1 - x0
+    const dy = y1 - y0
+    const len = Math.hypot(dx, dy) || 1
+    const nx = -dy / len
+    const ny = dx / len
+    const steps = Math.max(2, Math.ceil(len / 3.5))
+    const amp = 2.4
+    ctx.strokeStyle = '#111'
+    ctx.lineCap = 'round'
+    ctx.lineJoin = 'round'
+    for (let pass = 0; pass < 3; pass++) {
+      ctx.beginPath()
+      ctx.lineWidth = 1.35 + pass * 0.55 + Math.random() * 0.7
+      ctx.globalAlpha = 0.42 + pass * 0.12
+      ctx.moveTo(x0 + (Math.random() - 0.5) * 1.2, y0 + (Math.random() - 0.5) * 1.2)
+      for (let i = 1; i <= steps; i++) {
+        const t = i / steps
+        const j = (Math.random() - 0.5) * amp * (0.7 + pass * 0.25)
+        ctx.lineTo(x0 + dx * t + nx * j, y0 + dy * t + ny * j)
+      }
+      ctx.stroke()
+    }
+    ctx.globalAlpha = 1
+  }
+
   const onDrawPointerDown = (e: ReactPointerEvent<HTMLCanvasElement>) => {
     if (mode !== 'draw') return
     drawing.current = true
@@ -229,16 +271,18 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
     c.setPointerCapture(e.pointerId)
     const ctx = c.getContext('2d')
     if (!ctx) return
-    const rect = c.getBoundingClientRect()
+    const p = canvasPoint(e, c)
+    drawPt.current = p
+    if (stroke === 'sketch') {
+      sketchSegment(ctx, p.x, p.y, p.x + 0.4, p.y + 0.4)
+      return
+    }
     ctx.strokeStyle = '#111'
     ctx.lineWidth = brush * 2.2
     ctx.lineCap = 'round'
     ctx.lineJoin = 'round'
     ctx.beginPath()
-    ctx.moveTo(
-      ((e.clientX - rect.left) / rect.width) * c.width,
-      ((e.clientY - rect.top) / rect.height) * c.height,
-    )
+    ctx.moveTo(p.x, p.y)
   }
 
   const onDrawPointerMove = (e: ReactPointerEvent<HTMLCanvasElement>) => {
@@ -247,17 +291,23 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
     if (!c) return
     const ctx = c.getContext('2d')
     if (!ctx) return
-    const rect = c.getBoundingClientRect()
-    ctx.lineTo(
-      ((e.clientX - rect.left) / rect.width) * c.width,
-      ((e.clientY - rect.top) / rect.height) * c.height,
-    )
+    const p = canvasPoint(e, c)
+    if (stroke === 'sketch') {
+      const prev = drawPt.current ?? p
+      if (Math.hypot(p.x - prev.x, p.y - prev.y) < 2) return
+      sketchSegment(ctx, prev.x, prev.y, p.x, p.y)
+      drawPt.current = p
+      return
+    }
+    ctx.lineTo(p.x, p.y)
     ctx.stroke()
+    drawPt.current = p
   }
 
   const onDrawPointerUp = () => {
     if (!drawing.current) return
     drawing.current = false
+    drawPt.current = null
     saveDrawing()
   }
 
@@ -331,35 +381,37 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                         aria-label="Thin brush"
                         onClick={() => {
                           setBrush(1)
+                          setStroke('round')
                           setMode('draw')
                         }}
                         className={`track-box flex h-11 w-11 items-center justify-center bg-[var(--panel)] ${
-                          brush === 1 && mode === 'draw' ? 'is-selected' : ''
+                          brush === 1 && stroke === 'round' && mode === 'draw' ? 'is-selected' : ''
                         }`}
                       >
                         <span className="rounded-full bg-black" style={{ width: 5, height: 5 }} />
                       </button>
                       <button
                         type="button"
-                        aria-label="Draw with a medium squiggle"
+                        aria-label="Rough sketch line"
                         onClick={() => {
-                          if (mode === 'draw') {
+                          if (mode === 'draw' && stroke === 'sketch') {
                             setMode('stick')
                             return
                           }
                           setBrush(2)
+                          setStroke('sketch')
                           setMode('draw')
                         }}
                         className={`track-box flex h-11 w-11 items-center justify-center bg-[var(--panel)] ${
-                          mode === 'draw' ? 'is-selected' : ''
+                          stroke === 'sketch' && mode === 'draw' ? 'is-selected' : ''
                         }`}
                       >
                         <svg viewBox="0 0 28 28" className="h-7 w-7" aria-hidden>
                           <path
-                            d="M3.5 16.5c2.4-6 4-6 5.8 0 1.9 6 3.5 6 5.4 0 1.9-6 3.5-6 5.3 0 1.7 5.6 3.2 5.6 4.5 1.2"
+                            d="M3 17.2 6.2 12.4 8.1 16.8 11.4 10.6 13.8 17.4 17.2 11.8 19.6 16.1 22.8 12.2 25.2 16.6"
                             fill="none"
                             stroke="#111"
-                            strokeWidth="2.25"
+                            strokeWidth="1.7"
                             strokeLinecap="round"
                             strokeLinejoin="round"
                           />
@@ -370,10 +422,11 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                         aria-label="Medium brush"
                         onClick={() => {
                           setBrush(2)
+                          setStroke('round')
                           setMode('draw')
                         }}
                         className={`track-box flex h-11 w-11 items-center justify-center bg-[var(--panel)] ${
-                          brush === 2 && mode === 'draw' ? 'is-selected' : ''
+                          brush === 2 && stroke === 'round' && mode === 'draw' ? 'is-selected' : ''
                         }`}
                       >
                         <span className="rounded-full bg-black" style={{ width: 10, height: 10 }} />
@@ -383,10 +436,11 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                         aria-label="Thick brush"
                         onClick={() => {
                           setBrush(3)
+                          setStroke('round')
                           setMode('draw')
                         }}
                         className={`track-box flex h-11 w-11 items-center justify-center bg-[var(--panel)] ${
-                          brush === 3 && mode === 'draw' ? 'is-selected' : ''
+                          brush === 3 && stroke === 'round' && mode === 'draw' ? 'is-selected' : ''
                         }`}
                       >
                         <span className="rounded-full bg-black" style={{ width: 15, height: 15 }} />
