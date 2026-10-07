@@ -12,7 +12,7 @@ interface StickerRollProps {
 
 const ROLL_MIN = 64
 const ROLL_MAX = 88
-const TRACK_LEFT = 12
+const TRACK_LEFT = 4
 const TAPE_PAD_Y = 12
 const ROLL_UP_MS = 500
 const UNROLL_MS = 800
@@ -77,8 +77,8 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
       const stripH = stage.querySelector('.tape-strip')?.clientHeight ?? 108
       const room = Math.max(0, avail - TRACK_LEFT - ROLL_MAX - 10)
       const next = Math.min(setH ? (stripH - TAPE_PAD_Y) / setH : 1, setW ? room / setW : 1)
-      /* Leave a sliver so the cut (left) edge of the tape sits inside the panel. */
-      full.current = Math.max(ROLL_MAX, avail - 8)
+      /* Hairline inset so the cut edge sits just inside the panel. */
+      full.current = Math.max(ROLL_MAX, avail - 1)
       setScale((s) => (Math.abs(s - next) < 0.002 ? s : next))
       paint(len.current)
     }

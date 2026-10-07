@@ -623,22 +623,10 @@ button.track-box:not(.is-selected):hover video {
     ),
     #ffffff;
   border: 1px solid #e8e8e8;
+  border-left: 1px solid #bbb;
   border-right-color: transparent;
   border-radius: 0 calc(var(--roll-w) * 0.31) 0 0;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95);
-}
-
-/* Cut end of the unrolled strip */
-.tape-strip::before {
-  content: '';
-  position: absolute;
-  z-index: 5;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  width: 1px;
-  pointer-events: none;
-  background: #e0e0e0;
 }
 
 /* Cylinder highlight painted on the wound end of the strip */
