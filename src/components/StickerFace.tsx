@@ -1,5 +1,16 @@
 import type { StickerDef } from '../lib/badge'
 
+const BURST_POINTS = (() => {
+  const spikes = 22
+  const pts: string[] = []
+  for (let i = 0; i < spikes * 2; i++) {
+    const a = (i / (spikes * 2)) * Math.PI * 2 - Math.PI / 2
+    const r = i % 2 === 0 ? 50 : 41
+    pts.push(`${(50 + r * Math.cos(a)).toFixed(2)},${(50 + r * Math.sin(a)).toFixed(2)}`)
+  }
+  return pts.join(' ')
+})()
+
 function linesFor(label: string): string[] {
   if (label.includes('×')) {
     const [a, b] = label.split('×').map((s) => s.trim())
@@ -59,6 +70,8 @@ export function StickerFace({
                 ? 'sticker-nice sticker-nice-blob'
                 : def.shape === 'bump'
                   ? 'sticker-nice sticker-nice-bump'
+                  : def.shape === 'burst'
+                    ? 'sticker-nice sticker-nice-burst'
                   : 'sticker-nice sticker-nice-soft'
 
   return (
@@ -67,7 +80,7 @@ export function StickerFace({
         dragging ? 'sticker-dragging' : ''
       }`}
       style={{
-        background: def.color,
+        background: def.shape === 'burst' ? undefined : def.color,
         color: text,
         ['--sticker-tilt' as string]: `${tilt}deg`,
         transform: dragging
@@ -77,8 +90,20 @@ export function StickerFace({
             : `rotate(${tilt}deg)`,
       }}
     >
+      {def.shape === 'burst' && (
+        <svg className="sticker-burst-bg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden>
+          <polygon
+            points={BURST_POINTS}
+            fill={def.color}
+            stroke="#111"
+            strokeWidth="2.5"
+            strokeLinejoin="round"
+            vectorEffect="non-scaling-stroke"
+          />
+        </svg>
+      )}
       {lines.map((line, i) => (
-        <span key={i} className={`font-body font-extrabold uppercase ${type}`}>
+        <span key={i} className={`relative font-body font-extrabold uppercase ${type}`}>
           {line}
         </span>
       ))}

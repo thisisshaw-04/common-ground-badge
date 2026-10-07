@@ -333,6 +333,25 @@ button.track-box:not(.is-selected):hover video {
   clip-path: inset(-3px -3px -3px calc(100% - var(--bump-out) - 2.5px));
 }
 
+.sticker-nice-burst {
+  border: 0;
+  box-shadow: none;
+  background: transparent;
+  filter: drop-shadow(2px 3px 0 rgba(17, 17, 17, 0.12));
+  min-width: 6.4rem;
+  min-height: 4.4rem;
+  padding-inline: 1.5rem !important;
+  padding-block: 1rem !important;
+}
+
+.sticker-burst-bg {
+  position: absolute;
+  inset: -2px;
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
+  overflow: visible;
+}
+
 .sticker-nice-tag {
   border-radius: 8px 999px 999px 8px;
   padding-right: 1.15rem !important;
