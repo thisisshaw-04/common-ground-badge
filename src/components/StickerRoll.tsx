@@ -13,7 +13,7 @@ interface StickerRollProps {
 const ROLL_MIN = 64
 const ROLL_MAX = 88
 const TRACK_LEFT = 12
-const MAX_STICKER_H = 56
+const MAX_STICKER_H = 66
 const ROLL_UP_MS = 500
 const UNROLL_MS = 800
 

@@ -85,7 +85,7 @@ const FLOWER_D = (() => {
 function linesFor(label: string, shape?: string): string[] {
   if (label.includes('×')) {
     const [a, b] = label.split('×').map((s) => s.trim())
-    return [`${a} ×`, b]
+    return [a, b]
   }
   if (label.startsWith('HERE ')) {
     const rest = label.slice(5)
@@ -97,7 +97,7 @@ function linesFor(label: string, shape?: string): string[] {
     return b ? [a, b] : [label]
   }
   const parts = label.split(' ')
-  if (parts.length >= 2 && (label.length > 10 || shape === 'flower' || shape === 'star')) {
+  if (parts.length >= 2 && label.length > 9) {
     return [parts[0], parts.slice(1).join(' ')]
   }
   return [label]
@@ -118,8 +118,10 @@ export function StickerFace({
   const tilt = def.tilt ?? 0
   const lines = linesFor(def.label, def.shape)
   const size = large ? 'large' : compact ? 'compact' : 'normal'
-  const pad =
-    size === 'large'
+  const round = def.shape === 'flower' || def.shape === 'star' || def.shape === 'sun'
+  const pad = round
+    ? ''
+    : size === 'large'
       ? 'px-4 py-3'
       : size === 'compact'
         ? 'px-3 py-2'
@@ -194,15 +196,17 @@ export function StickerFace({
         </svg>
       )}
       {def.shape === 'star' && (
-        <svg className="sticker-shape-bg" viewBox="0 0 398 386" overflow="visible" aria-hidden>
+        <svg className="sticker-shape-bg" viewBox="-28 -22 456 444" aria-hidden>
           <path d={STAR_D} fill={def.color} />
         </svg>
       )}
-      {lines.map((line, i) => (
-        <span key={i} className="sticker-label relative font-body font-normal uppercase">
-          {line}
-        </span>
-      ))}
+      <span className="sticker-copy">
+        {lines.map((line, i) => (
+          <span key={i} className="sticker-label">
+            {line}
+          </span>
+        ))}
+      </span>
     </span>
   )
 }

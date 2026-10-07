@@ -250,10 +250,26 @@ button.track-box:not(.is-selected):hover video {
   transition: transform 0.15s ease;
 }
 
+.sticker-copy {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+}
+
 .sticker-label {
-  font-size: 9px;
-  line-height: 1.15;
-  letter-spacing: 0.04em;
+  display: block;
+  width: 100%;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: 0.02em;
+  text-align: center;
+  text-transform: uppercase;
 }
 
 .sticker-nice-pill {
@@ -376,8 +392,7 @@ button.track-box:not(.is-selected):hover video {
   aspect-ratio: 1;
   min-width: 4.8rem;
   min-height: 4.8rem;
-  padding-inline: 0.85rem !important;
-  padding-block: 0.85rem !important;
+  padding: 0.45rem !important;
 }
 
 .sticker-nice-star {
@@ -385,11 +400,10 @@ button.track-box:not(.is-selected):hover video {
   box-shadow: none;
   background: transparent;
   filter: drop-shadow(0 2px 3px rgba(17, 17, 17, 0.14));
-  aspect-ratio: 398 / 386;
-  min-width: 5.6rem;
-  min-height: 5.4rem;
-  padding-inline: 1.15rem !important;
-  padding-block: 1.15rem !important;
+  aspect-ratio: 1;
+  min-width: 5.2rem;
+  min-height: 5.2rem;
+  padding: 0.7rem !important;
 }
 
 .sticker-shape-bg {
@@ -412,6 +426,7 @@ button.track-box:not(.is-selected):hover video {
   aspect-ratio: 1;
   min-width: 4.8rem;
   min-height: 4.8rem;
+  padding: 0.55rem !important;
 }
 
 /* FigBuild-style 4-lobe clover / scalloped sticker */
@@ -469,7 +484,7 @@ button.track-box:not(.is-selected):hover video {
 }
 
 .sticker-on-badge .sticker-label {
-  font-size: 11px;
+  font-size: 13px;
 }
 
 .sticker-on-badge .sticker-nice-blob {
@@ -936,6 +951,6 @@ button.track-box:not(.is-selected):hover video {
 }
 
 .tape-item .sticker-nice-star {
-  min-width: 5.2rem;
-  min-height: 5rem;
+  min-width: 4.85rem;
+  min-height: 4.85rem;
 }
