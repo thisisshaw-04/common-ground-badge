@@ -301,7 +301,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
       <button
         type="button"
         onClick={onBack}
-        className="text-sm font-medium text-black/45 hover:text-black"
+        className="panel-title text-black/55 transition-colors hover:text-black"
       >
         ← Back
       </button>
@@ -320,11 +320,42 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
 
         <div className="relative flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto no-scrollbar lg:flex-row lg:items-start lg:gap-10 lg:overflow-hidden">
           {/* Adjustments LEFT — FigBuild 2-col grid */}
-          <section className="animate-pop order-last min-h-0 min-w-0 flex-1 lg:order-none lg:self-stretch lg:overflow-y-auto no-scrollbar lg:pt-8 lg:pr-2 lg:pb-4">
-            <div className="flex flex-col gap-6">
-              <div className="grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-2 sm:items-start sm:gap-y-6">
-                <div className="flex min-w-0 flex-col gap-6">
-                  <header className="hidden lg:block">{heading}</header>
+          <section className="animate-pop order-last min-h-0 min-w-0 flex-1 lg:order-none lg:self-stretch lg:overflow-y-auto no-scrollbar lg:pt-4 lg:pr-2 lg:pb-1 [@media(min-height:860px)]:lg:pt-8 [@media(min-height:860px)]:lg:pb-4">
+            <div className="flex flex-col gap-5 [@media(min-height:860px)]:gap-6">
+              <div className="grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2 [@media(min-height:860px)]:gap-y-6">
+                <header className="hidden lg:col-start-1 lg:row-start-1 lg:block">{heading}</header>
+                  <Panel title="Draw" className="sm:col-start-2 sm:row-start-1 sm:self-end">
+                    <div className="flex min-h-[5.5rem] items-center justify-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setMode(mode === 'draw' ? 'stick' : 'draw')}
+                        className={`option-btn border border-black bg-white px-3 py-2 text-xs font-semibold text-black/80 ${
+                          mode === 'draw' ? 'is-selected' : ''
+                        }`}
+                      >
+                        {mode === 'draw' ? 'On' : 'Draw'}
+                      </button>
+                      {([1, 2, 3] as const).map((size) => (
+                        <button
+                          key={size}
+                          type="button"
+                          onClick={() => {
+                            setBrush(size)
+                            setMode('draw')
+                          }}
+                          className={`track-box flex h-11 w-11 items-center justify-center bg-[var(--panel)] ${
+                            brush === size && mode === 'draw' ? 'is-selected' : ''
+                          }`}
+                        >
+                          <span
+                            className="rounded-full bg-black"
+                            style={{ width: size * 5, height: size * 5 }}
+                          />
+                        </button>
+                      ))}
+                    </div>
+                  </Panel>
+                <div className="flex min-w-0 flex-col gap-5 sm:col-start-1 sm:row-start-2 [@media(min-height:860px)]:gap-6">
                   <Panel title="Outer frame">
                     <div className="grid grid-cols-4 gap-3">
                       {(
@@ -366,40 +397,8 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                     </div>
                   </Panel>
                 </div>
-                <div className="flex min-w-0 flex-col gap-6">
-                  <Panel title="Draw">
-                    <div className="flex min-h-[5.5rem] items-center justify-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() => setMode(mode === 'draw' ? 'stick' : 'draw')}
-                        className={`option-btn border border-black bg-white px-3 py-2 text-xs font-semibold text-black/80 ${
-                          mode === 'draw' ? 'is-selected' : ''
-                        }`}
-                      >
-                        {mode === 'draw' ? 'On' : 'Draw'}
-                      </button>
-                      {([1, 2, 3] as const).map((size) => (
-                        <button
-                          key={size}
-                          type="button"
-                          onClick={() => {
-                            setBrush(size)
-                            setMode('draw')
-                          }}
-                          className={`track-box flex h-11 w-11 items-center justify-center bg-[var(--panel)] ${
-                            brush === size && mode === 'draw' ? 'is-selected' : ''
-                          }`}
-                        >
-                          <span
-                            className="rounded-full bg-black"
-                            style={{ width: size * 5, height: size * 5 }}
-                          />
-                        </button>
-                      ))}
-                    </div>
-                  </Panel>
-                  <Panel title="Foot video">
-                    <div className="grid grid-cols-2 gap-3">
+                  <Panel title="Foot video" fill className="sm:col-start-2 sm:row-start-2">
+                    <div className="grid min-h-0 flex-1 auto-rows-fr grid-cols-2 gap-3">
                       {FOOT_VIDEO_ORDER.map((id) => {
                         const v = FOOT_VIDEOS[id]
                         return (
@@ -416,20 +415,20 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                               vid.pause()
                               vid.currentTime = 0
                             }}
-                            className={`track-box text-left ${
+                            className={`track-box flex text-left ${
                               state.footVideo === id ? 'is-selected' : ''
                             }`}
                             aria-label={v.label}
                             title={v.label}
                           >
-                            <div className="relative h-8 overflow-hidden bg-[#d8d8d8] sm:h-9">
+                            <div className="relative min-h-8 w-full flex-1 overflow-hidden bg-[#d8d8d8] sm:min-h-9">
                               <video
                                 src={`${import.meta.env.BASE_URL}foot-videos/${v.file}`}
                                 muted
                                 loop
                                 playsInline
                                 preload="metadata"
-                                className="h-full w-full object-cover object-center"
+                                className="absolute inset-0 h-full w-full object-cover object-center"
                               />
                             </div>
                           </button>
@@ -437,7 +436,6 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                       })}
                     </div>
                   </Panel>
-                </div>
               </div>
 
               <Panel title="Stickers">
@@ -587,15 +585,17 @@ function Panel({
   title,
   children,
   className = '',
+  fill = false,
 }: {
   title: string
   children: ReactNode
   className?: string
+  fill?: boolean
 }) {
   return (
-    <div className={`panel-wrap ${className}`}>
+    <div className={`panel-wrap min-w-0 ${fill ? 'h-full' : ''} ${className}`}>
       <p className="panel-title">{title}</p>
-      <div className="panel">{children}</div>
+      <div className={`panel ${fill ? 'flex flex-1 flex-col' : ''}`}>{children}</div>
     </div>
   )
 }
