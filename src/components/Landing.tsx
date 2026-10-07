@@ -16,9 +16,9 @@ export function Landing({ onStart }: LandingProps) {
   const demo = DEMO_STATE
 
   return (
-    <div className="page-fig relative flex h-dvh flex-col overflow-hidden">
-      <main className="relative z-20 mx-auto flex min-h-0 w-full max-w-[1120px] flex-1 flex-col items-center px-5 pt-6 pb-24 md:flex-row md:items-center md:justify-between md:gap-10 md:px-10 lg:gap-16">
-        <div className="animate-floaty flex shrink-0 -translate-y-2 scale-[0.88] flex-col items-center sm:scale-95 md:-translate-y-4 md:scale-100">
+    <div className="page-fig relative flex min-h-dvh flex-col">
+      <main className="relative z-20 mx-auto flex w-full max-w-[1120px] flex-col items-center px-5 pt-6 pb-28 md:min-h-0 md:flex-1 md:flex-row md:items-center md:justify-between md:gap-10 md:px-10 md:pb-24 lg:gap-16">
+        <div className="animate-floaty flex shrink-0 -translate-y-2 scale-[0.72] flex-col items-center sm:scale-90 md:-translate-y-4 md:scale-100">
           <Lanyard cord={demo.cord} scale={0.58} />
           <BadgeFace
             width={BADGE_W}
@@ -52,36 +52,37 @@ export function Landing({ onStart }: LandingProps) {
           />
         </div>
 
-        <div className="animate-pop mt-2 max-w-md text-center md:mt-0 md:text-left">
-          <p className="text-lg text-black/70 md:text-xl">Welcome to</p>
-          <div className="mt-3 flex flex-nowrap items-center justify-center gap-2 md:justify-start">
-            <span className="poster-box poster-box-common text-[clamp(1.25rem,3vw,1.85rem)]">
-              Common
-            </span>
-            <span className="poster-box poster-box-ground text-[clamp(1.25rem,3vw,1.85rem)] !ml-0">
-              Ground
-            </span>
+        <div className="animate-pop mt-4 flex max-w-lg flex-col items-center gap-5 text-center md:mt-0">
+          <div className="flex flex-col items-center gap-2">
+            <p className="text-[clamp(2rem,5vw,4.1rem)] leading-none tracking-[-0.04em] text-black">
+              Welcome to
+            </p>
+            <div className="flex items-center justify-center">
+              <span className="hero-mark px-2.5 py-1.5 sm:px-4 sm:py-3 lg:px-5 lg:py-4">
+                Common
+              </span>
+              <span className="hero-mark rounded-full px-2.5 py-1.5 sm:px-4 sm:py-3 lg:px-5 lg:py-4">
+                Ground
+              </span>
+            </div>
           </div>
-          <p className="mt-5 text-lg text-black/80 md:text-xl">
+          <p className="max-w-[16rem] text-[clamp(1.2rem,2.5vw,2.25rem)] leading-snug text-black sm:max-w-[20rem] lg:max-w-[24rem]">
             Start your journey with a Common Ground Badge!
           </p>
           <button
             type="button"
             onClick={onStart}
-            className="cta-blue mt-8 w-full max-w-sm px-6 py-4 text-base md:w-auto md:text-lg"
+            className="cta-blue w-full max-w-[18.75rem] px-5 py-3.5 text-lg sm:max-w-[20rem] sm:text-[21px]"
           >
             Build a Common Ground Badge
           </button>
-          <p className="mt-4 font-mono text-[11px] tracking-wide text-black/40 uppercase">
-            {EVENT.date} · {EVENT.place}
-          </p>
         </div>
       </main>
 
       <DecoCorners />
 
-      <footer className="absolute inset-x-0 bottom-3 z-30 px-4 text-center">
-        <p className="text-[12px] text-black/35">
+      <footer className="relative z-30 px-4 py-4 text-center md:absolute md:inset-x-0 md:bottom-4 md:py-0">
+        <p className="text-[12px] text-black/40">
           {EVENT.subtitle} · Design × Tech × Culture · {EVENT.date} {EVENT.year}
         </p>
       </footer>

@@ -735,6 +735,19 @@ button.track-box:not(.is-selected):hover video {
   padding: 0.38em 0.42em 0.3em;
 }
 
+.hero-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #111;
+  color: #fff;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 0.95;
+  white-space: nowrap;
+  font-size: clamp(1.7rem, 4vw, 3.4rem);
+}
+
 .poster-name-input {
   font-family: var(--font-body);
 }
@@ -795,24 +808,24 @@ button.track-box:not(.is-selected):hover video {
 }
 
 .cta-blue {
-  background: var(--blue);
+  background: #4d49fc;
   color: #fff;
-  border-radius: 0;
-  font-weight: 700;
-  box-shadow: 0 4px 0 #3138c4;
+  border: 0;
+  border-radius: 9px;
+  font-weight: 500;
+  box-shadow: none;
   transition:
-    transform 0.12s ease,
-    box-shadow 0.12s ease;
+    background 0.2s ease,
+    border-radius 0.2s ease;
 }
 
 .cta-blue:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 5px 0 #3138c4;
+  background: #3d39ec;
+  border-radius: 0;
 }
 
 .cta-blue:active {
-  transform: translateY(2px);
-  box-shadow: 0 1px 0 #3138c4;
+  background: #3530d8;
 }
 
 .deco-cluster {
