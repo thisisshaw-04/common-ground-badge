@@ -464,7 +464,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                   peelingId={peel?.def.id ?? null}
                   onPeelStart={onPeelStart}
                 />
-                <div className="hairline mt-3 pt-2">
+                <div className="mt-3">
                   <p className="text-[11px] text-[var(--muted)]">
                     Drag onto the card · double-click to delete
                   </p>
