@@ -10,7 +10,7 @@ export const EVENT = {
 } as const
 
 export type CordId = 'ink' | 'signal' | 'flare' | 'acid'
-export type BorderId = 'none' | 'dashed' | 'track' | 'wiggly'
+export type BorderId = 'none' | 'dashed' | 'dotted' | 'wiggly'
 export type StickerTab = 'role' | 'year' | 'track' | 'vibe' | 'pronouns' | 'about'
 export type FootVideoId =
   | 'ink'

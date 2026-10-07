@@ -61,7 +61,7 @@ export function doodlePath(w: number, h: number, seed = 7, amp = 1.6, step = 46,
 /** CSS class for the outer shell border (none / dash / box). */
 export function outerShellClass(border: BorderId): string {
   if (border === 'dashed') return 'badge-shell-dashed'
-  if (border === 'track') return 'badge-shell-box'
+  if (border === 'dotted') return 'badge-shell-dotted'
   if (border === 'wiggly') return 'badge-shell-wiggly'
   return 'badge-shell-none'
 }
@@ -94,16 +94,6 @@ export function BadgeOuterFrame({ border }: { border: BorderId }) {
       viewBox={`0 0 ${w} ${h}`}
       aria-hidden
     >
-      {/* faint second pencil pass for the sketchy double line */}
-      <path
-        d={doodlePath(w, h, 23, 1.3, 58, 2.4)}
-        fill="none"
-        stroke="#111"
-        strokeOpacity="0.28"
-        strokeWidth="1"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
       <path
         d={doodlePath(w, h, 7)}
         fill="none"
@@ -130,8 +120,8 @@ export function FrameSwatch({ border }: { border: BorderId }) {
   if (border === 'dashed') {
     return <span className="block h-6 w-6 border border-dashed border-black" />
   }
-  if (border === 'track') {
-    return <span className="block h-6 w-6 border border-black" />
+  if (border === 'dotted') {
+    return <span className="block h-6 w-6 border-2 border-dotted border-black" />
   }
   return <span className="block h-6 w-6 border border-black/20" />
 }
