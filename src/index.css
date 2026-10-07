@@ -504,14 +504,19 @@ button.track-box:not(.is-selected):hover video {
 
 /* —— FigBuild sticker tape: white strip with a rounded top-right and a grey-ring roll —— */
 .tape-bed {
-  padding: 0.35rem 0 0.85rem;
+  padding: 0.35rem 0 1.1rem;
   user-select: none;
 }
 
 .tape-stage {
   --strip-w: 64px;
+  --roll-w: 64px;
+  --wound: 0;
+  --spin: 0px;
+  --core-w: 48px;
+  --rim-h: calc(16px + var(--wound) * 5px);
   position: relative;
-  height: 96px;
+  height: 104px;
 }
 
 .tape-strip {
@@ -534,7 +539,7 @@ button.track-box:not(.is-selected):hover video {
     ),
     linear-gradient(180deg, #f6f7f9 0%, #ffffff 42%, #eef0f3 100%);
   border: 1px solid #c5c8ce;
-  border-radius: 0 20px 0 0;
+  border-radius: 0 calc(var(--roll-w) * 0.31) 0 0;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.9),
     inset 0 -1px 0 rgba(0, 0, 0, 0.05);
@@ -562,19 +567,26 @@ button.track-box:not(.is-selected):hover video {
   top: 0;
   right: 0;
   bottom: 0;
-  width: 64px;
+  width: var(--roll-w);
   pointer-events: none;
-  border-radius: 0 19px 0 0;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(0, 0, 0, 0.05) 16%,
-    rgba(255, 255, 255, 0.55) 34%,
-    rgba(255, 255, 255, 0.95) 44%,
-    rgba(210, 214, 220, 0.35) 58%,
-    rgba(120, 128, 138, 0.22) 82%,
-    rgba(90, 96, 106, 0.28) 100%
-  );
+  border-radius: 0 calc(var(--roll-w) * 0.3) 0 0;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0 10px,
+      rgba(0, 0, 0, 0.055) 10px 11.5px
+    ),
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(0, 0, 0, 0.05) 16%,
+      rgba(255, 255, 255, 0.55) 34%,
+      rgba(255, 255, 255, 0.95) 44%,
+      rgba(210, 214, 220, 0.35) 58%,
+      rgba(120, 128, 138, 0.22) 82%,
+      rgba(90, 96, 106, 0.28) 100%
+    );
+  background-position: var(--spin) 0, 0 0;
 }
 
 .tape-roll-face {
@@ -582,16 +594,23 @@ button.track-box:not(.is-selected):hover video {
   z-index: 0;
   top: 30px;
   right: 0;
-  width: 64px;
+  width: var(--roll-w);
   height: 50px;
-  background: linear-gradient(
-    90deg,
-    #f4f4f4 0%,
-    #ffffff 38%,
-    #e8e8ea 72%,
-    #cfd3d8 100%
-  );
-  border-radius: 0 16px 0 0;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0 10px,
+      rgba(0, 0, 0, 0.05) 10px 11.5px
+    ),
+    linear-gradient(
+      90deg,
+      #f4f4f4 0%,
+      #ffffff 38%,
+      #e8e8ea 72%,
+      #cfd3d8 100%
+    );
+  background-position: var(--spin) 0, 0 0;
+  border-radius: 0 calc(var(--roll-w) * 0.25) 0 0;
   box-shadow: 1px 0 0 #b0b4bb;
 }
 
@@ -599,18 +618,50 @@ button.track-box:not(.is-selected):hover video {
   position: absolute;
   z-index: 3;
   right: 0;
-  top: 76px;
-  width: 64px;
-  height: 16px;
+  top: calc(80px - var(--rim-h) * 0.25);
+  width: var(--roll-w);
+  height: var(--rim-h);
   display: block;
+}
+
+/* Concentric paper wraps on the rim — more rings as the roll fattens */
+.tape-roll-layers {
+  position: absolute;
+  z-index: 4;
+  right: 0;
+  top: calc(80px - var(--rim-h) * 0.25);
+  width: var(--roll-w);
+  height: var(--rim-h);
+  border-radius: 50%;
+  pointer-events: none;
+  background: repeating-radial-gradient(
+    50% 50% at 50% 50%,
+    rgb(255 255 255 / 0.28) 0 6px,
+    rgb(120 124 132 / 0.5) 6px 8px
+  );
+  -webkit-mask-image: radial-gradient(
+    50% 50% at 50% 50%,
+    transparent 0 28%,
+    #000 30%,
+    #000 92%,
+    transparent 96%
+  );
+  mask-image: radial-gradient(
+    50% 50% at 50% 50%,
+    transparent 0 28%,
+    #000 30%,
+    #000 92%,
+    transparent 96%
+  );
+  opacity: calc(0.18 + var(--wound) * 0.82);
 }
 
 .tape-roll-spool {
   position: absolute;
-  z-index: 4;
-  right: 8px;
-  top: 78px;
-  width: 48px;
+  z-index: 5;
+  right: calc((var(--roll-w) - var(--core-w)) / 2);
+  top: calc(80px - var(--rim-h) * 0.25 + var(--rim-h) * 0.3);
+  width: var(--core-w);
   height: 11px;
   display: block;
 }
@@ -618,9 +669,9 @@ button.track-box:not(.is-selected):hover video {
 .tape-roll-shine {
   position: absolute;
   z-index: 6;
-  right: 22px;
+  right: calc(var(--roll-w) * 0.34);
   top: 3px;
-  width: 10px;
+  width: calc(var(--roll-w) * 0.16);
   height: 76px;
   display: block;
   pointer-events: none;

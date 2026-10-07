@@ -10,7 +10,8 @@ interface StickerRollProps {
   onPeelStart: (def: StickerDef, e: ReactPointerEvent<HTMLButtonElement>) => void
 }
 
-const ROLL_W = 64
+const ROLL_MIN = 64
+const ROLL_MAX = 88
 const TRACK_LEFT = 12
 const MAX_STICKER_H = 56
 const ROLL_UP_MS = 500
@@ -23,7 +24,8 @@ const ease = (t: number) => {
 
 /**
  * FigBuild-style sticker tape: a white strip with a rounded top-right that
- * collapses to the roll width, swaps stickers, then expands again.
+ * collapses onto the roll. The roll fattens and shows extra paper layers as
+ * tape winds on, then thins again as it unrolls.
  */
 export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }: StickerRollProps) {
   const stageRef = useRef<HTMLDivElement>(null)
@@ -38,8 +40,14 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
     const el = stageRef.current
     if (!el) return
     len.current = v
-    const w = ROLL_W + v * Math.max(0, full.current - ROLL_W)
+    const wound = 1 - v
+    // Wound tape area grows linearly, so diameter grows with its square root.
+    const d = Math.sqrt(ROLL_MIN * ROLL_MIN + wound * (ROLL_MAX * ROLL_MAX - ROLL_MIN * ROLL_MIN))
+    const w = d + v * Math.max(0, full.current - d)
     el.style.setProperty('--strip-w', `${w.toFixed(2)}px`)
+    el.style.setProperty('--roll-w', `${d.toFixed(2)}px`)
+    el.style.setProperty('--wound', wound.toFixed(4))
+    el.style.setProperty('--spin', `${(-wound * Math.max(full.current, 1) * 0.28).toFixed(2)}px`)
   }
 
   const run = (to: number, ms: number) =>
@@ -68,9 +76,9 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
       const setH = set?.offsetHeight ?? 0
       const room = Math.max(0, avail - TRACK_LEFT - 8)
       const scale = Math.min(1, setW ? room / setW : 1, setH ? MAX_STICKER_H / setH : 1)
-      const copies = setW ? Math.max(1, Math.ceil((avail + ROLL_W) / (setW * scale))) : 1
+      const copies = setW ? Math.max(1, Math.ceil((avail + ROLL_MAX) / (setW * scale))) : 1
       /* Leave a sliver so the cut (left) edge of the tape sits inside the panel. */
-      full.current = Math.max(ROLL_W, avail - 8)
+      full.current = Math.max(ROLL_MAX, avail - 8)
       setFit((f) => (f.scale === scale && f.copies === copies ? f : { scale, copies }))
       paint(len.current)
     }
@@ -136,6 +144,7 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
           </div>
         </div>
         <span className="tape-roll-face" aria-hidden />
+        <span className="tape-roll-layers" aria-hidden />
         <svg
           className="tape-roll-rim"
           viewBox="0 0 64 16"
