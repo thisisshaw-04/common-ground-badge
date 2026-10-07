@@ -489,7 +489,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                       onBlur={() => push(state)}
                       placeholder="YOUR NAME"
                       maxLength={22}
-                      className="poster-name-input absolute top-2 left-1/2 z-20 w-[84%] -translate-x-1/2 bg-transparent text-center text-[1.9rem] font-extrabold tracking-[-0.03em] text-black uppercase outline-none placeholder:font-extrabold placeholder:text-black/25"
+                      className="poster-name-input absolute top-2 left-1/2 z-20 w-[84%] -translate-x-1/2 bg-transparent text-center text-[1.9rem] font-bold tracking-[-0.03em] text-black uppercase outline-none placeholder:font-bold placeholder:text-black/25"
                     />
 
                     <canvas

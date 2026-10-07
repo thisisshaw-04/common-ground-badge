@@ -28,7 +28,7 @@ export function Landing({ onStart }: LandingProps) {
             footHeight={FOOT_H}
             className="-mt-9"
             body={
-              <p className="poster-name-input absolute top-2 left-1/2 z-10 w-[84%] -translate-x-1/2 text-center text-[1.65rem] font-extrabold tracking-[-0.03em] text-black uppercase">
+              <p className="poster-name-input absolute top-2 left-1/2 z-10 w-[84%] -translate-x-1/2 text-center text-[1.65rem] font-bold tracking-[-0.03em] text-black uppercase">
                 {demo.name}
               </p>
             }

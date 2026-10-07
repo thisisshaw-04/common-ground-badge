@@ -1,5 +1,11 @@
 @import 'tailwindcss';
 
+@theme {
+  --font-sans: 'Google Sans', sans-serif;
+  --font-serif: 'Google Sans', sans-serif;
+  --font-mono: 'Google Sans', sans-serif;
+}
+
 :root {
   --bg: #efefef;
   --ink: #111111;
@@ -21,14 +27,23 @@
   --pink: var(--sticker-magenta);
   --sky: var(--sticker-cyan);
   --lime: var(--sticker-green);
-  --font-display: 'Google Sans', 'Google Sans Text', system-ui, sans-serif;
-  --font-body: 'Google Sans', 'Google Sans Text', system-ui, sans-serif;
-  --font-hand: 'Google Sans', 'Google Sans Text', system-ui, sans-serif;
-  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+  --font: 'Google Sans', sans-serif;
+  --font-display: var(--font);
+  --font-body: var(--font);
+  --font-hand: var(--font);
+  --font-mono: var(--font);
 }
 
 * {
   box-sizing: border-box;
+  font-family: 'Google Sans', sans-serif;
+}
+
+code,
+kbd,
+pre,
+samp {
+  font-family: 'Google Sans', sans-serif;
 }
 
 html,
@@ -38,10 +53,19 @@ body,
   min-height: 100%;
 }
 
+html,
+body,
+button,
+input,
+textarea,
+select {
+  font-family: 'Google Sans', sans-serif;
+}
+
 body {
   margin: 0;
   color: var(--ink);
-  font-family: var(--font-body);
+  font-family: 'Google Sans', sans-serif;
   background: var(--bg);
   -webkit-font-smoothing: antialiased;
   overflow: hidden;
@@ -101,18 +125,17 @@ textarea {
   animation: wiggle 5s ease-in-out infinite;
 }
 
-.font-display {
-  font-family: var(--font-display);
+.font-display,
+.font-hand,
+.font-mono,
+.font-sans,
+.font-serif {
+  font-family: 'Google Sans', sans-serif;
 }
 
 .font-hand {
-  font-family: var(--font-hand);
   font-weight: 500;
   letter-spacing: -0.02em;
-}
-
-.font-mono {
-  font-family: var(--font-mono);
 }
 
 .page-fig {
