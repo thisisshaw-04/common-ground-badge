@@ -27,9 +27,9 @@ import { CordSwatch, Lanyard } from './Lanyard'
 import { StickerFace } from './StickerFace'
 import { StickerRoll } from './StickerRoll'
 
-const BADGE_W = 400
-const BODY_H = 168
-const FOOT_H = 218
+const BADGE_W = 500
+const BODY_H = 210
+const FOOT_H = 272
 
 interface MakerProps {
   state: BadgeState
@@ -315,7 +315,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
     <div
       className={`page-fig relative flex h-dvh flex-col overflow-hidden${isPeeling ? ' is-peeling-sticker' : ''}`}
     >
-      <div className="relative mx-auto flex min-h-0 w-full max-w-[1280px] flex-1 flex-col px-4 pt-3 pb-4 sm:px-6 sm:pt-4">
+      <div className="relative mx-auto flex min-h-0 w-full max-w-[1440px] flex-1 flex-col px-4 pt-3 pb-4 sm:px-6 sm:pt-4">
         <header className="animate-pop mb-2 shrink-0 sm:mb-3 lg:hidden">{heading}</header>
 
         <div className="relative flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto no-scrollbar lg:flex-row lg:items-start lg:gap-8 lg:overflow-hidden">
@@ -470,9 +470,9 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
           </section>
 
           {/* Badge RIGHT */}
-          <aside className="animate-pop flex shrink-0 flex-col items-center lg:sticky lg:top-0 lg:w-[460px] xl:w-[500px]">
-            <div className="flex w-full max-w-[440px] flex-col items-center lg:-translate-y-2">
-              <Lanyard cord={state.cord} scale={0.62} />
+          <aside className="animate-pop flex shrink-0 flex-col items-center lg:sticky lg:top-0 lg:w-[560px] xl:w-[600px]">
+            <div className="flex w-full max-w-[520px] flex-col items-center lg:-translate-y-2">
+              <Lanyard cord={state.cord} scale={0.74} />
               <BadgeFace
                 badgeRef={badgeRef}
                 width={BADGE_W}
@@ -489,7 +489,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                       onBlur={() => push(state)}
                       placeholder="YOUR NAME"
                       maxLength={22}
-                      className="poster-name-input absolute top-2 left-1/2 z-20 w-[84%] -translate-x-1/2 bg-transparent text-center text-[1.65rem] font-extrabold tracking-[-0.03em] text-black uppercase outline-none placeholder:font-extrabold placeholder:text-black/25"
+                      className="poster-name-input absolute top-2 left-1/2 z-20 w-[84%] -translate-x-1/2 bg-transparent text-center text-[1.9rem] font-extrabold tracking-[-0.03em] text-black uppercase outline-none placeholder:font-extrabold placeholder:text-black/25"
                     />
 
                     <canvas
@@ -527,7 +527,6 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                     >
                       <StickerFace
                         def={def}
-                        compact
                         large
                         dragging={draggingUid === s.uid}
                       />
