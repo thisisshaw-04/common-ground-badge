@@ -102,7 +102,7 @@ export const STICKER_SWATCH = {
   ochre: { color: 'var(--sticker-ochre)', textColor: '#111' },
   blue: { color: 'var(--sticker-blue)', textColor: '#fff' },
   cyan: { color: 'var(--sticker-cyan)', textColor: '#111' },
-  magenta: { color: 'var(--sticker-magenta)', textColor: '#111' },
+  magenta: { color: 'var(--sticker-magenta)', textColor: '#fff' },
 } as const
 
 const STICKER_PALETTE = [
