@@ -315,18 +315,18 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
     <div
       className={`page-fig relative flex h-dvh flex-col overflow-hidden${isPeeling ? ' is-peeling-sticker' : ''}`}
     >
-      <div className="relative mx-auto flex min-h-0 w-full max-w-[1280px] flex-1 flex-col px-4 pt-3 pb-4 sm:px-6 sm:pt-4">
+      <div className="relative mx-auto flex min-h-0 w-full max-w-[1440px] flex-1 flex-col px-4 pt-3 pb-4 sm:px-6 sm:pt-4">
         <header className="animate-pop mb-2 shrink-0 sm:mb-3 lg:hidden">{heading}</header>
 
-        <div className="relative flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto no-scrollbar lg:flex-row lg:items-start lg:gap-8 lg:overflow-hidden">
+        <div className="relative flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto no-scrollbar lg:flex-row lg:items-start lg:gap-10 lg:overflow-hidden">
           {/* Adjustments LEFT — FigBuild 2-col grid */}
           <section className="animate-pop order-last min-h-0 min-w-0 flex-1 lg:order-none lg:self-stretch lg:overflow-y-auto no-scrollbar lg:pt-8 lg:pr-2 lg:pb-4">
-            <div className="flex flex-col gap-6 sm:gap-5">
-              <div className="grid grid-cols-1 gap-x-5 gap-y-6 sm:grid-cols-2 sm:items-start sm:gap-y-5">
-                <div className="flex min-w-0 flex-col gap-6 sm:gap-5">
+            <div className="flex flex-col gap-6">
+              <div className="grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-2 sm:items-start sm:gap-y-6">
+                <div className="flex min-w-0 flex-col gap-6">
                   <header className="hidden lg:block">{heading}</header>
                   <Panel title="Outer frame">
-                    <div className="grid grid-cols-4 gap-2">
+                    <div className="grid grid-cols-4 gap-3">
                       {(
                         [
                           ['none', 'None'],
@@ -350,7 +350,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                     </div>
                   </Panel>
                   <Panel title="Cords">
-                    <div className="grid grid-cols-4 gap-1.5">
+                    <div className="grid grid-cols-4 gap-3">
                       {(Object.keys(CORDS) as CordId[]).map((id) => (
                         <button
                           key={id}
@@ -366,7 +366,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                     </div>
                   </Panel>
                 </div>
-                <div className="flex min-w-0 flex-col gap-6 sm:gap-5">
+                <div className="flex min-w-0 flex-col gap-6">
                   <Panel title="Draw">
                     <div className="flex min-h-[5.5rem] items-center justify-center gap-2">
                       <button
@@ -399,7 +399,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                     </div>
                   </Panel>
                   <Panel title="Foot video">
-                    <div className="grid grid-cols-2 gap-2.5">
+                    <div className="grid grid-cols-2 gap-3">
                       {FOOT_VIDEO_ORDER.map((id) => {
                         const v = FOOT_VIDEOS[id]
                         return (
