@@ -182,6 +182,18 @@ button.track-box:not(.is-selected):active,
   box-shadow: 1px 1px 0 #111;
 }
 
+.btn-done:hover {
+  box-shadow: 3px 3px 0 var(--select) !important;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 button.track-box > svg,
 button.track-box > span,
 button.track-box > div:not(.relative) {

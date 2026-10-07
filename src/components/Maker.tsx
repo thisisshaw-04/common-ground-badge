@@ -318,9 +318,9 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
       <div className="relative mx-auto flex min-h-0 w-full max-w-[1280px] flex-1 flex-col px-4 pt-3 pb-4 sm:px-6 sm:pt-4">
         <header className="animate-pop mb-2 shrink-0 sm:mb-3 lg:hidden">{heading}</header>
 
-        <div className="relative flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto lg:flex-row lg:items-start lg:gap-8 lg:overflow-hidden">
+        <div className="relative flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto no-scrollbar lg:flex-row lg:items-start lg:gap-8 lg:overflow-hidden">
           {/* Adjustments LEFT — FigBuild 2-col grid */}
-          <section className="animate-pop order-last min-h-0 min-w-0 flex-1 lg:order-none lg:self-stretch lg:overflow-y-auto lg:pr-2 lg:pb-4">
+          <section className="animate-pop order-last min-h-0 min-w-0 flex-1 lg:order-none lg:self-stretch lg:overflow-y-auto no-scrollbar lg:pr-2 lg:pb-4">
             <div className="flex flex-col gap-6 sm:gap-5">
               <div className="grid grid-cols-1 gap-x-5 gap-y-6 sm:grid-cols-2 sm:items-start sm:gap-y-5">
                 <div className="flex min-w-0 flex-col gap-6 sm:gap-5">
@@ -560,7 +560,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                 <button
                   type="button"
                   onClick={onDone}
-                  className="option-btn min-w-0 flex-[1.4] border-2 border-black bg-white py-2.5 text-sm font-bold text-black"
+                  className="option-btn btn-done min-w-0 flex-[1.4] border-2 border-black bg-black py-2.5 text-sm font-bold text-white"
                 >
                   I&apos;m done!
                 </button>
