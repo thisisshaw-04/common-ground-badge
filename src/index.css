@@ -1,7 +1,7 @@
 @import 'tailwindcss';
 
 :root {
-  --bg: #ffffff;
+  --bg: #efefef;
   --ink: #111111;
   --paper: #ffffff;
   --panel: #ffffff;
@@ -110,7 +110,7 @@ textarea {
 }
 
 .page-fig {
-  background: #ffffff;
+  background: var(--bg);
 }
 
 .panel-wrap {
