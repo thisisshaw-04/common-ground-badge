@@ -427,6 +427,17 @@ button.track-box:not(.is-selected):hover video {
   animation: none !important;
 }
 
+/* Stickers stuck on the badge sit flat and still */
+.sticker-on-badge .sticker-nice {
+  animation: none !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+.sticker-on-badge .sticker-nice-blob {
+  transform: rotate(var(--sticker-tilt, 0deg));
+}
+
 /* Peeling sticker sheet tray */
 .sticker-sheet {
   position: relative;

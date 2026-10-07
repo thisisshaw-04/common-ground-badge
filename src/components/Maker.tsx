@@ -515,7 +515,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                     <button
                       key={s.uid}
                       type="button"
-                      className={`absolute cursor-grab touch-none select-none active:cursor-grabbing ${
+                      className={`sticker-on-badge absolute cursor-grab touch-none select-none active:cursor-grabbing ${
                         mode === 'draw' ? 'pointer-events-none' : 'pointer-events-auto'
                       } ${draggingUid === s.uid ? 'z-[120]' : 'z-[100]'}`}
                       style={{

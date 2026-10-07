@@ -38,7 +38,7 @@ export function Landing({ onStart }: LandingProps) {
               return (
                 <span
                   key={s.uid}
-                  className="pointer-events-none absolute"
+                  className="sticker-on-badge pointer-events-none absolute"
                   style={{
                     left: `${s.x}%`,
                     top: `${s.y}%`,
