@@ -355,6 +355,18 @@ button.track-box:not(.is-selected):hover video {
   padding-block: 0.9rem !important;
 }
 
+.sticker-nice-sun {
+  border: 0;
+  box-shadow: none;
+  background: transparent;
+  filter: drop-shadow(0 2px 3px rgba(17, 17, 17, 0.14));
+  aspect-ratio: 1;
+  min-width: 4.8rem;
+  min-height: 4.8rem;
+  padding-inline: 0.85rem !important;
+  padding-block: 0.85rem !important;
+}
+
 .sticker-shape-bg {
   position: absolute;
   inset: 0;

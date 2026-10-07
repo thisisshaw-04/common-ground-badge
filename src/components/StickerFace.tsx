@@ -44,6 +44,27 @@ const WAVE_D = (() => {
   return `${pts.join(' ')} Z`
 })()
 
+/** Rounded-petal sun, like a scalloped daisy. */
+const SUN_D = (() => {
+  const n = 16
+  const inner = 33
+  const outer = 50
+  const half = (Math.PI / n) * 0.7
+  const at = (r: number, a: number) =>
+    `${(50 + r * Math.cos(a)).toFixed(2)} ${(50 + r * Math.sin(a)).toFixed(2)}`
+  let d = ''
+  for (let i = 0; i < n; i++) {
+    const mid = -Math.PI / 2 + (i * 2 * Math.PI) / n
+    const a0 = mid - half
+    const a1 = mid + half
+    d += i === 0 ? `M ${at(inner, a0)}` : ` L ${at(inner, a0)}`
+    d += ` L ${at(outer - 5, a0)}`
+    d += ` Q ${at(outer, mid)} ${at(outer - 5, a1)}`
+    d += ` L ${at(inner, a1)}`
+  }
+  return `${d} Z`
+})()
+
 const FLOWER_D = (() => {
   const petals = 8
   const at = (r: number, a: number) =>
@@ -61,6 +82,11 @@ function linesFor(label: string, shape?: string): string[] {
   if (label.includes('×')) {
     const [a, b] = label.split('×').map((s) => s.trim())
     return [`${a} ×`, b]
+  }
+  if (label.startsWith('HERE ')) {
+    const rest = label.slice(5)
+    if (rest.startsWith('TO ')) return ['HERE TO', rest.slice(3)]
+    return ['HERE', rest]
   }
   if (label.includes('YEAR')) {
     const [a, b] = label.split(' ')
@@ -120,6 +146,8 @@ export function StickerFace({
                     ? 'sticker-nice sticker-nice-burst'
                     : def.shape === 'wave'
                       ? 'sticker-nice sticker-nice-wave'
+                      : def.shape === 'sun'
+                        ? 'sticker-nice sticker-nice-sun'
                   : 'sticker-nice sticker-nice-soft'
 
   return (
@@ -129,7 +157,10 @@ export function StickerFace({
       }`}
       style={{
         background:
-          def.shape === 'burst' || def.shape === 'flower' || def.shape === 'wave'
+          def.shape === 'burst' ||
+          def.shape === 'flower' ||
+          def.shape === 'wave' ||
+          def.shape === 'sun'
             ? undefined
             : def.color,
         color: text,
@@ -154,6 +185,11 @@ export function StickerFace({
       {def.shape === 'wave' && (
         <svg className="sticker-shape-bg" viewBox="0 0 200 100" preserveAspectRatio="none" aria-hidden>
           <path d={WAVE_D} fill={def.color} />
+        </svg>
+      )}
+      {def.shape === 'sun' && (
+        <svg className="sticker-shape-bg" viewBox="0 0 100 100" aria-hidden>
+          <path d={SUN_D} fill={def.color} />
         </svg>
       )}
       {lines.map((line, i) => (
