@@ -642,15 +642,15 @@ button.track-box:not(.is-selected):hover video {
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
+  width: max-content;
 }
 
 .tape-set {
   display: flex;
   flex-shrink: 0;
   align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  padding-right: 0;
+  gap: 0.7rem;
+  padding-right: 0.7rem;
 }
 
 .tape-item {
@@ -664,7 +664,6 @@ button.track-box:not(.is-selected):hover video {
   padding: 0;
   filter: none;
   box-shadow: none;
-  transform: scale(var(--item-scale));
   transition:
     transform 0.16s ease,
     filter 0.16s ease,
@@ -672,7 +671,7 @@ button.track-box:not(.is-selected):hover video {
 }
 
 .tape-item:hover {
-  transform: scale(calc(var(--item-scale) * 1.07)) rotate(-3deg);
+  transform: scale(1.07) rotate(-3deg);
   filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.16));
 }
 

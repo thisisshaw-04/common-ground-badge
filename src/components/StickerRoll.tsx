@@ -39,7 +39,7 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
   const full = useRef(0)
   const anim = useRef(0)
   const [shown, setShown] = useState({ key: tabKey, stickers })
-  const [scale, setScale] = useState(1)
+  const [fit, setFit] = useState({ scale: 1, copies: 1 })
 
   const paint = (v: number) => {
     const el = stageRef.current
@@ -69,11 +69,16 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
     if (!stage || !track) return
     const measure = () => {
       const set = track.firstElementChild as HTMLElement | null
+      const setW = set?.offsetWidth ?? 0
       const setH = set?.offsetHeight ?? 0
       full.current = Math.max(0, stage.clientWidth - CUT)
       const roomH = TAPE_H - 18
-      const next = Math.min(1, setH ? roomH / setH : 1)
-      setScale((s) => (Math.abs(s - next) < 0.002 ? s : next))
+      const scale = Math.min(1, setH ? roomH / setH : 1)
+      const span = Math.max(setW * scale, 1)
+      const copies = Math.max(2, Math.ceil((full.current + ROLL * 0.6) / span))
+      setFit((f) =>
+        Math.abs(f.scale - scale) < 0.002 && f.copies === copies ? f : { scale, copies },
+      )
       paint(feed.current)
     }
     measure()
@@ -114,7 +119,6 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
             '--oval-w': `${OVAL_W}px`,
             '--cap-h': `${capH}px`,
             '--hang': `${hang}px`,
-            '--item-scale': String(scale),
           } as CSSProperties
         }
       >
@@ -124,30 +128,33 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
             className="tape-track"
             style={{
               left: PAD,
-              right: 0,
-              transform: 'translateY(-50%)',
+              transform: `translateY(-50%) scale(${fit.scale})`,
+              transformOrigin: 'left center',
             }}
           >
-            <div className="tape-set">
-              {shown.stickers.map((s) => {
-                const peeling = peelingId === s.id
-                return (
-                  <button
-                    key={s.id}
-                    type="button"
-                    className={`tape-item${peeling ? ' is-peeling' : ''}`}
-                    aria-label={`Peel ${s.label} sticker`}
-                    onPointerDown={(e) => {
-                      e.preventDefault()
-                      e.stopPropagation()
-                      onPeelStart(s, e)
-                    }}
-                  >
-                    <StickerFace def={s} large />
-                  </button>
-                )
-              })}
-            </div>
+            {Array.from({ length: fit.copies }, (_, copy) => (
+              <div key={copy} className="tape-set">
+                {shown.stickers.map((s) => {
+                  const peeling = peelingId === s.id
+                  return (
+                    <button
+                      key={`${copy}-${s.id}`}
+                      type="button"
+                      className={`tape-item${peeling ? ' is-peeling' : ''}`}
+                      aria-label={`Peel ${s.label} sticker`}
+                      tabIndex={copy > 0 ? -1 : undefined}
+                      onPointerDown={(e) => {
+                        e.preventDefault()
+                        e.stopPropagation()
+                        onPeelStart(s, e)
+                      }}
+                    >
+                      <StickerFace def={s} large />
+                    </button>
+                  )
+                })}
+              </div>
+            ))}
           </div>
           <span className="tape-shine" />
         </div>
