@@ -41,18 +41,19 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
     /* Cardboard core stays put. Only the paper ring grows as tape winds on. */
     const coreD = tapeH * 0.56
     const ring = tapeH * (0.055 + wound * 0.2)
-    const outerD = coreD + ring * 2
+    const outerD = Math.max(tapeH, coreD + ring * 2)
     const coreVb = (50 * (coreD / outerD)).toFixed(3)
     const w = outerD + v * Math.max(0, full.current - outerD)
     el.style.setProperty('--strip-w', `${w.toFixed(2)}px`)
     el.style.setProperty('--roll-w', `${outerD.toFixed(2)}px`)
     el.style.setProperty('--core-vb', coreVb)
     el.style.setProperty('--wound', wound.toFixed(4))
-    const hole = el.querySelector('.tape-roll-hole')
-    if (hole) {
-      hole.setAttribute('rx', coreVb)
-      hole.setAttribute('ry', (Number(coreVb) * 0.78).toFixed(3))
-    }
+    const rx = coreVb
+    const ry = (Number(coreVb) * 0.78).toFixed(3)
+    el.querySelectorAll('.tape-roll-hole').forEach((hole) => {
+      hole.setAttribute('rx', rx)
+      hole.setAttribute('ry', ry)
+    })
   }
 
   const run = (to: number, ms: number) =>
@@ -146,21 +147,24 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
             </div>
           </div>
         </div>
-        <svg className="tape-roll" viewBox="0 0 100 100" aria-hidden>
+        <svg className="tape-roll" viewBox="0 0 100 100" shapeRendering="geometricPrecision" aria-hidden>
           <defs>
             <radialGradient id={`tape-rim-${uid}`} cx="48%" cy="28%" r="70%">
               <stop offset="0" stopColor="#ffffff" />
-              <stop offset="0.55" stopColor="#f0f0f0" />
-              <stop offset="1" stopColor="#d5d5d5" />
+              <stop offset="0.55" stopColor="#f3f3f3" />
+              <stop offset="1" stopColor="#e4e4e4" />
             </radialGradient>
-            <radialGradient id={`tape-hole-${uid}`} cx="50%" cy="38%" r="62%">
-              <stop offset="0" stopColor="#1a1a1a" />
-              <stop offset="0.45" stopColor="#5c5c5c" />
-              <stop offset="1" stopColor="#c8c8c8" />
+            <radialGradient id={`tape-hole-${uid}`} cx="50%" cy="36%" r="68%">
+              <stop offset="0" stopColor="#3a3a3a" />
+              <stop offset="0.42" stopColor="#7a7a7a" />
+              <stop offset="1" stopColor="#d4d4d4" />
             </radialGradient>
+            <mask id={`tape-donut-${uid}`} maskUnits="userSpaceOnUse">
+              <rect width="100" height="100" fill="#000" />
+              <circle cx="50" cy="50" r="50" fill="#fff" />
+              <ellipse className="tape-roll-hole" cx="50" cy="50" rx="37" ry="28.9" fill="#000" />
+            </mask>
           </defs>
-          <circle cx="50" cy="50" r="49.7" fill={`url(#tape-rim-${uid})`} />
-          <circle cx="50" cy="50" r="49.7" fill="none" stroke="#d0d0d0" strokeWidth="0.5" />
           <ellipse
             className="tape-roll-hole"
             cx="50"
@@ -168,6 +172,13 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
             rx="37"
             ry="28.9"
             fill={`url(#tape-hole-${uid})`}
+          />
+          <circle
+            cx="50"
+            cy="50"
+            r="50"
+            fill={`url(#tape-rim-${uid})`}
+            mask={`url(#tape-donut-${uid})`}
           />
         </svg>
       </div>

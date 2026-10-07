@@ -576,6 +576,7 @@ button.track-box:not(.is-selected):hover video {
 /* —— FigBuild sticker tape: white strip with a rounded top-right and a grey-ring roll —— */
 .tape-bed {
   padding: 0.35rem 0 1.1rem;
+  overflow: visible;
   user-select: none;
 }
 
@@ -586,7 +587,7 @@ button.track-box:not(.is-selected):hover video {
   --core-vb: 37;
   --wound: 0;
   position: relative;
-  height: calc(var(--tape-h) + 10px);
+  height: max(var(--tape-h), var(--roll-w));
   overflow: visible;
 }
 
@@ -596,9 +597,9 @@ button.track-box:not(.is-selected):hover video {
   position: absolute;
   z-index: 1;
   top: 8px;
-  right: 6px;
+  right: calc(var(--roll-w) * 0.5);
   height: calc(var(--tape-h) - 8px);
-  width: calc(var(--strip-w) - 10px);
+  width: calc(var(--strip-w) - var(--roll-w) * 0.5 - 8px);
   border-radius: 2px;
   pointer-events: none;
   box-shadow: 0 8px 14px -6px rgba(17, 17, 17, 0.12);
@@ -608,9 +609,10 @@ button.track-box:not(.is-selected):hover video {
   position: absolute;
   z-index: 2;
   top: 0;
-  right: 0;
+  /* Stop at the spool’s center so the rectangle never cuts the circle. */
+  right: calc(var(--roll-w) * 0.5);
   height: var(--tape-h);
-  width: var(--strip-w);
+  width: calc(var(--strip-w) - var(--roll-w) * 0.5);
   overflow: hidden;
   background:
     linear-gradient(
@@ -624,7 +626,7 @@ button.track-box:not(.is-selected):hover video {
     #ffffff;
   border: 1px solid #e8e8e8;
   border-left: 1px solid #bbb;
-  border-right-color: transparent;
+  border-right: 0;
   border-radius: 0;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95);
 }
@@ -632,7 +634,7 @@ button.track-box:not(.is-selected):hover video {
 .tape-roll {
   position: absolute;
   z-index: 6;
-  top: 6px;
+  top: 0;
   right: 0;
   width: var(--roll-w);
   height: var(--roll-w);
