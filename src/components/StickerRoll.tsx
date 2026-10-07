@@ -10,11 +10,11 @@ interface StickerRollProps {
   onPeelStart: (def: StickerDef, e: ReactPointerEvent<HTMLButtonElement>) => void
 }
 
-const ROLL_D = 34
-const TRACK_LEFT = 12
-const STRIP_PAD = 12
-const MAX_STICKER_H = 54
-const ROLL_GROW = 6
+const ROLL_D = 64
+const TRACK_LEFT = 18
+const STRIP_PAD = 28
+const MAX_STICKER_H = 58
+const ROLL_GROW = 8
 const ROLL_UP_MS = 700
 const UNROLL_MS = 1050
 

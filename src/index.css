@@ -325,12 +325,12 @@ button.track-box:not(.is-selected):hover video {
 
 .sticker-nice-bump::before {
   left: calc(-2.5px - var(--bump-out));
-  clip-path: inset(-3px calc(100% - var(--bump-out) - 2.5px) -3px -3px);
+  clip-path: inset(-3px calc(100% - var(--bump-out) - 4px) -3px -3px);
 }
 
 .sticker-nice-bump::after {
   right: calc(-2.5px - var(--bump-out));
-  clip-path: inset(-3px -3px -3px calc(100% - var(--bump-out) - 2.5px));
+  clip-path: inset(-3px -3px -3px calc(100% - var(--bump-out) - 4px));
 }
 
 .sticker-nice-burst {
@@ -486,33 +486,29 @@ button.track-box:not(.is-selected):hover video {
   transform: scale(0.96);
 }
 
-/* —— Sticker tape: strip winds on/off a vertical roll at the right —— */
+/* —— Sticker tape: strip curls round an upright white roll at the right —— */
 .tape-bed {
-  background: #fff;
-  padding: 0.85rem 0.75rem 1.35rem;
+  background: #ececec;
+  padding: 1rem 1rem 1.6rem;
   user-select: none;
 }
 
 .tape-stage {
   --strip-w: 0px;
-  --roll-d: 34px;
+  --roll-d: 64px;
   --spin: 0px;
   position: relative;
 }
 
 .tape-strip {
-  will-change: width;
   position: absolute;
   z-index: 1;
   top: 0;
-  right: calc(var(--roll-d) / 2);
-  width: var(--strip-w);
+  right: 0;
+  width: calc(var(--strip-w) + var(--roll-d) / 2);
   overflow: hidden;
   background: #fff;
-  border-radius: 2px 0 0 2px;
-  box-shadow:
-    inset 0 0 0 1px #dcdcdc,
-    0 2px 4px rgba(0, 0, 0, 0.06);
+  border-radius: 0 calc(var(--roll-d) * 0.42) 0 0;
 }
 
 .tape-track {
@@ -553,100 +549,41 @@ button.track-box:not(.is-selected):hover video {
   filter: none;
 }
 
-/* Upright glossy roll. Texture slides with --spin; the gloss stays fixed so it reads as turning. */
+/* Front face of the roll: same white as the tape, with a fixed gloss streak */
 .tape-roll {
   position: absolute;
   z-index: 2;
-  top: -2px;
-  bottom: -4px;
+  top: 0;
   right: 0;
+  bottom: 0;
   width: var(--roll-d);
-  border-radius: 50% / 6px;
-  background:
-    repeating-linear-gradient(
-      90deg,
-      rgba(120, 128, 140, 0) 0 15px,
-      rgba(120, 128, 140, 0.035) 15px 16px,
-      rgba(120, 128, 140, 0) 16px 31px
-    ),
-    linear-gradient(
-      90deg,
-      #d3d7dc 0%,
-      #eceef1 16%,
-      #fafbfc 32%,
-      #ffffff 42%,
-      #f6f7f9 58%,
-      #e6e9ec 78%,
-      #d1d5da 94%,
-      #e2e5e8 100%
-    );
-  background-position:
-    var(--spin) 0,
-    0 0;
-  box-shadow:
-    -4px 0 6px -3px rgba(0, 0, 0, 0.1),
-    2px 5px 9px -2px rgba(0, 0, 0, 0.1);
-  will-change: width, background-position;
-}
-
-/* Fixed specular streak + soft rim light */
-.tape-roll::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
   pointer-events: none;
+  border-radius: 0 calc(var(--roll-d) * 0.42) 0 0;
   background:
     linear-gradient(
       90deg,
       transparent 0%,
-      transparent 26%,
-      rgba(255, 255, 255, 0.7) 33%,
-      rgba(255, 255, 255, 0.25) 38%,
       transparent 46%,
-      transparent 84%,
-      rgba(255, 255, 255, 0.3) 92%,
-      transparent 97%
+      rgba(255, 255, 255, 0.55) 50%,
+      rgba(255, 255, 255, 0.85) 54%,
+      rgba(255, 255, 255, 0.4) 58%,
+      transparent 64%
     ),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.2), transparent 30%, transparent 78%, rgba(0, 0, 0, 0.04));
+    linear-gradient(90deg, transparent 0%, transparent 82%, rgba(0, 0, 0, 0.035) 100%);
 }
 
-/* Top face: wound tape layers around a core */
+/* Base rim of the roll */
 .tape-roll-cap {
   position: absolute;
-  z-index: 1;
   left: 0;
   right: 0;
-  top: -5px;
-  height: 11px;
+  bottom: calc(var(--roll-d) * -0.13);
+  height: calc(var(--roll-d) * 0.26);
   border-radius: 50%;
   background:
-    radial-gradient(
-      ellipse at 50% 50%,
-      #c3c8ce 0 20%,
-      #dde0e4 22%,
-      #f1f3f5 26% 31%,
-      #d3d7dc 33%,
-      transparent 34%
-    ),
-    repeating-radial-gradient(ellipse at 50% 50%, #ffffff 0 3px, #eef0f2 3px 3.6px),
-    #fff;
-  box-shadow:
-    inset 0 0 0 1px rgba(90, 98, 110, 0.12),
-    inset 0 -1px 2px rgba(0, 0, 0, 0.06),
-    0 1px 0 rgba(255, 255, 255, 0.9);
-}
-
-/* Shade where the tape leaves the roll */
-.tape-strip::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: 18px;
-  pointer-events: none;
-  background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.07));
+    radial-gradient(ellipse at 50% 45%, #ffffff 0 52%, transparent 54%),
+    linear-gradient(180deg, #e6e6e6 0%, #cfcfcf 45%, #f4f4f4 72%, #d9d9d9 100%);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
 }
 
 .sticker-peel-ghost {
