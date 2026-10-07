@@ -501,6 +501,29 @@ button.track-box:not(.is-selected):hover video {
   border-radius: 0 20px 0 0;
 }
 
+/* Glossy cylinder on the wound end of the tape */
+.tape-strip::after {
+  content: '';
+  position: absolute;
+  z-index: 4;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 64px;
+  pointer-events: none;
+  border-radius: 0 19px 0 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(0, 0, 0, 0.05) 16%,
+    rgba(255, 255, 255, 0.55) 34%,
+    rgba(255, 255, 255, 0.95) 44%,
+    rgba(210, 214, 220, 0.35) 58%,
+    rgba(120, 128, 138, 0.22) 82%,
+    rgba(90, 96, 106, 0.28) 100%
+  );
+}
+
 .tape-roll-face {
   position: absolute;
   z-index: 0;
@@ -508,7 +531,13 @@ button.track-box:not(.is-selected):hover video {
   right: 0;
   width: 64px;
   height: 50px;
-  background: #fff;
+  background: linear-gradient(
+    90deg,
+    #f4f4f4 0%,
+    #ffffff 38%,
+    #e8e8ea 72%,
+    #cfd3d8 100%
+  );
   border-radius: 0 16px 0 0;
   box-shadow: 1px 0 0 #ececec;
 }
@@ -536,13 +565,13 @@ button.track-box:not(.is-selected):hover video {
 .tape-roll-shine {
   position: absolute;
   z-index: 6;
-  right: 17px;
+  right: 22px;
   top: 3px;
-  width: 5px;
+  width: 10px;
   height: 76px;
   display: block;
-  mix-blend-mode: overlay;
   pointer-events: none;
+  filter: blur(0.4px);
 }
 
 .tape-track {

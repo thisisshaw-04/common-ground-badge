@@ -163,15 +163,15 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
           </defs>
           <ellipse cx="24" cy="5.5" rx="24" ry="5.5" fill={`url(#tape-spool-${uid})`} />
         </svg>
-        <svg className="tape-roll-shine" viewBox="0 0 5 76" preserveAspectRatio="none" aria-hidden>
+        <svg className="tape-roll-shine" viewBox="0 0 10 76" preserveAspectRatio="none" aria-hidden>
           <defs>
             <linearGradient id={`tape-shine-${uid}`} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stopColor="#fff" stopOpacity="0.12" />
-              <stop offset="0.5" stopColor="#fff" />
-              <stop offset="1" stopColor="#fff" stopOpacity="0.12" />
+              <stop offset="0" stopColor="#fff" stopOpacity="0.15" />
+              <stop offset="0.45" stopColor="#fff" stopOpacity="0.95" />
+              <stop offset="1" stopColor="#fff" stopOpacity="0.2" />
             </linearGradient>
           </defs>
-          <path d="M2.5 0C3.9 0 5 34 5 76H0C0 34 1.1 0 2.5 0Z" fill={`url(#tape-shine-${uid})`} />
+          <path d="M5 0C7.8 0 10 34 10 76H0C0 34 2.2 0 5 0Z" fill={`url(#tape-shine-${uid})`} />
         </svg>
       </div>
     </div>
