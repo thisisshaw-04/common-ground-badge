@@ -17,31 +17,22 @@ interface StickerRollProps {
   onPeelStart: (def: StickerDef, e: ReactPointerEvent<HTMLButtonElement>) => void
 }
 
-/** Strip height — large enough for StickerFace `large` labels to read. */
-const TAPE_H = 96
-/** Perspective squash of the circular end (width → height). */
-const SQUASH = 0.7
-/** Outer paper width when the strip is fully out. */
-const ROLL_MIN = 92
-/** Outer paper width when the strip is fully wound on. */
-const ROLL_MAX = 108
-/** Core hole width in px — never animates. Height = HOLE * SQUASH. */
-const HOLE = 72
+const TAPE_H = 100
+/** Cylinder thickness peeking out on the far right. */
+const RIM = 8
+/** Core hole — fixed, slightly oval, sits inside the rounded end. */
+const HOLE_W = 62
+const HOLE_H = 52
 const CUT = 2
-const TRACK_PAD = 12
-const ROLL_UP_MS = 520
-const UNROLL_MS = 840
+const TRACK_PAD = 14
+const ROLL_UP_MS = 480
+const UNROLL_MS = 780
 
 const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2)
 
-function capH(rollD: number) {
-  return rollD * SQUASH
-}
-
 /**
- * Washi tape matching the reference: a white paper strip whose right end is
- * a cylinder, with a perspective oval core sitting on the bottom of that end.
- * Hole stays a fixed pixel size; only the white paper ring grows when winding.
+ * One object: a white paper strip that ends in a pill. The core hole lives
+ * inside that rounded end; a thin rim behind it is the only extra depth.
  */
 export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }: StickerRollProps) {
   const stageRef = useRef<HTMLDivElement>(null)
@@ -56,13 +47,7 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
     const el = stageRef.current
     if (!el) return
     len.current = v
-    const wound = 1 - v
-    const rollD = ROLL_MIN + wound * (ROLL_MAX - ROLL_MIN)
-    const w = v * Math.max(0, full.current)
-    el.style.setProperty('--strip-w', `${w.toFixed(2)}px`)
-    el.style.setProperty('--roll-d', `${rollD.toFixed(2)}px`)
-    el.style.setProperty('--cap-h', `${capH(rollD).toFixed(2)}px`)
-    el.style.setProperty('--wound', wound.toFixed(4))
+    el.style.setProperty('--strip-w', `${(v * Math.max(0, full.current)).toFixed(2)}px`)
   }
 
   const run = (to: number, ms: number) =>
@@ -89,10 +74,10 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
       const set = track.firstElementChild as HTMLElement | null
       const setW = set?.offsetWidth ?? 0
       const setH = set?.offsetHeight ?? 0
-      full.current = Math.max(0, avail - CUT)
-      const reserved = ROLL_MIN * 0.18
+      full.current = Math.max(0, avail - RIM - CUT)
+      const reserved = TAPE_H * 0.78
       const roomW = Math.max(0, full.current - TRACK_PAD - reserved)
-      const roomH = TAPE_H - 20
+      const roomH = TAPE_H - 22
       const next = Math.min(1, setH ? roomH / setH : 1, setW ? roomW / setW : 1)
       setScale((s) => (Math.abs(s - next) < 0.002 ? s : next))
       paint(len.current)
@@ -122,9 +107,6 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
 
   useEffect(() => () => void ++anim.current, [])
 
-  const holeH = HOLE * SQUASH
-  const hang = capH(ROLL_MAX) * 0.5
-
   return (
     <div className="tape-bed">
       <div
@@ -134,15 +116,13 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
         style={
           {
             '--tape-h': `${TAPE_H}px`,
-            '--roll-max': `${ROLL_MAX}px`,
-            '--roll-d': `${ROLL_MIN}px`,
-            '--cap-h': `${capH(ROLL_MIN)}px`,
-            '--hang': `${hang}px`,
-            '--hole-w': `${HOLE}px`,
-            '--hole-h': `${holeH}px`,
+            '--rim': `${RIM}px`,
+            '--hole-w': `${HOLE_W}px`,
+            '--hole-h': `${HOLE_H}px`,
           } as CSSProperties
         }
       >
+        <span className="tape-roll-rim" aria-hidden />
         <div className="tape-strip">
           <div
             ref={trackRef}
@@ -174,10 +154,7 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
             </div>
           </div>
         </div>
-
-        <span className="tape-cyl-shine" />
         <div className="tape-roll" aria-hidden>
-          <span className="tape-roll-paper" />
           <span className="tape-roll-hole" />
         </div>
       </div>
