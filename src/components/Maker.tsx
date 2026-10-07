@@ -25,6 +25,7 @@ import { BadgeFace } from './BadgeFace'
 import { FrameSwatch } from './BadgeFrame'
 import { CordSwatch, Lanyard } from './Lanyard'
 import { StickerFace } from './StickerFace'
+import { StickerRoll } from './StickerRoll'
 
 const BADGE_W = 410
 const BODY_H = 172
@@ -496,23 +497,12 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                     Drag onto the card · double-click to delete
                   </p>
                 </div>
-                <div className="sticker-sheet-row">
-                  {STICKERS.filter((s) => s.tab === tab).map((s) => (
-                    <button
-                      key={s.id}
-                      type="button"
-                      className={`sticker-pick${peel?.def.id === s.id ? ' is-peeling' : ''}`}
-                      aria-label={`Peel ${s.label} sticker`}
-                      onPointerDown={(e) => {
-                        e.preventDefault()
-                        e.stopPropagation()
-                        onPeelStart(s, e)
-                      }}
-                    >
-                      <StickerFace def={s} large />
-                    </button>
-                  ))}
-                </div>
+                <StickerRoll
+                  tabKey={tab}
+                  stickers={STICKERS.filter((s) => s.tab === tab)}
+                  peelingId={peel?.def.id ?? null}
+                  onPeelStart={onPeelStart}
+                />
               </Panel>
             </div>
           </section>
