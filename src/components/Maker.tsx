@@ -328,31 +328,69 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                     <div className="flex min-h-[5.5rem] items-center justify-center gap-2">
                       <button
                         type="button"
-                        onClick={() => setMode(mode === 'draw' ? 'stick' : 'draw')}
-                        className={`option-btn border border-black bg-white px-3 py-2 text-xs font-semibold text-black/80 ${
+                        aria-label="Thin brush"
+                        onClick={() => {
+                          setBrush(1)
+                          setMode('draw')
+                        }}
+                        className={`track-box flex h-11 w-11 items-center justify-center bg-[var(--panel)] ${
+                          brush === 1 && mode === 'draw' ? 'is-selected' : ''
+                        }`}
+                      >
+                        <span className="rounded-full bg-black" style={{ width: 5, height: 5 }} />
+                      </button>
+                      <button
+                        type="button"
+                        aria-label="Draw with a medium squiggle"
+                        onClick={() => {
+                          if (mode === 'draw') {
+                            setMode('stick')
+                            return
+                          }
+                          setBrush(2)
+                          setMode('draw')
+                        }}
+                        className={`track-box flex h-11 w-11 items-center justify-center bg-[var(--panel)] ${
                           mode === 'draw' ? 'is-selected' : ''
                         }`}
                       >
-                        {mode === 'draw' ? 'On' : 'Draw'}
-                      </button>
-                      {([1, 2, 3] as const).map((size) => (
-                        <button
-                          key={size}
-                          type="button"
-                          onClick={() => {
-                            setBrush(size)
-                            setMode('draw')
-                          }}
-                          className={`track-box flex h-11 w-11 items-center justify-center bg-[var(--panel)] ${
-                            brush === size && mode === 'draw' ? 'is-selected' : ''
-                          }`}
-                        >
-                          <span
-                            className="rounded-full bg-black"
-                            style={{ width: size * 5, height: size * 5 }}
+                        <svg viewBox="0 0 28 28" className="h-7 w-7" aria-hidden>
+                          <path
+                            d="M3.5 16.5c2.4-6 4-6 5.8 0 1.9 6 3.5 6 5.4 0 1.9-6 3.5-6 5.3 0 1.7 5.6 3.2 5.6 4.5 1.2"
+                            fill="none"
+                            stroke="#111"
+                            strokeWidth="2.25"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
                           />
-                        </button>
-                      ))}
+                        </svg>
+                      </button>
+                      <button
+                        type="button"
+                        aria-label="Medium brush"
+                        onClick={() => {
+                          setBrush(2)
+                          setMode('draw')
+                        }}
+                        className={`track-box flex h-11 w-11 items-center justify-center bg-[var(--panel)] ${
+                          brush === 2 && mode === 'draw' ? 'is-selected' : ''
+                        }`}
+                      >
+                        <span className="rounded-full bg-black" style={{ width: 10, height: 10 }} />
+                      </button>
+                      <button
+                        type="button"
+                        aria-label="Thick brush"
+                        onClick={() => {
+                          setBrush(3)
+                          setMode('draw')
+                        }}
+                        className={`track-box flex h-11 w-11 items-center justify-center bg-[var(--panel)] ${
+                          brush === 3 && mode === 'draw' ? 'is-selected' : ''
+                        }`}
+                      >
+                        <span className="rounded-full bg-black" style={{ width: 15, height: 15 }} />
+                      </button>
                     </div>
                   </Panel>
                 <div className="flex min-w-0 flex-col gap-5 sm:col-start-1 sm:row-start-2 [@media(min-height:860px)]:gap-6">
