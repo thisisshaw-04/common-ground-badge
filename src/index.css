@@ -592,93 +592,256 @@ button.track-box:not(.is-selected):hover video {
   transform: scale(0.96);
 }
 
-/* —— Washi tape: one pill-shaped strip, core inside the rounded end —— */
+/* —— Physical label dispenser: translucent tape + compact ¾ spool —— */
 .tape-bed {
-  padding: 0.55rem 0 0.7rem;
+  padding: 0.45rem 0 0.85rem;
   overflow: visible;
   user-select: none;
+  perspective: 640px;
 }
 
 .tape-stage {
-  --tape-h: 100px;
-  --rim: 8px;
-  --hole-w: 62px;
-  --hole-h: 52px;
+  --tape-h: 92px;
+  --roll-max: 96px;
+  --roll-d: 78px;
+  --rim: 14px;
+  --core: 36px;
+  --hole: 18px;
+  --face-cx: 62px;
   --strip-w: 0px;
+  --strip-right: 23px;
+  --wound: 0;
+  --spin: 0deg;
   position: relative;
-  height: calc(var(--tape-h) + 10px);
+  height: var(--roll-max);
   overflow: visible;
+  transform-style: preserve-3d;
 }
 
 .tape-stage::before {
   content: '';
   position: absolute;
   z-index: 0;
-  left: 8px;
-  right: calc(var(--rim) + 8px);
-  top: calc(var(--tape-h) - 4px);
-  height: 12px;
+  top: calc(50% + var(--tape-h) / 2 - 6px);
+  right: calc(var(--strip-right) + var(--roll-d) * 0.42);
+  width: var(--strip-w);
+  height: 11px;
   pointer-events: none;
-  border-radius: 8px;
-  box-shadow: 0 8px 12px -6px rgba(17, 17, 17, 0.16);
-}
-
-.tape-roll-rim {
-  position: absolute;
-  z-index: 1;
-  top: 8px;
-  right: 0;
-  width: calc(var(--tape-h) - 16px);
-  height: calc(var(--tape-h) - 16px);
-  border-radius: 50%;
-  pointer-events: none;
-  background: linear-gradient(90deg, #ececec 0%, #fafafa 50%, #d8d8d8 100%);
-  box-shadow: 1px 1px 3px rgba(17, 17, 17, 0.08);
+  border-radius: 6px;
+  box-shadow: 0 10px 14px -7px rgba(80, 50, 120, 0.18);
 }
 
 .tape-strip {
   position: absolute;
   z-index: 2;
-  top: 0;
-  right: var(--rim);
+  top: 50%;
+  right: var(--strip-right);
   height: var(--tape-h);
   width: var(--strip-w);
+  transform: translateY(-50%) rotateX(4deg);
+  transform-origin: right center;
   overflow-x: clip;
   overflow-y: visible;
-  background: linear-gradient(180deg, #ffffff 0%, #fbfbfb 46%, #f4f4f4 100%);
-  border-top: 1px solid #ececec;
-  border-bottom: 1px solid #e6e6e6;
-  border-left: 1px solid #c8c8c8;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.14) 0 2px,
+      transparent 2px 11px
+    ),
+    linear-gradient(
+      180deg,
+      rgba(255, 252, 248, 0.72) 0%,
+      rgba(236, 226, 255, 0.38) 46%,
+      rgba(255, 214, 196, 0.28) 100%
+    );
+  border-top: 1px solid rgba(255, 255, 255, 0.7);
+  border-bottom: 1px solid rgba(160, 130, 190, 0.28);
+  border-left: 1px solid rgba(180, 140, 120, 0.45);
   border-right: 0;
-  border-radius: 0 calc(var(--tape-h) / 2) calc(var(--tape-h) / 2) 0;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.65),
+    inset 0 -8px 10px rgba(120, 80, 160, 0.06),
+    0 1px 0 rgba(255, 90, 50, 0.08);
+  -webkit-mask-image: radial-gradient(
+    circle at calc(100% - var(--roll-d) * 0.5) 50%,
+    transparent calc(var(--roll-d) * 0.5 - 0.5px),
+    #000 calc(var(--roll-d) * 0.5)
+  );
+  mask-image: radial-gradient(
+    circle at calc(100% - var(--roll-d) * 0.5) 50%,
+    transparent calc(var(--roll-d) * 0.5 - 0.5px),
+    #000 calc(var(--roll-d) * 0.5)
+  );
 }
 
-.tape-roll {
+.tape-spool {
   position: absolute;
-  z-index: 3;
-  top: 0;
-  right: var(--rim);
-  width: var(--tape-h);
-  height: var(--tape-h);
+  z-index: 5;
+  top: 50%;
+  right: 0;
+  width: calc(var(--rim) + var(--roll-max));
+  height: var(--roll-max);
+  transform: translateY(-50%) rotateY(-16deg);
+  transform-style: preserve-3d;
   pointer-events: none;
 }
 
-.tape-roll-hole {
+.tape-spool-shadow {
+  position: absolute;
+  z-index: 0;
+  top: 58%;
+  right: calc(var(--face-cx) - var(--roll-d) * 0.15);
+  width: calc(var(--roll-d) * 0.78);
+  height: 18px;
+  border-radius: 50%;
+  transform: translateX(30%);
+  background: rgba(70, 40, 90, 0.16);
+  filter: blur(5px);
+}
+
+.tape-spool-barrel {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  right: calc(var(--face-cx) - var(--rim) * 0.15);
+  width: var(--rim);
+  height: calc(var(--roll-d) - 6px);
+  transform: translate(50%, -50%);
+  border-radius: 3px;
+  background:
+    repeating-linear-gradient(
+      180deg,
+      #f6d0b8 0 3px,
+      #e8b89a 3px 5px,
+      #f3c4a8 5px 8px
+    );
+  box-shadow:
+    inset 2px 0 3px rgba(255, 255, 255, 0.55),
+    inset -2px 0 4px rgba(90, 40, 20, 0.28);
+}
+
+.tape-spool-rim {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  right: calc(var(--face-cx) - var(--rim));
+  width: var(--roll-d);
+  height: calc(var(--roll-d) - 5px);
+  transform: translate(50%, -50%);
+  border-radius: 50%;
+  background: linear-gradient(
+    90deg,
+    #d7c4f0 0%,
+    #f4e8ff 38%,
+    #e8d4c0 70%,
+    #c9a888 100%
+  );
+  box-shadow:
+    3px 2px 6px rgba(70, 40, 90, 0.16),
+    inset -1px 0 0 rgba(255, 255, 255, 0.45);
+}
+
+.tape-spool-face {
+  position: absolute;
+  z-index: 3;
+  top: 50%;
+  right: var(--face-cx);
+  width: var(--roll-d);
+  height: var(--roll-d);
+  transform: translate(50%, -50%) rotate(var(--spin));
+  border-radius: 50%;
+  overflow: hidden;
+  background: #f3e6d6;
+  box-shadow:
+    inset 0 0 0 1px rgba(90, 50, 30, 0.16),
+    0 1px 2px rgba(70, 40, 90, 0.1);
+}
+
+.tape-spool-paper {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 34% 28%, rgba(255, 255, 255, 0.55) 0 16%, transparent 46%),
+    repeating-conic-gradient(
+      from 12deg,
+      rgba(255, 90, 50, 0.05) 0 10deg,
+      rgba(140, 110, 210, 0.06) 10deg 18deg,
+      transparent 18deg 24deg
+    ),
+    #f6e4d2;
+}
+
+.tape-spool-core {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: var(--hole-w);
-  height: var(--hole-h);
+  width: var(--core);
+  height: var(--core);
   transform: translate(-50%, -50%);
   border-radius: 50%;
   background:
-    radial-gradient(ellipse 70% 48% at 50% 22%, #b8b8b8 0%, transparent 58%),
-    linear-gradient(180deg, #8d8d8d 0%, #4f4f4f 42%, #242424 100%);
+    radial-gradient(circle at 42% 34%, #e6a05c 0%, #c56a30 62%, #a85222 100%);
   box-shadow:
-    inset 0 2px 3px rgba(255, 255, 255, 0.28),
-    inset 0 -4px 7px rgba(0, 0, 0, 0.32),
-    0 0 0 1px rgba(0, 0, 0, 0.1);
+    inset 0 0 0 1px rgba(90, 40, 10, 0.32),
+    inset 0 2px 3px rgba(255, 220, 180, 0.32);
+}
+
+.tape-spool-hole {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--hole);
+  height: var(--hole);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 32%, #5a4638 0%, #1a120e 72%);
+  box-shadow:
+    inset 0 3px 5px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(90, 40, 10, 0.4);
+}
+
+.tape-spool-glint {
+  position: absolute;
+  inset: 7%;
+  border-radius: 50%;
+  pointer-events: none;
+  background: linear-gradient(
+    125deg,
+    rgba(255, 255, 255, 0.42) 0 16%,
+    transparent 40%
+  );
+}
+
+.tape-cat {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 4.4rem;
+  height: 1.85rem;
+  padding: 0 0.7rem;
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transform: rotate(-4deg);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.45),
+    0 2px 3px rgba(0, 0, 0, 0.1);
+}
+
+.tape-cat-orange {
+  background: #ff4f2d;
+  color: #fff;
+}
+
+.tape-cat-lavender {
+  background: #c4b0ff;
+  color: #1a1028;
 }
 
 .tape-track {
@@ -696,7 +859,7 @@ button.track-box:not(.is-selected):hover video {
   flex-shrink: 0;
   align-items: center;
   gap: 0.7rem;
-  padding-right: 0.35rem;
+  padding-right: calc(var(--roll-d) * 0.52);
 }
 
 .tape-item {
