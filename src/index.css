@@ -250,6 +250,12 @@ button.track-box:not(.is-selected):hover video {
   transition: transform 0.15s ease;
 }
 
+.sticker-label {
+  font-size: 9px;
+  line-height: 1.15;
+  letter-spacing: 0.04em;
+}
+
 .sticker-nice-pill {
   border-radius: 999px;
 }

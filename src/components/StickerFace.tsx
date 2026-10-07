@@ -124,12 +124,6 @@ export function StickerFace({
       : size === 'compact'
         ? 'px-3 py-2'
         : 'px-3.5 py-2.5'
-  const type =
-    size === 'large'
-      ? 'text-[12px] leading-[1.05] tracking-[0.04em]'
-      : size === 'compact'
-        ? 'text-[10px] leading-[1.1] tracking-[0.04em]'
-        : 'text-[12px] leading-[1.1] tracking-[0.04em]'
 
   const shape =
     def.shape === 'pill'
@@ -205,7 +199,7 @@ export function StickerFace({
         </svg>
       )}
       {lines.map((line, i) => (
-        <span key={i} className={`relative font-body font-normal uppercase ${type}`}>
+        <span key={i} className="sticker-label relative font-body font-normal uppercase">
           {line}
         </span>
       ))}
