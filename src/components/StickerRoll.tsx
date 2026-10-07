@@ -14,12 +14,12 @@ const ROLL_D = 34
 const TRACK_LEFT = 12
 const STRIP_PAD = 12
 const MAX_STICKER_H = 54
-const ROLL_GROW = 22
-const ROLL_UP_MS = 520
-const UNROLL_MS = 900
+const ROLL_GROW = 6
+const ROLL_UP_MS = 700
+const UNROLL_MS = 1050
 
-const easeIn = (t: number) => t * t * t
-const easeOut = (t: number) => 1 - Math.pow(1 - t, 3)
+const easeInOut = (t: number) => -(Math.cos(Math.PI * t) - 1) / 2
+const easeOut = (t: number) => 1 - Math.pow(1 - t, 4)
 
 /**
  * Sticker tape on a roll. The strip's free end travels with the stickers, the
@@ -40,7 +40,9 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
     len.current = v
     const wound = 1 - v
     el.style.setProperty('--strip-w', `${(v * full.current).toFixed(2)}px`)
-    el.style.setProperty('--roll-d', `${(ROLL_D + wound * ROLL_GROW).toFixed(2)}px`)
+    // Wound tape area grows linearly, so diameter grows with its square root.
+    const d = Math.sqrt(ROLL_D * ROLL_D + wound * ((ROLL_D + ROLL_GROW) ** 2 - ROLL_D * ROLL_D))
+    el.style.setProperty('--roll-d', `${d.toFixed(2)}px`)
     el.style.setProperty('--spin', `${(-wound * full.current).toFixed(2)}px`)
   }
 
@@ -87,7 +89,7 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
     }
     let cancelled = false
     void (async () => {
-      const ok = await run(0, ROLL_UP_MS * Math.max(0.25, len.current), easeIn)
+      const ok = await run(0, ROLL_UP_MS * Math.max(0.3, len.current), easeInOut)
       if (!ok || cancelled) return
       setShown({ key: tabKey, stickers })
     })()
