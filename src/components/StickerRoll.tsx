@@ -17,18 +17,17 @@ interface StickerRollProps {
 }
 
 const TAPE_H = 96
-/** Cylinder diameter = strip height. */
+/** Cylinder diameter = strip height; oval cap shares that width so the right edge joins. */
 const ROLL = TAPE_H
-/** End-cap, slightly smaller than the outer tape, squashed as if looking slightly down. */
-const OVAL_W = Math.round(ROLL * 0.88)
-const SQUASH = 0.4
+const OVAL_W = ROLL
+const SQUASH = 0.38
 const CUT = 2
 const PAD = 14
 const CLOSE_MS = 280
 const OPEN_MS = 560
 
 const capH = OVAL_W * SQUASH
-const hang = capH * 0.72
+const hang = capH * 0.55
 
 const easeOut = (t: number) => 1 - Math.pow(1 - t, 3)
 const easeIn = (t: number) => t * t * t
@@ -153,24 +152,23 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
           <span className="tape-shine" />
         </div>
         <div className="tape-roll" aria-hidden>
-          <svg className="tape-roll-svg" viewBox="0 0 100 40" preserveAspectRatio="none">
+          <span className="tape-roll-cyl" />
+          <svg className="tape-roll-end" viewBox="0 0 64 18" preserveAspectRatio="none">
             <defs>
-              <radialGradient id="tape-face" cx="50%" cy="30%" r="72%">
+              <radialGradient id="tape-paper" cx="50%" cy="38%" r="58%">
                 <stop offset="0%" stopColor="#ffffff" />
-                <stop offset="70%" stopColor="#f2f2f2" />
-                <stop offset="100%" stopColor="#d8d8d8" />
+                <stop offset="62%" stopColor="#f2f2f2" />
+                <stop offset="100%" stopColor="#d4d4d4" />
               </radialGradient>
-              <radialGradient id="tape-bowl" cx="50%" cy="80%" r="68%">
-                <stop offset="0%" stopColor="#ececec" />
-                <stop offset="38%" stopColor="#d0d0d0" />
-                <stop offset="72%" stopColor="#9c9c9c" />
-                <stop offset="100%" stopColor="#6a6a6a" />
-              </radialGradient>
+              <linearGradient id="tape-core" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#6a6a6a" />
+                <stop offset="42%" stopColor="#9a9a9a" />
+                <stop offset="100%" stopColor="#f2f2f2" />
+              </linearGradient>
             </defs>
-            <ellipse cx="50" cy="20.4" rx="49.5" ry="18.2" fill="#d8d8d8" />
-            <ellipse cx="50" cy="19.2" rx="49.5" ry="18.2" fill="url(#tape-face)" />
-            <ellipse cx="50" cy="19.6" rx="40" ry="13.8" fill="url(#tape-bowl)" />
-            <ellipse cx="50" cy="13.8" rx="21" ry="3.6" fill="#fff" opacity="0.4" />
+            <ellipse cx="32" cy="9" rx="31.7" ry="8.6" fill="url(#tape-paper)" />
+            <ellipse cx="32" cy="9" rx="24" ry="6.4" fill="url(#tape-core)" />
+            <ellipse cx="32" cy="6.2" rx="16" ry="2.4" fill="#fff" opacity="0.35" />
           </svg>
         </div>
       </div>
