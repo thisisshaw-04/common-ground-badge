@@ -111,7 +111,6 @@ export const STICKERS: StickerDef[] = [
   { id: 'maker', tab: 'role', label: 'MAKER', ...STICKER_SWATCH.red, shape: 'bump', tilt: -5 },
   { id: 'storyteller', tab: 'role', label: 'STORYTELLER', ...STICKER_SWATCH.magenta, shape: 'bump', tilt: 4 },
   { id: 'researcher', tab: 'role', label: 'RESEARCHER', ...STICKER_SWATCH.red, shape: 'bump', tilt: -3 },
-  { id: 'wildcard', tab: 'role', label: 'WILDCARD', ...STICKER_SWATCH.magenta, shape: 'bump', tilt: 5 },
   { id: 'dxtech', tab: 'track', label: 'DESIGN × TECH', ...STICKER_SWATCH.cyan, shape: 'wave', tilt: -3 },
   { id: 'cxtech', tab: 'track', label: 'CULTURE × TECH', ...STICKER_SWATCH.blue, shape: 'wave', tilt: 3 },
   { id: 'solo', tab: 'track', label: 'SOLO BUILDER', ...STICKER_SWATCH.cyan, shape: 'wave', tilt: -4 },
