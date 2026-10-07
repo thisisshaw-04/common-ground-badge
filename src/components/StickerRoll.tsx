@@ -38,11 +38,21 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
     len.current = v
     const wound = 1 - v
     const tapeH = parseFloat(getComputedStyle(el).getPropertyValue('--tape-h')) || 128
-    const d = tapeH * (0.98 + wound * 0.08)
-    const w = d + v * Math.max(0, full.current - d)
+    /* Cardboard core stays put. Only the paper ring grows as tape winds on. */
+    const coreD = tapeH * 0.56
+    const ring = tapeH * (0.055 + wound * 0.2)
+    const outerD = coreD + ring * 2
+    const coreVb = (50 * (coreD / outerD)).toFixed(3)
+    const w = outerD + v * Math.max(0, full.current - outerD)
     el.style.setProperty('--strip-w', `${w.toFixed(2)}px`)
-    el.style.setProperty('--roll-w', `${d.toFixed(2)}px`)
+    el.style.setProperty('--roll-w', `${outerD.toFixed(2)}px`)
+    el.style.setProperty('--core-vb', coreVb)
     el.style.setProperty('--wound', wound.toFixed(4))
+    const hole = el.querySelector('.tape-roll-hole')
+    if (hole) {
+      hole.setAttribute('rx', coreVb)
+      hole.setAttribute('ry', (Number(coreVb) * 0.78).toFixed(3))
+    }
   }
 
   const run = (to: number, ms: number) =>
@@ -138,38 +148,27 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
         </div>
         <svg className="tape-roll" viewBox="0 0 100 100" aria-hidden>
           <defs>
-            <radialGradient id={`tape-rim-${uid}`} cx="50%" cy="28%" r="62%">
-              <stop offset="0" stopColor="#f2f2f2" />
-              <stop offset="0.42" stopColor="#d0d0d0" />
-              <stop offset="0.78" stopColor="#b4b4b4" />
-              <stop offset="1" stopColor="#9c9c9c" />
+            <radialGradient id={`tape-rim-${uid}`} cx="48%" cy="28%" r="70%">
+              <stop offset="0" stopColor="#ffffff" />
+              <stop offset="0.55" stopColor="#f0f0f0" />
+              <stop offset="1" stopColor="#d5d5d5" />
             </radialGradient>
-            <linearGradient id={`tape-core-${uid}`} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stopColor="#e6e6e6" />
-              <stop offset="0.38" stopColor="#fafafa" />
-              <stop offset="0.62" stopColor="#f3f3f3" />
-              <stop offset="1" stopColor="#d8d8d8" />
-            </linearGradient>
+            <radialGradient id={`tape-hole-${uid}`} cx="50%" cy="38%" r="62%">
+              <stop offset="0" stopColor="#1a1a1a" />
+              <stop offset="0.45" stopColor="#5c5c5c" />
+              <stop offset="1" stopColor="#c8c8c8" />
+            </radialGradient>
           </defs>
-          <circle cx="50" cy="50" r="49.6" fill={`url(#tape-rim-${uid})`} />
-          <circle
+          <circle cx="50" cy="50" r="49.7" fill={`url(#tape-rim-${uid})`} />
+          <circle cx="50" cy="50" r="49.7" fill="none" stroke="#d0d0d0" strokeWidth="0.5" />
+          <ellipse
+            className="tape-roll-hole"
             cx="50"
             cy="50"
-            r="49.6"
-            fill="none"
-            stroke="#c4c4c4"
-            strokeWidth="0.7"
+            rx="37"
+            ry="28.9"
+            fill={`url(#tape-hole-${uid})`}
           />
-          <path
-            d="M22 24 A 36 36 0 0 1 78 24"
-            fill="none"
-            stroke="#fff"
-            strokeWidth="3.2"
-            strokeLinecap="round"
-            opacity="0.7"
-          />
-          <circle cx="50" cy="50" r="40.2" fill={`url(#tape-core-${uid})`} />
-          <circle cx="50" cy="50" r="40.2" fill="none" stroke="#c8c8c8" strokeWidth="0.55" />
         </svg>
       </div>
     </div>

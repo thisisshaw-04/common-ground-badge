@@ -583,6 +583,7 @@ button.track-box:not(.is-selected):hover video {
   --tape-h: 128px;
   --strip-w: 64px;
   --roll-w: var(--tape-h);
+  --core-vb: 37;
   --wound: 0;
   position: relative;
   height: calc(var(--tape-h) + 10px);
@@ -639,6 +640,11 @@ button.track-box:not(.is-selected):hover video {
   overflow: visible;
   pointer-events: none;
   filter: drop-shadow(0 2px 3px rgba(17, 17, 17, 0.08));
+}
+
+.tape-roll-hole {
+  rx: var(--core-vb);
+  ry: calc(var(--core-vb) * 0.78);
 }
 
 .tape-track {
