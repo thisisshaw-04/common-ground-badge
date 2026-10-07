@@ -585,8 +585,8 @@ button.track-box:not(.is-selected):hover video {
   --roll-max: 116px;
   --roll-d: 102px;
   --rim: 10px;
-  --core: 52px;
-  --hole: 26px;
+  --core: 54px;
+  --hole: 30px;
   --face-cx: 68px;
   --strip-w: 0px;
   --strip-right: 17px;
@@ -690,9 +690,9 @@ button.track-box:not(.is-selected):hover video {
   transform: translate(50%, -50%);
   border-radius: 50%;
   overflow: hidden;
-  background: #f3f3f3;
+  background: #f7f7f7;
   box-shadow:
-    inset 0 0 0 1px rgba(17, 17, 17, 0.1),
+    inset 0 0 0 1px rgba(17, 17, 17, 0.12),
     0 1px 2px rgba(17, 17, 17, 0.06);
 }
 
@@ -701,13 +701,17 @@ button.track-box:not(.is-selected):hover video {
   inset: 0;
   border-radius: 50%;
   background:
+    radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.5) 0 18%, transparent 48%),
     repeating-radial-gradient(
-      circle at 48% 44%,
-      #ffffff 0 2.4px,
-      #ececec 2.4px 3.2px,
-      #f7f7f7 3.2px 5.4px
-    );
-  background-position: var(--spin) 0;
+      circle at 50% 50%,
+      rgba(17, 17, 17, 0.03) 0 1px,
+      transparent 1px 9px
+    ),
+    #f6f6f6;
+  background-position:
+    0 0,
+    var(--spin) 0,
+    0 0;
 }
 
 .tape-spool-core {
@@ -718,16 +722,10 @@ button.track-box:not(.is-selected):hover video {
   height: var(--core);
   transform: translate(-50%, -50%);
   border-radius: 50%;
-  background:
-    repeating-conic-gradient(
-      from 18deg,
-      rgba(90, 58, 24, 0.07) 0 6deg,
-      transparent 6deg 14deg
-    ),
-    radial-gradient(circle at 38% 32%, #e2c49a 0%, #c4a06a 48%, #a67c45 100%);
+  background: linear-gradient(165deg, #d4b183 0%, #c0945e 50%, #a57846 100%);
   box-shadow:
-    inset 0 0 0 1px rgba(90, 58, 24, 0.28),
-    inset 0 2px 3px rgba(255, 255, 255, 0.28);
+    inset 0 0 0 1px rgba(90, 58, 24, 0.32),
+    inset 0 1px 1px rgba(255, 255, 255, 0.2);
 }
 
 .tape-spool-hole {
@@ -738,22 +736,22 @@ button.track-box:not(.is-selected):hover video {
   height: var(--hole);
   transform: translate(-50%, -50%);
   border-radius: 50%;
-  background: radial-gradient(circle at 38% 30%, #6a5040 0%, #3a2a20 58%, #241810 100%);
+  background: #2a2118;
   box-shadow:
-    inset 0 2px 5px rgba(0, 0, 0, 0.45),
-    0 0 0 1px rgba(90, 58, 24, 0.35);
+    inset 0 3px 6px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(90, 58, 24, 0.4);
 }
 
 .tape-spool-glint {
   position: absolute;
-  inset: 8%;
+  inset: 6%;
   border-radius: 50%;
-  background: radial-gradient(
-    circle at 32% 26%,
-    rgba(255, 255, 255, 0.55) 0 12%,
-    transparent 38%
-  );
   pointer-events: none;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.28) 0 18%,
+    transparent 42%
+  );
 }
 
 .tape-track {
@@ -771,7 +769,7 @@ button.track-box:not(.is-selected):hover video {
   flex-shrink: 0;
   align-items: center;
   gap: 0.7rem;
-  padding-right: 0.5rem;
+  padding-right: calc(var(--roll-d) * 0.52);
 }
 
 .tape-item {

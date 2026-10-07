@@ -24,9 +24,9 @@ const ROLL_MIN = 102
 /** Outer paper diameter when the strip is fully wound on. */
 const ROLL_MAX = 116
 /** Cardboard tube outer diameter — never animates. */
-const CORE = 52
+const CORE = 54
 /** Tube hole — never animates. */
-const HOLE = 26
+const HOLE = 30
 /** Visible cylinder thickness on the right (¾ view). */
 const RIM = 10
 const CUT = 2
@@ -93,7 +93,9 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
       const faceCx = RIM + ROLL_MAX / 2
       const stripRight = faceCx - ROLL_MIN / 2
       full.current = Math.max(0, avail - stripRight - CUT)
-      const roomW = Math.max(0, full.current - TRACK_PAD * 2)
+      /* Keep the unique set on the visible paper, not under the spool. */
+      const reserved = ROLL_MIN * 0.52 + 8
+      const roomW = Math.max(0, full.current - TRACK_PAD - reserved)
       const roomH = TAPE_H - 18
       const next = Math.min(1, setH ? roomH / setH : 1, setW ? roomW / setW : 1)
       setScale((s) => (Math.abs(s - next) < 0.002 ? s : next))
@@ -178,9 +180,9 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
           <span className="tape-spool-rim" />
           <span className="tape-spool-face">
             <span className="tape-spool-paper" />
+            <span className="tape-spool-glint" />
             <span className="tape-spool-core" />
             <span className="tape-spool-hole" />
-            <span className="tape-spool-glint" />
           </span>
         </div>
       </div>
