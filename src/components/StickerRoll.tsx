@@ -10,8 +10,6 @@ interface StickerRollProps {
   onPeelStart: (def: StickerDef, e: ReactPointerEvent<HTMLButtonElement>) => void
 }
 
-const ROLL_MIN = 64
-const ROLL_MAX = 88
 const TRACK_LEFT = 4
 const TAPE_PAD_Y = 12
 const ROLL_UP_MS = 500
@@ -23,9 +21,7 @@ const ease = (t: number) => {
 }
 
 /**
- * FigBuild-style sticker tape: a white strip with a rounded top-right that
- * collapses onto the roll. The roll fattens and shows extra paper layers as
- * tape winds on, then thins again as it unrolls.
+ * Sticker tape: a white strip that winds onto a circular spool at the right.
  */
 export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }: StickerRollProps) {
   const stageRef = useRef<HTMLDivElement>(null)
@@ -41,13 +37,12 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
     if (!el) return
     len.current = v
     const wound = 1 - v
-    // Wound tape area grows linearly, so diameter grows with its square root.
-    const d = Math.sqrt(ROLL_MIN * ROLL_MIN + wound * (ROLL_MAX * ROLL_MAX - ROLL_MIN * ROLL_MIN))
+    const tapeH = parseFloat(getComputedStyle(el).getPropertyValue('--tape-h')) || 128
+    const d = tapeH * (0.98 + wound * 0.08)
     const w = d + v * Math.max(0, full.current - d)
     el.style.setProperty('--strip-w', `${w.toFixed(2)}px`)
     el.style.setProperty('--roll-w', `${d.toFixed(2)}px`)
     el.style.setProperty('--wound', wound.toFixed(4))
-    el.style.setProperty('--spin', `${(-wound * Math.max(full.current, 1) * 0.28).toFixed(2)}px`)
   }
 
   const run = (to: number, ms: number) =>
@@ -75,10 +70,11 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
       const setW = set?.offsetWidth ?? 0
       const setH = set?.offsetHeight ?? 0
       const stripH = stage.querySelector('.tape-strip')?.clientHeight ?? 108
-      const room = Math.max(0, avail - TRACK_LEFT - ROLL_MAX - 10)
+      const tapeH = parseFloat(getComputedStyle(stage).getPropertyValue('--tape-h')) || 128
+      const room = Math.max(0, avail - TRACK_LEFT - tapeH - 10)
       const next = Math.min(setH ? (stripH - TAPE_PAD_Y) / setH : 1, setW ? room / setW : 1)
       /* Hairline inset so the cut edge sits just inside the panel. */
-      full.current = Math.max(ROLL_MAX, avail - 1)
+      full.current = Math.max(tapeH, avail - 1)
       setScale((s) => (Math.abs(s - next) < 0.002 ? s : next))
       paint(len.current)
     }
@@ -140,26 +136,41 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
             </div>
           </div>
         </div>
-        <div className="tape-roll" aria-hidden>
-          <span className="tape-roll-cyl" />
-          <svg className="tape-roll-end" viewBox="0 0 64 18" preserveAspectRatio="none">
-            <defs>
-              <radialGradient id={`tape-paper-${uid}`} cx="50%" cy="40%" r="55%">
-                <stop offset="0" stopColor="#ffffff" />
-                <stop offset="0.62" stopColor="#f2f2f2" />
-                <stop offset="1" stopColor="#d4d4d4" />
-              </radialGradient>
-              <linearGradient id={`tape-core-${uid}`} x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0" stopColor="#5e5e5e" />
-                <stop offset="0.42" stopColor="#8d8d8d" />
-                <stop offset="1" stopColor="#f4f4f4" />
-              </linearGradient>
-            </defs>
-            <ellipse cx="32" cy="9" rx="31.6" ry="8.6" fill={`url(#tape-paper-${uid})`} />
-            <ellipse cx="32" cy="9" rx="24" ry="6.5" fill={`url(#tape-core-${uid})`} />
-          </svg>
-          <span className="tape-roll-shine" />
-        </div>
+        <svg className="tape-roll" viewBox="0 0 100 100" aria-hidden>
+          <defs>
+            <radialGradient id={`tape-rim-${uid}`} cx="50%" cy="28%" r="62%">
+              <stop offset="0" stopColor="#f2f2f2" />
+              <stop offset="0.42" stopColor="#d0d0d0" />
+              <stop offset="0.78" stopColor="#b4b4b4" />
+              <stop offset="1" stopColor="#9c9c9c" />
+            </radialGradient>
+            <linearGradient id={`tape-core-${uid}`} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stopColor="#e6e6e6" />
+              <stop offset="0.38" stopColor="#fafafa" />
+              <stop offset="0.62" stopColor="#f3f3f3" />
+              <stop offset="1" stopColor="#d8d8d8" />
+            </linearGradient>
+          </defs>
+          <circle cx="50" cy="50" r="49.6" fill={`url(#tape-rim-${uid})`} />
+          <circle
+            cx="50"
+            cy="50"
+            r="49.6"
+            fill="none"
+            stroke="#c4c4c4"
+            strokeWidth="0.7"
+          />
+          <path
+            d="M22 24 A 36 36 0 0 1 78 24"
+            fill="none"
+            stroke="#fff"
+            strokeWidth="3.2"
+            strokeLinecap="round"
+            opacity="0.7"
+          />
+          <circle cx="50" cy="50" r="40.2" fill={`url(#tape-core-${uid})`} />
+          <circle cx="50" cy="50" r="40.2" fill="none" stroke="#c8c8c8" strokeWidth="0.55" />
+        </svg>
       </div>
     </div>
   )
