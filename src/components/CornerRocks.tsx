@@ -61,15 +61,13 @@ type RockPose = {
 }
 
 const LEFT_PILE: RockPose[] = [
-  { position: [0.08, 0, 0], rotation: [0.06, 0.55, 0.03], scale: 1 },
-  { position: [0.72, 0, 0.18], rotation: [0.04, -0.85, -0.02], scale: 0.62 },
-  { position: [-0.22, 0, 0.42], rotation: [0.05, 1.35, 0.04], scale: 0.46 },
+  { position: [0.04, 0, 0], rotation: [0.05, 0.55, 0.03], scale: 0.72 },
+  { position: [0.42, 0, 0.16], rotation: [0.04, -0.85, -0.02], scale: 0.44 },
 ]
 
 const RIGHT_PILE: RockPose[] = [
-  { position: [-0.06, 0, 0], rotation: [0.05, -0.62, -0.03], scale: 1 },
-  { position: [-0.74, 0, 0.16], rotation: [0.04, 0.9, 0.02], scale: 0.6 },
-  { position: [0.2, 0, 0.44], rotation: [0.06, -1.25, 0.03], scale: 0.48 },
+  { position: [-0.04, 0, 0], rotation: [0.05, -0.62, -0.03], scale: 0.72 },
+  { position: [-0.44, 0, 0.14], rotation: [0.04, 0.9, 0.02], scale: 0.42 },
 ]
 
 function Pile({ poses }: { poses: RockPose[] }) {
@@ -125,15 +123,17 @@ function CornerCanvas({
   const camX = side === 'left' ? 2.15 : -2.15
   return (
     <div
-      className={`pointer-events-none absolute bottom-0 z-[-1] h-[150px] w-[160px] overflow-hidden sm:h-[230px] sm:w-[250px] md:h-[260px] md:w-[280px] ${
-        side === 'left' ? 'left-0' : 'right-0'
+      className={`pointer-events-none absolute bottom-0 z-[-1] overflow-hidden ${
+        side === 'left'
+          ? 'left-0 h-[72px] w-[78px] sm:h-[96px] sm:w-[104px] md:h-[110px] md:w-[118px]'
+          : 'right-0 h-[88px] w-[96px] sm:h-[120px] sm:w-[132px] md:h-[140px] md:w-[150px]'
       }`}
       aria-hidden
     >
       <WebGLGate>
         <Canvas
           orthographic
-          camera={{ position: [camX, 3.1, 5.2], zoom: 56, near: 0.1, far: 40 }}
+          camera={{ position: [camX, 3.1, 5.2], zoom: 78, near: 0.1, far: 40 }}
           dpr={[1, 1.5]}
           gl={{
             antialias: true,
@@ -151,7 +151,7 @@ function CornerCanvas({
           <hemisphereLight args={['#f3eee6', '#9a948a', 0.65]} />
           <directionalLight position={[2.4, 4, 2.4]} intensity={1.3} color="#fff4e4" />
           <directionalLight position={[-1.8, 1, 1.4]} intensity={0.36} color="#d7e0f2" />
-          <group position={[side === 'left' ? -0.15 : 0.15, -0.95, 0]} scale={0.82}>
+          <group position={[side === 'left' ? -0.2 : 0.2, -0.7, 0]} scale={0.48}>
             <Pile poses={poses} />
           </group>
         </Canvas>
