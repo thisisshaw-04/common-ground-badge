@@ -17,17 +17,17 @@ interface StickerRollProps {
 }
 
 const TAPE_H = 96
-/** Cylinder diameter = strip height; oval cap shares that width so the right edge joins. */
-const ROLL = TAPE_H
-const OVAL_W = ROLL
-const SQUASH = 0.38
+/** Right-end roll width — smaller than the strip height so the corner stays gentle. */
+const ROLL = 64
+const CURVE = 18
+const SQUASH = 0.36
 const CUT = 2
 const PAD = 14
 const CLOSE_MS = 280
 const OPEN_MS = 560
 
-const capH = OVAL_W * SQUASH
-const hang = capH * 0.55
+const capH = ROLL * SQUASH
+const hang = capH * 0.52
 
 const easeOut = (t: number) => 1 - Math.pow(1 - t, 3)
 const easeIn = (t: number) => t * t * t
@@ -116,7 +116,7 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
           {
             '--tape-h': `${TAPE_H}px`,
             '--roll-d': `${ROLL}px`,
-            '--oval-w': `${OVAL_W}px`,
+            '--curve': `${CURVE}px`,
             '--cap-h': `${capH}px`,
             '--hang': `${hang}px`,
           } as CSSProperties

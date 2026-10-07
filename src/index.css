@@ -543,10 +543,10 @@ button.track-box:not(.is-selected):hover video {
 
 .tape-stage {
   --tape-h: 96px;
-  --roll-d: 96px;
-  --oval-w: 96px;
-  --cap-h: 36px;
-  --hang: 20px;
+  --roll-d: 64px;
+  --curve: 18px;
+  --cap-h: 23px;
+  --hang: 12px;
   --strip-w: 0px;
   position: relative;
   height: calc(var(--tape-h) + var(--hang));
@@ -558,7 +558,7 @@ button.track-box:not(.is-selected):hover video {
   z-index: 0;
   top: calc(var(--tape-h) - 8px);
   left: 6px;
-  right: calc(var(--roll-d) * 0.45);
+  right: calc(var(--roll-d) * 0.4);
   height: 14px;
   pointer-events: none;
   border-radius: 8px;
@@ -574,35 +574,35 @@ button.track-box:not(.is-selected):hover video {
   width: var(--strip-w);
   overflow: hidden;
   background:
-    linear-gradient(90deg, transparent 62%, rgba(0, 0, 0, 0.04) 100%),
+    linear-gradient(90deg, transparent 78%, rgba(0, 0, 0, 0.035) 100%),
     linear-gradient(180deg, #ffffff 0%, #f4f4f4 100%);
   border: 1px solid #dedede;
   border-right: 0;
-  /* Only the top-right is rounded — the oval cap owns the bottom-right join. */
-  border-radius: 3px calc(var(--tape-h) / 2) 0 3px;
+  /* Small top-right radius — a steep half-pill left a dead zone above the oval. */
+  border-radius: 4px var(--curve) 0 4px;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 1);
 }
 
-/* Thin specular on the wrapping sticker — not a white wash. */
+/* Specular on the remaining roll, not across a huge arc. */
 .tape-shine {
   position: absolute;
   z-index: 4;
-  top: 8%;
-  bottom: 18%;
-  right: calc(var(--roll-d) * 0.28);
-  width: 6px;
+  top: 10%;
+  bottom: 16%;
+  right: calc(var(--roll-d) * 0.22);
+  width: 5px;
   pointer-events: none;
   border-radius: 4px;
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(255, 255, 255, 0.9) 50%,
+    rgba(255, 255, 255, 0.88) 50%,
     transparent 100%
   );
-  filter: blur(0.8px);
+  filter: blur(0.7px);
 }
 
-/* One object: neck + oval cap sharing the strip’s right edge. */
+/* Neck + oval cap: one cylinder sitting on the strip’s right edge. */
 .tape-roll {
   position: absolute;
   z-index: 4;
@@ -617,10 +617,10 @@ button.track-box:not(.is-selected):hover video {
   position: absolute;
   z-index: 0;
   right: 0;
-  top: calc(var(--tape-h) - 12px);
+  top: calc(var(--tape-h) - 22px);
   width: 100%;
-  height: 16px;
-  background: linear-gradient(90deg, #f4f4f4 0%, #ffffff 42%, #ececec 100%);
+  height: 26px;
+  background: linear-gradient(90deg, #f3f3f3 0%, #ffffff 40%, #ececec 100%);
 }
 
 .tape-roll-end {
@@ -628,7 +628,7 @@ button.track-box:not(.is-selected):hover video {
   z-index: 3;
   left: 0;
   right: 0;
-  top: calc(var(--tape-h) - var(--cap-h) * 0.5);
+  top: calc(var(--tape-h) - var(--cap-h) * 0.58);
   width: 100%;
   height: var(--cap-h);
   display: block;
