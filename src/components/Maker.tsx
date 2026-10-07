@@ -315,10 +315,10 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
     <div
       className={`page-fig relative flex h-dvh flex-col overflow-hidden${isPeeling ? ' is-peeling-sticker' : ''}`}
     >
-      <div className="relative mx-auto flex min-h-0 w-full max-w-[1440px] flex-1 flex-col px-4 pt-3 pb-4 sm:px-6 sm:pt-4">
+      <div className="relative mx-auto flex min-h-0 w-full max-w-[1280px] flex-1 flex-col px-4 pt-3 pb-4 sm:px-6 sm:pt-4">
         <header className="animate-pop mb-2 shrink-0 sm:mb-3 lg:hidden">{heading}</header>
 
-        <div className="relative flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto no-scrollbar lg:flex-row lg:items-start lg:gap-10 lg:overflow-hidden">
+        <div className="relative flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto no-scrollbar lg:flex-row lg:items-start lg:gap-8 lg:overflow-hidden">
           {/* Adjustments LEFT — FigBuild 2-col grid */}
           <section className="animate-pop order-last min-h-0 min-w-0 flex-1 lg:order-none lg:self-stretch lg:overflow-y-auto no-scrollbar lg:pt-4 lg:pr-2 lg:pb-1 [@media(min-height:860px)]:lg:pt-8 [@media(min-height:860px)]:lg:pb-4">
             <div className="flex flex-col gap-5 [@media(min-height:860px)]:gap-6">

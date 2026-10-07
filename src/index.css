@@ -475,17 +475,17 @@ button.track-box:not(.is-selected):hover video {
   transform: scale(0.96);
 }
 
-/* —— Sticker tape: strip curls round an upright white roll at the right —— */
+/* —— Sticker tape: paper strip wound onto an upright roll at the right —— */
 .tape-bed {
-  background: #ececec;
-  padding: 1rem 1rem 1.6rem;
+  padding: 1.25rem 0.5rem 1.6rem;
   user-select: none;
 }
 
 .tape-stage {
   --strip-w: 0px;
-  --roll-d: 64px;
+  --roll-d: 58px;
   --spin: 0px;
+  --cap-h: calc(var(--roll-d) * 0.3);
   position: relative;
 }
 
@@ -493,11 +493,38 @@ button.track-box:not(.is-selected):hover video {
   position: absolute;
   z-index: 1;
   top: 0;
-  right: 0;
-  width: calc(var(--strip-w) + var(--roll-d) / 2);
+  right: calc(var(--roll-d) / 2);
+  width: var(--strip-w);
   overflow: hidden;
-  background: #fff;
-  border-radius: 0 calc(var(--roll-d) * 0.42) 0 0;
+  background: linear-gradient(180deg, #ffffff 0%, #fbfbfa 55%, #f3f3f1 100%);
+  box-shadow:
+    inset 0 1px 0 #e4e4e2,
+    inset 0 -1px 0 #dcdcda,
+    0 6px 10px -6px rgba(0, 0, 0, 0.22),
+    0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+/* Paper bending round the roll, and a lifted free end */
+.tape-strip::after,
+.tape-strip::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.tape-strip::after {
+  right: 0;
+  width: 28px;
+  background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.05) 60%, rgba(0, 0, 0, 0.12));
+}
+
+.tape-strip::before {
+  left: 0;
+  width: 6px;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.06), transparent);
 }
 
 .tape-track {
@@ -545,41 +572,78 @@ button.track-box:not(.is-selected):hover video {
   filter: none;
 }
 
-/* Front face of the roll: same white as the tape, with a fixed gloss streak */
+/* Roll body: outer wrap of the paper, shaded as a cylinder; faint wrap lines turn with --spin */
 .tape-roll {
   position: absolute;
   z-index: 2;
-  top: 0;
+  top: calc(var(--cap-h) / -2);
+  bottom: calc(var(--cap-h) / -2);
   right: 0;
-  bottom: 0;
   width: var(--roll-d);
   pointer-events: none;
-  border-radius: 0 calc(var(--roll-d) * 0.42) 0 0;
+  border-radius: 50% / calc(var(--cap-h) / 2);
   background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0) 0 21px,
+      rgba(0, 0, 0, 0.035) 21px 22px
+    ),
     linear-gradient(
       90deg,
-      transparent 0%,
-      transparent 46%,
-      rgba(255, 255, 255, 0.55) 50%,
-      rgba(255, 255, 255, 0.85) 54%,
-      rgba(255, 255, 255, 0.4) 58%,
-      transparent 64%
-    ),
-    linear-gradient(90deg, transparent 0%, transparent 82%, rgba(0, 0, 0, 0.035) 100%);
+      #c9c9c6 0%,
+      #e9e9e6 12%,
+      #fbfbfa 30%,
+      #ffffff 40%,
+      #f4f4f2 58%,
+      #dededb 80%,
+      #c4c4c0 100%
+    );
+  background-position:
+    var(--spin) 0,
+    0 0;
+  box-shadow:
+    8px 10px 14px -6px rgba(0, 0, 0, 0.22),
+    -2px 0 4px -2px rgba(0, 0, 0, 0.12);
 }
 
-/* Base rim of the roll */
+/* Soft specular streak that stays put while the roll turns */
+.tape-roll::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    90deg,
+    transparent 24%,
+    rgba(255, 255, 255, 0.75) 32%,
+    transparent 42%
+  );
+}
+
+/* Top face: wound paper layers round a cardboard core */
 .tape-roll-cap {
   position: absolute;
+  z-index: 1;
   left: 0;
   right: 0;
-  bottom: calc(var(--roll-d) * -0.13);
-  height: calc(var(--roll-d) * 0.26);
+  top: 0;
+  height: var(--cap-h);
   border-radius: 50%;
   background:
-    radial-gradient(ellipse at 50% 45%, #ffffff 0 52%, transparent 54%),
-    linear-gradient(180deg, #e6e6e6 0%, #cfcfcf 45%, #f4f4f4 72%, #d9d9d9 100%);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+    radial-gradient(
+      closest-side,
+      #6f5843 0 30%,
+      #8a6c4f 34%,
+      #b58d64 36%,
+      #c99f74 46%,
+      #a98058 49%,
+      transparent 50%
+    ),
+    repeating-radial-gradient(closest-side, #fdfdfc 0 2.4%, #ececea 2.4% 3.4%),
+    #fafaf9;
+  box-shadow:
+    inset 0 0 0 1px rgba(0, 0, 0, 0.1),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.08);
 }
 
 .sticker-peel-ghost {
