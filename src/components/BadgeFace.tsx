@@ -71,7 +71,7 @@ export function BadgeFace({
       {overlay ? (
         <div
           data-badge-stickers
-          className="pointer-events-none absolute inset-0 z-[100] overflow-visible"
+          className="pointer-events-none absolute inset-0 z-[100] overflow-hidden"
         >
           {overlay}
         </div>
