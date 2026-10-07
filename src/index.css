@@ -246,6 +246,7 @@ button.track-box:not(.is-selected):hover video {
   position: relative;
   border: 0;
   box-shadow: 0 2px 3px rgba(17, 17, 17, 0.14);
+  font-weight: 400;
   transition: transform 0.15s ease;
 }
 
@@ -536,7 +537,7 @@ button.track-box:not(.is-selected):hover video {
   width: calc(var(--strip-w) - 8px);
   border-radius: 2px calc(var(--roll-w) * 0.28) 2px 2px;
   pointer-events: none;
-  box-shadow: 0 10px 18px -6px rgba(17, 17, 17, 0.16);
+  box-shadow: 0 8px 14px -6px rgba(17, 17, 17, 0.12);
 }
 
 .tape-strip {

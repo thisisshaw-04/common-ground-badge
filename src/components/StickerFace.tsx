@@ -193,7 +193,7 @@ export function StickerFace({
         </svg>
       )}
       {lines.map((line, i) => (
-        <span key={i} className={`relative font-body font-extrabold uppercase ${type}`}>
+        <span key={i} className={`relative font-body font-normal uppercase ${type}`}>
           {line}
         </span>
       ))}
