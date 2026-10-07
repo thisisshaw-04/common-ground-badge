@@ -10,20 +10,20 @@ interface StickerRollProps {
   onPeelStart: (def: StickerDef, e: ReactPointerEvent<HTMLButtonElement>) => void
 }
 
-const ROLL_D = 58
-const TRACK_LEFT = 18
-const STRIP_PAD = 22
-const MAX_STICKER_H = 58
-const ROLL_GROW = 10
-const ROLL_UP_MS = 700
-const UNROLL_MS = 1050
+const ROLL_W = 64
+const TRACK_LEFT = 12
+const MAX_STICKER_H = 56
+const ROLL_UP_MS = 500
+const UNROLL_MS = 800
 
-const easeInOut = (t: number) => -(Math.cos(Math.PI * t) - 1) / 2
-const easeOut = (t: number) => 1 - Math.pow(1 - t, 4)
+const ease = (t: number) => {
+  const c = 1.001
+  return t < 0.5 ? (4 * t * t * t) / c : 1 - Math.pow(-2 * t + 2, 3) / 2
+}
 
 /**
- * Sticker tape on a roll. The strip's free end travels with the stickers, the
- * roll spins in step with the tape length and thickens as tape winds onto it.
+ * FigBuild-style sticker tape: a white strip with a rounded top-right that
+ * collapses to the roll width, swaps stickers, then expands again.
  */
 export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }: StickerRollProps) {
   const stageRef = useRef<HTMLDivElement>(null)
@@ -32,21 +32,17 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
   const full = useRef(0)
   const anim = useRef(0)
   const [shown, setShown] = useState({ key: tabKey, stickers })
-  const [fit, setFit] = useState({ scale: 1, height: 64, copies: 1 })
+  const [fit, setFit] = useState({ scale: 1, copies: 1 })
 
   const paint = (v: number) => {
     const el = stageRef.current
     if (!el) return
     len.current = v
-    const wound = 1 - v
-    el.style.setProperty('--strip-w', `${(v * full.current).toFixed(2)}px`)
-    // Wound tape area grows linearly, so diameter grows with its square root.
-    const d = Math.sqrt(ROLL_D * ROLL_D + wound * ((ROLL_D + ROLL_GROW) ** 2 - ROLL_D * ROLL_D))
-    el.style.setProperty('--roll-d', `${d.toFixed(2)}px`)
-    el.style.setProperty('--spin', `${(-wound * full.current).toFixed(2)}px`)
+    const w = ROLL_W + v * Math.max(0, full.current - ROLL_W)
+    el.style.setProperty('--strip-w', `${w.toFixed(2)}px`)
   }
 
-  const run = (to: number, ms: number, ease: (t: number) => number) =>
+  const run = (to: number, ms: number) =>
     new Promise<boolean>((resolve) => {
       const id = ++anim.current
       const from = len.current
@@ -66,18 +62,15 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
     const track = trackRef.current
     if (!stage || !track) return
     const measure = () => {
-      const avail = Math.max(0, stage.clientWidth - ROLL_D / 2)
+      const avail = stage.clientWidth
       const set = track.firstElementChild as HTMLElement | null
       const setW = set?.offsetWidth ?? 0
       const setH = set?.offsetHeight ?? 0
-      const room = avail - TRACK_LEFT - ROLL_D / 2 - 6
+      const room = Math.max(0, avail - TRACK_LEFT - 8)
       const scale = Math.min(1, setW ? room / setW : 1, setH ? MAX_STICKER_H / setH : 1)
-      // Repeat the set so the tape is filled right up to (and under) the roll.
-      const copies = setW ? Math.max(1, Math.ceil((avail - TRACK_LEFT + ROLL_D / 2) / (setW * scale))) : 1
+      const copies = setW ? Math.max(1, Math.ceil((avail + ROLL_W) / (setW * scale))) : 1
       full.current = avail
-      setFit((f) =>
-        f.scale === scale && f.copies === copies ? f : { scale, height: MAX_STICKER_H, copies },
-      )
+      setFit((f) => (f.scale === scale && f.copies === copies ? f : { scale, copies }))
       paint(len.current)
     }
     measure()
@@ -88,12 +81,12 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
 
   useEffect(() => {
     if (tabKey === shown.key) {
-      if (len.current < 1) void run(1, UNROLL_MS, easeOut)
+      if (len.current < 1) void run(1, UNROLL_MS)
       return
     }
     let cancelled = false
     void (async () => {
-      const ok = await run(0, ROLL_UP_MS * Math.max(0.3, len.current), easeInOut)
+      const ok = await run(0, ROLL_UP_MS)
       if (!ok || cancelled) return
       setShown({ key: tabKey, stickers })
     })()
@@ -105,51 +98,82 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
 
   useEffect(() => () => void ++anim.current, [])
 
-  const tapeH = fit.height + STRIP_PAD
+  const uid = shown.key.replace(/[^a-z0-9]/gi, '') || 'roll'
 
   return (
     <div className="tape-bed">
-    <div
-      ref={stageRef}
-      className="tape-stage"
-      style={{ height: tapeH }}
-      aria-label="Sticker tape"
-    >
-      <div className="tape-strip" style={{ height: tapeH }}>
-        <div
-          ref={trackRef}
-          className="tape-track"
-          style={{ left: TRACK_LEFT, transform: `translateY(-50%) scale(${fit.scale})` }}
-        >
-          {Array.from({ length: fit.copies }, (_, copy) => (
-          <div key={copy} className="tape-set" aria-hidden={copy > 0 || undefined}>
-          {shown.stickers.map((s) => {
-            const peeling = peelingId === s.id
-            return (
-              <button
-                key={s.id}
-                tabIndex={copy > 0 ? -1 : undefined}
-                type="button"
-                className={`tape-item${peeling ? ' is-peeling' : ''}`}
-                aria-label={`Peel ${s.label} sticker`}
-                onPointerDown={(e) => {
-                  e.preventDefault()
-                  e.stopPropagation()
-                  onPeelStart(s, e)
-                }}
-              >
-                <StickerFace def={s} />
-              </button>
-            )
-          })}
+      <div ref={stageRef} className="tape-stage" aria-label="Sticker tape">
+        <div className="tape-strip">
+          <div
+            ref={trackRef}
+            className="tape-track"
+            style={{ left: TRACK_LEFT, transform: `translateY(-50%) scale(${fit.scale})` }}
+          >
+            {Array.from({ length: fit.copies }, (_, copy) => (
+              <div key={copy} className="tape-set" aria-hidden={copy > 0 || undefined}>
+                {shown.stickers.map((s) => {
+                  const peeling = peelingId === s.id
+                  return (
+                    <button
+                      key={s.id}
+                      tabIndex={copy > 0 ? -1 : undefined}
+                      type="button"
+                      className={`tape-item${peeling ? ' is-peeling' : ''}`}
+                      aria-label={`Peel ${s.label} sticker`}
+                      onPointerDown={(e) => {
+                        e.preventDefault()
+                        e.stopPropagation()
+                        onPeelStart(s, e)
+                      }}
+                    >
+                      <StickerFace def={s} />
+                    </button>
+                  )
+                })}
+              </div>
+            ))}
           </div>
-          ))}
         </div>
+        <span className="tape-roll-face" aria-hidden />
+        <svg
+          className="tape-roll-rim"
+          viewBox="0 0 64 16"
+          preserveAspectRatio="none"
+          aria-hidden
+        >
+          <defs>
+            <radialGradient id={`tape-rim-${uid}`} cx="50%" cy="50%" r="50%">
+              <stop offset="0" stopColor="#fff" />
+              <stop offset="1" stopColor="#d9d9d9" />
+            </radialGradient>
+          </defs>
+          <ellipse cx="32" cy="8" rx="32" ry="8" fill={`url(#tape-rim-${uid})`} />
+        </svg>
+        <svg
+          className="tape-roll-spool"
+          viewBox="0 0 48 11"
+          preserveAspectRatio="none"
+          aria-hidden
+        >
+          <defs>
+            <linearGradient id={`tape-spool-${uid}`} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stopColor="#5a5a5a" />
+              <stop offset="0.97" stopColor="#fff" />
+            </linearGradient>
+          </defs>
+          <ellipse cx="24" cy="5.5" rx="24" ry="5.5" fill={`url(#tape-spool-${uid})`} />
+        </svg>
+        <svg className="tape-roll-shine" viewBox="0 0 5 76" preserveAspectRatio="none" aria-hidden>
+          <defs>
+            <linearGradient id={`tape-shine-${uid}`} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stopColor="#fff" stopOpacity="0.12" />
+              <stop offset="0.5" stopColor="#fff" />
+              <stop offset="1" stopColor="#fff" stopOpacity="0.12" />
+            </linearGradient>
+          </defs>
+          <path d="M2.5 0C3.9 0 5 34 5 76H0C0 34 1.1 0 2.5 0Z" fill={`url(#tape-shine-${uid})`} />
+        </svg>
       </div>
-      <span className="tape-roll" aria-hidden>
-        <span className="tape-roll-cap" />
-      </span>
-    </div>
     </div>
   )
 }

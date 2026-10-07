@@ -475,56 +475,74 @@ button.track-box:not(.is-selected):hover video {
   transform: scale(0.96);
 }
 
-/* —— Sticker tape: paper strip wound onto an upright roll at the right —— */
+/* —— FigBuild sticker tape: white strip with a rounded top-right and a grey-ring roll —— */
 .tape-bed {
-  padding: 1.25rem 0.5rem 1.6rem;
+  padding: 0.35rem 0 0.85rem;
   user-select: none;
 }
 
 .tape-stage {
-  --strip-w: 0px;
-  --roll-d: 58px;
-  --spin: 0px;
-  --cap-h: calc(var(--roll-d) * 0.3);
+  --strip-w: 64px;
   position: relative;
+  height: 96px;
 }
 
 .tape-strip {
   position: absolute;
-  z-index: 1;
+  z-index: 2;
   top: 0;
-  right: calc(var(--roll-d) / 2);
+  right: 0;
+  height: 80px;
   width: var(--strip-w);
   overflow: hidden;
-  background: linear-gradient(180deg, #ffffff 0%, #fbfbfa 55%, #f3f3f1 100%);
-  box-shadow:
-    inset 0 1px 0 #e4e4e2,
-    inset 0 -1px 0 #dcdcda,
-    0 6px 10px -6px rgba(0, 0, 0, 0.22),
-    0 1px 2px rgba(0, 0, 0, 0.06);
+  background: #fff;
+  border: 1px solid #ececec;
+  border-left: 0;
+  border-radius: 0 20px 0 0;
 }
 
-/* Paper bending round the roll, and a lifted free end */
-.tape-strip::after,
-.tape-strip::before {
-  content: '';
+.tape-roll-face {
   position: absolute;
-  top: 0;
-  bottom: 0;
-  z-index: 3;
-  pointer-events: none;
-}
-
-.tape-strip::after {
+  z-index: 0;
+  top: 30px;
   right: 0;
-  width: 28px;
-  background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.05) 60%, rgba(0, 0, 0, 0.12));
+  width: 64px;
+  height: 50px;
+  background: #fff;
+  border-radius: 0 16px 0 0;
+  box-shadow: 1px 0 0 #ececec;
 }
 
-.tape-strip::before {
-  left: 0;
-  width: 6px;
-  background: linear-gradient(90deg, rgba(0, 0, 0, 0.06), transparent);
+.tape-roll-rim {
+  position: absolute;
+  z-index: 3;
+  right: 0;
+  top: 76px;
+  width: 64px;
+  height: 16px;
+  display: block;
+}
+
+.tape-roll-spool {
+  position: absolute;
+  z-index: 4;
+  right: 8px;
+  top: 78px;
+  width: 48px;
+  height: 11px;
+  display: block;
+}
+
+.tape-roll-shine {
+  position: absolute;
+  z-index: 6;
+  right: 17px;
+  top: 3px;
+  width: 5px;
+  height: 76px;
+  display: block;
+  mix-blend-mode: overlay;
+  pointer-events: none;
 }
 
 .tape-track {
@@ -547,6 +565,7 @@ button.track-box:not(.is-selected):hover video {
 
 .tape-item {
   position: relative;
+  z-index: 1;
   flex-shrink: 0;
   cursor: grab;
   touch-action: none;
@@ -570,80 +589,6 @@ button.track-box:not(.is-selected):hover video {
   opacity: 0.18;
   transform: none;
   filter: none;
-}
-
-/* Roll body: outer wrap of the paper, shaded as a cylinder; faint wrap lines turn with --spin */
-.tape-roll {
-  position: absolute;
-  z-index: 2;
-  top: calc(var(--cap-h) / -2);
-  bottom: calc(var(--cap-h) / -2);
-  right: 0;
-  width: var(--roll-d);
-  pointer-events: none;
-  border-radius: 50% / calc(var(--cap-h) / 2);
-  background:
-    repeating-linear-gradient(
-      90deg,
-      rgba(0, 0, 0, 0) 0 21px,
-      rgba(0, 0, 0, 0.035) 21px 22px
-    ),
-    linear-gradient(
-      90deg,
-      #c9c9c6 0%,
-      #e9e9e6 12%,
-      #fbfbfa 30%,
-      #ffffff 40%,
-      #f4f4f2 58%,
-      #dededb 80%,
-      #c4c4c0 100%
-    );
-  background-position:
-    var(--spin) 0,
-    0 0;
-  box-shadow:
-    8px 10px 14px -6px rgba(0, 0, 0, 0.22),
-    -2px 0 4px -2px rgba(0, 0, 0, 0.12);
-}
-
-/* Soft specular streak that stays put while the roll turns */
-.tape-roll::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: linear-gradient(
-    90deg,
-    transparent 24%,
-    rgba(255, 255, 255, 0.75) 32%,
-    transparent 42%
-  );
-}
-
-/* Top face: wound paper layers round a cardboard core */
-.tape-roll-cap {
-  position: absolute;
-  z-index: 1;
-  left: 0;
-  right: 0;
-  top: 0;
-  height: var(--cap-h);
-  border-radius: 50%;
-  background:
-    radial-gradient(
-      closest-side,
-      #6f5843 0 30%,
-      #8a6c4f 34%,
-      #b58d64 36%,
-      #c99f74 46%,
-      #a98058 49%,
-      transparent 50%
-    ),
-    repeating-radial-gradient(closest-side, #fdfdfc 0 2.4%, #ececea 2.4% 3.4%),
-    #fafaf9;
-  box-shadow:
-    inset 0 0 0 1px rgba(0, 0, 0, 0.1),
-    inset 0 -1px 2px rgba(0, 0, 0, 0.08);
 }
 
 .sticker-peel-ghost {
