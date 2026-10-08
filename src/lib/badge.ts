@@ -141,8 +141,8 @@ export const STICKERS: StickerDef[] = [
   { id: 'firsttimer', tab: 'about', label: 'FIRST TIMER', ...paint(1), shape: 'flower', tilt: -4 },
   { id: 'nightowl', tab: 'about', label: 'NIGHT OWL', ...paint(2), shape: 'flower', tilt: 5 },
   { id: 'snackboss', tab: 'about', label: 'SNACK BOSS', ...paint(3), shape: 'flower', tilt: -3 },
-  { id: 'codex', tab: 'about', label: 'CODEX', ...paint(4), shape: 'flower', tilt: 4 },
-  { id: 'sg', tab: 'about', label: 'SG LOCAL', ...paint(5), shape: 'flower', tilt: -2 },
+  { id: 'earlybird', tab: 'about', label: 'EARLY BIRD', ...paint(4), shape: 'flower', tilt: 4 },
+  { id: 'bigideas', tab: 'about', label: 'BIG IDEAS', ...paint(5), shape: 'flower', tilt: -2 },
 ]
 
 /** Sample placements for the landing preview badge. */
