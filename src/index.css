@@ -709,19 +709,18 @@ button.track-box:not(.is-selected):hover video {
   cursor: grabbing !important;
 }
 
-/* Hang behind the card so the strap tucks under the top edge instead of
-   covering the lockup. The PNG is cropped at the fabric — no printed clip. */
+/* Printed clip sits on the badge’s top edge, in front of the lockup. */
 .lanyard-hang {
-  z-index: 0;
+  z-index: 7;
 }
 
 .lanyard-offscreen {
   position: absolute;
   left: 50%;
   bottom: 100%;
-  z-index: 0;
-  /* A few pixels under the badge border so the cord ends at the join. */
-  margin-bottom: -8px;
+  z-index: 7;
+  /* Drop the grey clip onto the top edge (clip is ~20px on the Maker card). */
+  margin-bottom: -16px;
   transform: translateX(-50%);
 }
 
