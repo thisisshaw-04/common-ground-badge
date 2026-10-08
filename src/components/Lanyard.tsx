@@ -16,7 +16,7 @@ interface LanyardProps {
   className?: string
 }
 
-/** Printed Y-lanyard PNG — fabric ends at the badge’s top edge. */
+/** Printed Y-lanyard PNG — grey clip sits on the badge’s top edge. */
 export function Lanyard({ cord, scale = 1, className = '' }: LanyardProps) {
   const width = Math.round(240 * scale)
   return (
