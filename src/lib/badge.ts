@@ -137,11 +137,11 @@ export const STICKERS: StickerDef[] = [
   { id: 'theythem', tab: 'pronouns', label: 'THEY/THEM', ...paint(3), shape: 'burst', tilt: -2 },
   { id: 'shethey', tab: 'pronouns', label: 'SHE/THEY', ...paint(4), shape: 'burst', tilt: 3 },
   { id: 'askme', tab: 'pronouns', label: 'ASK ME', ...paint(5), shape: 'burst', tilt: -3 },
-  { id: 'curious', tab: 'about', label: 'STAY CURIOUS', ...paint(0), shape: 'flower', tilt: 4 },
+  { id: 'curious', tab: 'about', label: 'TOUCH GRASS', ...paint(0), shape: 'flower', tilt: 4 },
   { id: 'firsttimer', tab: 'about', label: 'FIRST TIMER', ...paint(1), shape: 'flower', tilt: -4 },
   { id: 'nightowl', tab: 'about', label: 'NIGHT OWL', ...paint(2), shape: 'flower', tilt: 5 },
   { id: 'snackboss', tab: 'about', label: 'SNACK BOSS', ...paint(3), shape: 'flower', tilt: -3 },
-  { id: 'earlybird', tab: 'about', label: 'FULL SEND', ...paint(4), shape: 'flower', tilt: 4 },
+  { id: 'ailarper', tab: 'about', label: 'AI LARPER', ...paint(4), shape: 'flower', tilt: 4 },
   { id: 'bigideas', tab: 'about', label: 'BIG IDEAS', ...paint(5), shape: 'flower', tilt: -2 },
 ]
 
