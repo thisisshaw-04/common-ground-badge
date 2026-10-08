@@ -97,7 +97,7 @@ function linesFor(label: string): string[] {
     return b ? [a, b] : [label]
   }
   const parts = label.split(' ')
-  if (parts.length >= 2 && label.length >= 9) {
+  if (parts.length >= 2 && label.length >= 8) {
     return [parts[0], parts.slice(1).join(' ')]
   }
   return [label]
