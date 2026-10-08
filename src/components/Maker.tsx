@@ -568,8 +568,8 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
 
           {/* Badge RIGHT */}
           <aside className="animate-pop flex shrink-0 flex-col items-center lg:h-full lg:w-[448px] lg:justify-end xl:w-[468px]">
-            <div className="relative flex w-full max-w-[420px] flex-col items-center">
-              <Lanyard cord={state.cord} scale={1.18} className="lanyard-offscreen" />
+            <div className="relative flex w-full max-w-[420px] flex-col items-center overflow-visible">
+              <Lanyard cord={state.cord} scale={1.22} className="lanyard-offscreen" />
               <BadgeFace
                 badgeRef={badgeRef}
                 width={BADGE_W}

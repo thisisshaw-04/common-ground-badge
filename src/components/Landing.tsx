@@ -17,8 +17,8 @@ export function Landing({ onStart }: LandingProps) {
   return (
     <div className="relative isolate flex min-h-dvh flex-col">
       <main className="relative z-20 isolate mx-auto flex w-full max-w-[1120px] flex-col items-center px-2 pt-6 pb-28 md:min-h-0 md:flex-1 md:flex-row md:items-center md:justify-between md:gap-10 md:px-4 md:pb-24 lg:gap-16 lg:px-6">
-        <div className="animate-floaty flex shrink-0 -translate-y-2 scale-[0.72] flex-col items-center sm:scale-90 md:-translate-y-4 md:scale-100">
-          <Lanyard cord={demo.cord} scale={1} />
+        <div className="animate-floaty relative flex shrink-0 -translate-y-2 scale-[0.72] flex-col items-center overflow-visible sm:scale-90 md:-translate-y-4 md:scale-100">
+          <Lanyard cord={demo.cord} scale={1.15} className="lanyard-offscreen" />
           <BadgeFace
             width={BADGE_W}
             footVideo={demo.footVideo}

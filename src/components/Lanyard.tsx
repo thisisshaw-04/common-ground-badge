@@ -21,7 +21,7 @@ export function Lanyard({ cord, scale = 1, className = '' }: LanyardProps) {
   const width = Math.round(240 * scale)
   return (
     <div
-      className={`lanyard-hang pointer-events-none relative ${className}`.trim()}
+      className={`lanyard-hang pointer-events-none ${className}`.trim()}
       style={{ width }}
       aria-hidden
     >
