@@ -18,14 +18,14 @@ export function Landing({ onStart }: LandingProps) {
     <div className="relative isolate flex min-h-dvh flex-col">
       <main className="relative z-20 isolate mx-auto flex w-full max-w-[1120px] flex-col items-center px-2 pt-6 pb-28 md:min-h-0 md:flex-1 md:flex-row md:items-center md:justify-between md:gap-10 md:px-4 md:pb-24 lg:gap-16 lg:px-6">
         <div className="animate-floaty flex shrink-0 -translate-y-2 scale-[0.72] flex-col items-center sm:scale-90 md:-translate-y-4 md:scale-100">
-          <Lanyard cord={demo.cord} scale={0.62} />
+          <Lanyard cord={demo.cord} scale={1} />
           <BadgeFace
             width={BADGE_W}
             footVideo={demo.footVideo}
             border={demo.border}
             bodyHeight={BODY_H}
             footHeight={FOOT_H}
-            className="-mt-9"
+            className="-mt-1"
             body={
               <p className="poster-name-input absolute top-2 left-1/2 z-10 w-[84%] -translate-x-1/2 text-center text-[1.4rem] font-bold tracking-[-0.03em] text-black uppercase">
                 {demo.name}

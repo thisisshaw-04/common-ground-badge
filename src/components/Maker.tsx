@@ -482,8 +482,9 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                         <button
                           key={id}
                           type="button"
+                          aria-label={CORDS[id].label}
                           onClick={() => push({ ...state, cord: id })}
-                          className={`track-box flex aspect-square flex-col items-center justify-center bg-[var(--panel)] ${
+                          className={`track-box aspect-square overflow-hidden bg-[var(--panel)] p-0 ${
                             state.cord === id ? 'is-selected' : ''
                           }`}
                         >
@@ -568,7 +569,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
           {/* Badge RIGHT */}
           <aside className="animate-pop flex shrink-0 flex-col items-center lg:sticky lg:top-0 lg:w-[448px] xl:w-[468px]">
             <div className="flex w-full max-w-[420px] flex-col items-center lg:-translate-y-2">
-              <Lanyard cord={state.cord} scale={0.61} />
+              <Lanyard cord={state.cord} scale={1} />
               <BadgeFace
                 badgeRef={badgeRef}
                 width={BADGE_W}
@@ -576,7 +577,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                 border={state.border}
                 bodyHeight={BODY_H}
                 footHeight={FOOT_H}
-                className="-mt-10"
+                className="-mt-1"
                 body={
                   <>
                     <input

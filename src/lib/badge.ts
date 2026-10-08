@@ -87,12 +87,12 @@ export function footVideoSrc(id: FootVideoId) {
 
 export const CORDS: Record<
   CordId,
-  { label: string; from: string; to: string }
+  { label: string; file: string; swatch: string }
 > = {
-  ink: { label: 'Ink', from: '#1a1a1a', to: '#3a3a3a' },
-  signal: { label: 'Signal', from: '#ffe600', to: '#c4b000' },
-  flare: { label: 'Flare', from: '#ff4fd8', to: '#ff9a3c' },
-  acid: { label: 'Acid', from: '#39ffb6', to: '#4c54f5' },
+  ink: { label: 'Ink', file: 'ink.png', swatch: 'ink-swatch.png' },
+  signal: { label: 'Signal', file: 'signal.png', swatch: 'signal-swatch.png' },
+  flare: { label: 'Flare', file: 'flare.png', swatch: 'flare-swatch.png' },
+  acid: { label: 'Ash', file: 'acid.png', swatch: 'acid-swatch.png' },
 }
 
 /** Shared sticker swatches — hex lives in `:root` (`--sticker-*`). */
