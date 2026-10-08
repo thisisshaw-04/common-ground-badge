@@ -356,7 +356,11 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
         ← Back
       </button>
       <h1 className="mt-1.5 text-[clamp(1.5rem,2.35vw,2.2rem)] leading-[1.1] font-medium tracking-[-0.025em] text-black">
-        Get Creative with Your Common Ground Badge :)
+        Get Creative with
+        <br />
+        Your Common Ground
+        <br />
+        Badge :)
       </h1>
     </>
   )
