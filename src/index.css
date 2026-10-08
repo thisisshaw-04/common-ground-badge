@@ -543,10 +543,10 @@ button.track-box:not(.is-selected):hover video {
 
 .tape-stage {
   --tape-h: 96px;
-  --roll-d: 64px;
-  --curve: 18px;
-  --cap-h: 23px;
-  --hang: 12px;
+  --roll-d: 76px;
+  --curve: 26px;
+  --cap-h: 32px;
+  --hang: 26px;
   --strip-w: 0px;
   position: relative;
   height: calc(var(--tape-h) + var(--hang));
@@ -578,7 +578,6 @@ button.track-box:not(.is-selected):hover video {
     linear-gradient(180deg, #ffffff 0%, #f4f4f4 100%);
   border: 1px solid #dedede;
   border-right: 0;
-  /* Small top-right radius — a steep half-pill left a dead zone above the oval. */
   border-radius: 4px var(--curve) 0 4px;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 1);
 }
@@ -602,10 +601,10 @@ button.track-box:not(.is-selected):hover video {
   filter: blur(0.7px);
 }
 
-/* Oval cap tucks under the strip so no square neck sits on top of it. */
+/* Core hangs below the strip and slightly overlaps the bottom edge — no square neck. */
 .tape-roll {
   position: absolute;
-  z-index: 1;
+  z-index: 3;
   top: 0;
   right: 0;
   width: var(--roll-d);
@@ -618,12 +617,13 @@ button.track-box:not(.is-selected):hover video {
   z-index: 3;
   left: 0;
   right: 0;
-  top: calc(var(--tape-h) - var(--cap-h) * 0.45);
+  /* Most of the oval hangs below; a thin overlap joins it to the strip. */
+  top: calc(var(--tape-h) - var(--cap-h) * 0.22);
   width: 100%;
   height: var(--cap-h);
   display: block;
   overflow: visible;
-  filter: drop-shadow(0 3px 4px rgba(17, 17, 17, 0.12));
+  filter: drop-shadow(0 5px 6px rgba(17, 17, 17, 0.14));
 }
 
 .tape-track {
