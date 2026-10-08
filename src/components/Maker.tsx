@@ -379,7 +379,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
               <div className="grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2 [@media(min-height:860px)]:gap-y-6">
                 <header className="hidden lg:col-start-1 lg:row-start-1 lg:block">{heading}</header>
                   <Panel title="Draw" className="sm:col-start-2 sm:row-start-1 sm:self-end">
-                    <div className="flex min-h-[5.5rem] items-center justify-center gap-2">
+                    <div className="grid grid-cols-4 gap-3">
                       <button
                         type="button"
                         aria-label="Thin brush"
@@ -388,11 +388,11 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                           setStroke('round')
                           setMode('draw')
                         }}
-                        className={`track-box flex h-11 w-11 items-center justify-center bg-[var(--panel)] ${
+                        className={`track-box flex aspect-square items-center justify-center bg-[var(--panel)] ${
                           brush === 1 && stroke === 'round' && mode === 'draw' ? 'is-selected' : ''
                         }`}
                       >
-                        <span className="rounded-full bg-black" style={{ width: 5, height: 5 }} />
+                        <span className="rounded-full bg-black" style={{ width: 8, height: 8 }} />
                       </button>
                       <button
                         type="button"
@@ -406,11 +406,11 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                           setStroke('sketch')
                           setMode('draw')
                         }}
-                        className={`track-box flex h-11 w-11 items-center justify-center bg-[var(--panel)] ${
+                        className={`track-box flex aspect-square items-center justify-center bg-[var(--panel)] ${
                           stroke === 'sketch' && mode === 'draw' ? 'is-selected' : ''
                         }`}
                       >
-                        <svg viewBox="0 0 28 28" className="h-7 w-7" aria-hidden>
+                        <svg viewBox="0 0 28 28" className="h-9 w-9" aria-hidden>
                           <path
                             d="M3 17.2 6.2 12.4 8.1 16.8 11.4 10.6 13.8 17.4 17.2 11.8 19.6 16.1 22.8 12.2 25.2 16.6"
                             fill="none"
@@ -429,11 +429,11 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                           setStroke('round')
                           setMode('draw')
                         }}
-                        className={`track-box flex h-11 w-11 items-center justify-center bg-[var(--panel)] ${
+                        className={`track-box flex aspect-square items-center justify-center bg-[var(--panel)] ${
                           brush === 2 && stroke === 'round' && mode === 'draw' ? 'is-selected' : ''
                         }`}
                       >
-                        <span className="rounded-full bg-black" style={{ width: 10, height: 10 }} />
+                        <span className="rounded-full bg-black" style={{ width: 14, height: 14 }} />
                       </button>
                       <button
                         type="button"
@@ -443,11 +443,11 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                           setStroke('round')
                           setMode('draw')
                         }}
-                        className={`track-box flex h-11 w-11 items-center justify-center bg-[var(--panel)] ${
+                        className={`track-box flex aspect-square items-center justify-center bg-[var(--panel)] ${
                           brush === 3 && stroke === 'round' && mode === 'draw' ? 'is-selected' : ''
                         }`}
                       >
-                        <span className="rounded-full bg-black" style={{ width: 15, height: 15 }} />
+                        <span className="rounded-full bg-black" style={{ width: 20, height: 20 }} />
                       </button>
                     </div>
                   </Panel>
