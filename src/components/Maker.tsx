@@ -396,7 +396,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                       </button>
                       <button
                         type="button"
-                        aria-label="Rough sketch line"
+                        aria-label="Rough sketch circle"
                         onClick={() => {
                           if (mode === 'draw' && stroke === 'sketch') {
                             setMode('stick')
@@ -412,12 +412,8 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                       >
                         <svg viewBox="0 0 28 28" className="h-7 w-7" aria-hidden>
                           <path
-                            d="M3 17.2 6.2 12.4 8.1 16.8 11.4 10.6 13.8 17.4 17.2 11.8 19.6 16.1 22.8 12.2 25.2 16.6"
-                            fill="none"
-                            stroke="#111"
-                            strokeWidth="1.7"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
+                            d="M13.64 4.93 C 14.58 5.08 16.26 5.12 17.08 5.66 C 17.91 6.2 17.97 7.69 18.6 8.18 C 19.23 8.66 20.21 8.01 20.87 8.58 C 21.53 9.15 22.56 10.65 22.55 11.6 C 22.54 12.54 20.81 13.47 20.79 14.27 C 20.78 15.07 22.35 15.45 22.46 16.38 C 22.56 17.31 22.12 19.19 21.42 19.86 C 20.73 20.53 18.98 19.94 18.28 20.42 C 17.58 20.9 18.0 22.38 17.23 22.74 C 16.46 23.1 14.61 22.91 13.66 22.58 C 12.7 22.25 12.29 20.93 11.49 20.78 C 10.7 20.62 9.74 21.93 8.91 21.64 C 8.07 21.34 6.81 19.96 6.49 19.01 C 6.16 18.07 7.18 16.76 6.95 15.98 C 6.73 15.21 5.35 15.2 5.12 14.36 C 4.89 13.51 5.1 11.73 5.58 10.89 C 6.06 10.04 7.51 9.9 8.0 9.26 C 8.48 8.62 7.93 7.78 8.5 7.03 C 9.06 6.28 10.54 5.11 11.4 4.76 C 12.26 4.41 12.69 4.78 13.64 4.93 Z"
+                            fill="#111"
                           />
                         </svg>
                       </button>
