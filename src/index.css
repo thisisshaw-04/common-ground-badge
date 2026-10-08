@@ -722,6 +722,17 @@ button.track-box:not(.is-selected):hover video {
   margin-bottom: -18px;
 }
 
+@media (min-width: 1024px) {
+  .lanyard-offscreen {
+    position: absolute;
+    left: 50%;
+    bottom: 100%;
+    z-index: 6;
+    margin-bottom: -18px;
+    transform: translateX(-50%);
+  }
+}
+
 .lanyard-hang-img {
   display: block;
   width: 100%;

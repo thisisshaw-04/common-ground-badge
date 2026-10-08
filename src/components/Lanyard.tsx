@@ -13,14 +13,15 @@ export function cordSwatchSrc(id: CordId) {
 interface LanyardProps {
   cord: CordId
   scale?: number
+  className?: string
 }
 
 /** Printed Y-lanyard PNG, hung from the top of the badge. */
-export function Lanyard({ cord, scale = 1 }: LanyardProps) {
+export function Lanyard({ cord, scale = 1, className = '' }: LanyardProps) {
   const width = Math.round(240 * scale)
   return (
     <div
-      className="lanyard-hang pointer-events-none relative"
+      className={`lanyard-hang pointer-events-none relative ${className}`.trim()}
       style={{ width }}
       aria-hidden
     >

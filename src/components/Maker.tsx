@@ -372,10 +372,10 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
       <div className="relative mx-auto flex min-h-0 w-full max-w-[1440px] flex-1 flex-col px-2 pt-3 pb-4 sm:px-4 sm:pt-4 lg:px-5">
         <header className="animate-pop mb-2 shrink-0 sm:mb-3 lg:hidden">{heading}</header>
 
-        <div className="relative flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto no-scrollbar lg:flex-row lg:items-start lg:gap-8 lg:overflow-hidden">
+        <div className="relative flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto no-scrollbar lg:flex-row lg:items-stretch lg:gap-8 lg:overflow-visible">
           {/* Adjustments LEFT — FigBuild 2-col grid */}
-          <section className="animate-pop order-last min-h-0 min-w-0 flex-1 lg:order-none lg:self-stretch lg:overflow-y-auto no-scrollbar lg:pt-4 lg:pr-2 lg:pb-1 [@media(min-height:860px)]:lg:pt-8 [@media(min-height:860px)]:lg:pb-4">
-            <div className="flex flex-col gap-5 [@media(min-height:860px)]:gap-6">
+          <section className="animate-pop order-last flex min-h-0 min-w-0 flex-1 flex-col lg:order-none lg:self-stretch lg:overflow-y-auto no-scrollbar lg:pt-4 lg:pr-2 lg:pb-1 [@media(min-height:860px)]:lg:pt-8 [@media(min-height:860px)]:lg:pb-4">
+            <div className="flex min-h-0 flex-1 flex-col gap-5 [@media(min-height:860px)]:gap-6">
               <div className="grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2 [@media(min-height:860px)]:gap-y-6">
                 <header className="hidden lg:col-start-1 lg:row-start-1 lg:block">{heading}</header>
                   <Panel title="Draw" className="sm:col-start-2 sm:row-start-1 sm:self-end">
@@ -535,7 +535,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                   </Panel>
               </div>
 
-              <Panel title="Stickers">
+              <Panel title="Stickers" className="lg:mt-auto">
                 <div className="mb-3 flex flex-wrap items-center gap-1.5">
                   {TABS.map((t) => (
                     <button
@@ -567,9 +567,9 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
           </section>
 
           {/* Badge RIGHT */}
-          <aside className="animate-pop flex shrink-0 flex-col items-center lg:sticky lg:top-0 lg:w-[448px] xl:w-[468px]">
-            <div className="flex w-full max-w-[420px] flex-col items-center lg:-translate-y-2">
-              <Lanyard cord={state.cord} scale={1} />
+          <aside className="animate-pop flex shrink-0 flex-col items-center lg:h-full lg:w-[448px] lg:justify-end xl:w-[468px]">
+            <div className="relative flex w-full max-w-[420px] flex-col items-center">
+              <Lanyard cord={state.cord} scale={1.18} className="lanyard-offscreen" />
               <BadgeFace
                 badgeRef={badgeRef}
                 width={BADGE_W}
@@ -577,7 +577,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                 border={state.border}
                 bodyHeight={BODY_H}
                 footHeight={FOOT_H}
-                className="-mt-1"
+                className="relative z-[1] -mt-1"
                 body={
                   <>
                     <input
