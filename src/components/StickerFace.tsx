@@ -1,11 +1,12 @@
 import type { StickerDef } from '../lib/badge'
 
+/** Wide sawtooth oval — stretched starburst like a die-cut seal. */
 const BURST_POINTS = (() => {
-  const spikes = 22
+  const spikes = 38
   const pts: string[] = []
   for (let i = 0; i < spikes * 2; i++) {
     const a = (i / (spikes * 2)) * Math.PI * 2 - Math.PI / 2
-    const r = i % 2 === 0 ? 50 : 41
+    const r = i % 2 === 0 ? 50 : 36.5
     pts.push(`${(50 + r * Math.cos(a)).toFixed(2)},${(50 + r * Math.sin(a)).toFixed(2)}`)
   }
   return pts.join(' ')

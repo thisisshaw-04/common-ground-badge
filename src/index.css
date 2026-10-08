@@ -409,10 +409,11 @@ button.track-box:not(.is-selected):hover video {
   box-shadow: none;
   background: transparent;
   filter: none;
-  min-width: 6.4rem;
-  min-height: 4.4rem;
-  padding-inline: 1.5rem !important;
-  padding-block: 1rem !important;
+  aspect-ratio: 2.45 / 1;
+  min-width: 7.6rem;
+  min-height: 3.1rem;
+  padding-inline: 1.55rem !important;
+  padding-block: 0.7rem !important;
 }
 
 .sticker-nice-wave {
@@ -681,6 +682,11 @@ button.track-box:not(.is-selected):hover video {
 .tape-item .sticker-nice-star {
   min-width: 4.85rem;
   min-height: 4.85rem;
+}
+
+.tape-item .sticker-nice-burst {
+  min-width: 7.1rem;
+  min-height: 2.9rem;
 }
 
 .sticker-peel-ghost {
