@@ -514,9 +514,9 @@ button.track-box:not(.is-selected):hover video {
   animation: none !important;
 }
 
-/* Stickers stuck on the badge sit flat, still, and a bit larger */
+/* Stickers stuck on the badge sit flat and still */
 .sticker-on-badge {
-  zoom: 1.45;
+  zoom: 1.18;
 }
 
 .sticker-on-badge .sticker-nice {
@@ -526,7 +526,7 @@ button.track-box:not(.is-selected):hover video {
 }
 
 .sticker-on-badge .sticker-label {
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .sticker-on-badge .sticker-nice-blob {
@@ -602,10 +602,10 @@ button.track-box:not(.is-selected):hover video {
   filter: blur(0.7px);
 }
 
-/* Neck + oval cap: one cylinder sitting on the strip’s right edge. */
+/* Oval cap tucks under the strip so no square neck sits on top of it. */
 .tape-roll {
   position: absolute;
-  z-index: 4;
+  z-index: 1;
   top: 0;
   right: 0;
   width: var(--roll-d);
@@ -613,22 +613,12 @@ button.track-box:not(.is-selected):hover video {
   pointer-events: none;
 }
 
-.tape-roll-cyl {
-  position: absolute;
-  z-index: 0;
-  right: 0;
-  top: calc(var(--tape-h) - 22px);
-  width: 100%;
-  height: 26px;
-  background: linear-gradient(90deg, #f3f3f3 0%, #ffffff 40%, #ececec 100%);
-}
-
 .tape-roll-end {
   position: absolute;
   z-index: 3;
   left: 0;
   right: 0;
-  top: calc(var(--tape-h) - var(--cap-h) * 0.58);
+  top: calc(var(--tape-h) - var(--cap-h) * 0.45);
   width: 100%;
   height: var(--cap-h);
   display: block;

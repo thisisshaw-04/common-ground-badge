@@ -27,7 +27,7 @@ const CLOSE_MS = 280
 const OPEN_MS = 560
 
 const capH = ROLL * SQUASH
-const hang = capH * 0.52
+const hang = capH * 0.6
 
 const easeOut = (t: number) => 1 - Math.pow(1 - t, 3)
 const easeIn = (t: number) => t * t * t
@@ -159,7 +159,6 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
           <span className="tape-shine" />
         </div>
         <div className="tape-roll" aria-hidden>
-          <span className="tape-roll-cyl" />
           <svg className="tape-roll-end" viewBox="0 0 64 18" preserveAspectRatio="none">
             <defs>
               <radialGradient id="tape-paper" cx="50%" cy="38%" r="58%">
