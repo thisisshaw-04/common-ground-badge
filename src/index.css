@@ -711,16 +711,17 @@ button.track-box:not(.is-selected):hover video {
 
 .lanyard-hang {
   z-index: 6;
-  margin-bottom: -18px;
+  margin-bottom: -4px;
 }
 
-/* Pulled out of flow so the badge stays put and the Y can clip off the viewport. */
+/* Pulled out of flow so the badge stays put and the Y can clip off the viewport.
+   Bottom of the printed clip sits on the badge’s top edge — don’t drag it down the card. */
 .lanyard-offscreen {
   position: absolute;
   left: 50%;
   bottom: 100%;
   z-index: 6;
-  margin-bottom: -18px;
+  margin-bottom: -5px;
   transform: translateX(-50%);
 }
 

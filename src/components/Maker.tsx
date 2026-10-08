@@ -577,7 +577,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                 border={state.border}
                 bodyHeight={BODY_H}
                 footHeight={FOOT_H}
-                className="relative z-[1] -mt-1"
+                className="relative z-[1]"
                 body={
                   <>
                     <input
