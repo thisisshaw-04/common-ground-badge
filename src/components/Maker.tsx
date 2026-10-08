@@ -372,11 +372,11 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
       <div className="relative mx-auto flex min-h-0 w-full max-w-[1180px] flex-1 flex-col px-3 pt-5 pb-5 sm:px-5 sm:pt-6 lg:px-4">
         <header className="animate-pop mb-3 shrink-0 sm:mb-4 lg:hidden">{heading}</header>
 
-        <div className="relative flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto no-scrollbar lg:flex-row lg:items-start lg:gap-10 lg:overflow-visible">
+        <div className="relative flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto no-scrollbar lg:flex-none lg:flex-row lg:items-end lg:gap-10 lg:overflow-visible">
           {/* Adjustments LEFT — FigBuild 2-col grid */}
           <section className="animate-pop order-last flex min-h-0 min-w-0 flex-1 flex-col lg:order-none lg:overflow-y-auto no-scrollbar lg:pt-1 lg:pr-1 lg:pb-1">
             <div className="flex min-h-0 flex-col gap-6 [@media(min-height:860px)]:gap-7">
-              <div className="grid grid-cols-1 gap-x-5 gap-y-6 sm:grid-cols-2 [@media(min-height:860px)]:gap-y-7">
+              <div className="grid grid-cols-1 gap-x-5 gap-y-7 sm:grid-cols-2 [@media(min-height:860px)]:gap-y-8">
                 <header className="hidden lg:col-start-1 lg:row-start-1 lg:block">{heading}</header>
                   <Panel title="Draw" className="sm:col-start-2 sm:row-start-1 sm:self-end">
                     <div className="grid grid-cols-4 gap-2">
@@ -447,7 +447,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                       </button>
                     </div>
                   </Panel>
-                <div className="flex min-w-0 flex-col gap-7 sm:col-start-1 sm:row-start-2 [@media(min-height:860px)]:gap-8">
+                <div className="flex min-w-0 flex-col gap-8 sm:col-start-1 sm:row-start-2 [@media(min-height:860px)]:gap-9">
                   <Panel title="Outer frame">
                     <div className="grid grid-cols-4 gap-2">
                       {(
