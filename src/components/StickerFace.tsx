@@ -1,13 +1,38 @@
 import type { StickerDef } from '../lib/badge'
 
-/** Wide sawtooth oval — stretched starburst like a die-cut seal. */
+/**
+ * Wide sawtooth oval. Vertices sit on equal arc-length so teeth stay even
+ * around the ellipse instead of bunching at the pointy ends.
+ */
 const BURST_POINTS = (() => {
-  const spikes = 38
+  const spikes = 20
+  const rx = 120
+  const ry = 47.5
+  const cx = 123
+  const cy = 50
+  const inner = 0.8
+  const verts = spikes * 2
+  const steps = verts * 40
+  const acc = [0]
+  let px = rx * Math.cos(-Math.PI / 2)
+  let py = ry * Math.sin(-Math.PI / 2)
+  for (let i = 1; i <= steps; i++) {
+    const t = -Math.PI / 2 + (i / steps) * Math.PI * 2
+    const x = rx * Math.cos(t)
+    const y = ry * Math.sin(t)
+    acc.push(acc[i - 1] + Math.hypot(x - px, y - py))
+    px = x
+    py = y
+  }
+  const total = acc[steps]
   const pts: string[] = []
-  for (let i = 0; i < spikes * 2; i++) {
-    const a = (i / (spikes * 2)) * Math.PI * 2 - Math.PI / 2
-    const r = i % 2 === 0 ? 50 : 36.5
-    pts.push(`${(50 + r * Math.cos(a)).toFixed(2)},${(50 + r * Math.sin(a)).toFixed(2)}`)
+  let j = 0
+  for (let k = 0; k < verts; k++) {
+    const target = (k / verts) * total
+    while (j < steps && acc[j] < target) j++
+    const a = -Math.PI / 2 + (j / steps) * Math.PI * 2
+    const s = k % 2 === 0 ? 1 : inner
+    pts.push(`${(cx + rx * s * Math.cos(a)).toFixed(2)},${(cy + ry * s * Math.sin(a)).toFixed(2)}`)
   }
   return pts.join(' ')
 })()
@@ -177,7 +202,7 @@ export function StickerFace({
       }}
     >
       {def.shape === 'burst' && (
-        <svg className="sticker-shape-bg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden>
+        <svg className="sticker-shape-bg" viewBox="0 0 246 100" preserveAspectRatio="none" aria-hidden>
           <polygon points={BURST_POINTS} fill={def.color} strokeLinejoin="round" />
         </svg>
       )}
