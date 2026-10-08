@@ -16,7 +16,7 @@ interface LanyardProps {
   className?: string
 }
 
-/** Printed Y-lanyard PNG, hung from the top of the badge. */
+/** Printed Y-lanyard PNG — fabric ends at the badge’s top edge. */
 export function Lanyard({ cord, scale = 1, className = '' }: LanyardProps) {
   const width = Math.round(240 * scale)
   return (
