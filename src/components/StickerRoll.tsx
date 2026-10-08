@@ -17,17 +17,17 @@ interface StickerRollProps {
 }
 
 const TAPE_H = 96
-/** Remaining spool on the right. Curve is both top and bottom so no square sits on the core. */
-const ROLL = 72
-const CURVE = 28
-const SQUASH = 0.48
+/** Remaining roll width. Only the top-right wraps; the core hangs under a straight bottom. */
+const ROLL = 74
+const CURVE = 30
+const SQUASH = 0.4
 const CUT = 2
 const PAD = 14
 const CLOSE_MS = 280
 const OPEN_MS = 560
 
 const capH = ROLL * SQUASH
-const hang = capH * 0.62
+const hang = capH * 0.7
 
 const easeOut = (t: number) => 1 - Math.pow(1 - t, 3)
 const easeIn = (t: number) => t * t * t
@@ -159,20 +159,23 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
           <span className="tape-shine" />
         </div>
         <div className="tape-roll" aria-hidden>
-          <svg className="tape-roll-paper" viewBox="0 0 72 36" preserveAspectRatio="none">
-            <ellipse cx="36" cy="18" rx="35.6" ry="17.2" fill="#ffffff" />
-          </svg>
-          <svg className="tape-roll-hole" viewBox="0 0 72 36" preserveAspectRatio="none">
+          <svg className="tape-roll-end" viewBox="0 0 74 30" preserveAspectRatio="none">
             <defs>
+              <radialGradient id="tape-paper" cx="50%" cy="30%" r="70%">
+                <stop offset="0%" stopColor="#ffffff" />
+                <stop offset="70%" stopColor="#f6f6f6" />
+                <stop offset="100%" stopColor="#e2e2e2" />
+              </radialGradient>
               <linearGradient id="tape-tube" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#9a9a9a" />
-                <stop offset="45%" stopColor="#c8c8c8" />
-                <stop offset="100%" stopColor="#f7f7f7" />
+                <stop offset="0%" stopColor="#b0b0b0" />
+                <stop offset="40%" stopColor="#d2d2d2" />
+                <stop offset="100%" stopColor="#f8f8f8" />
               </linearGradient>
             </defs>
-            <ellipse cx="36" cy="18.4" rx="24.2" ry="11.2" fill="#d6d6d6" />
-            <ellipse cx="36" cy="18.6" rx="21.4" ry="9.6" fill="url(#tape-tube)" />
-            <ellipse cx="36" cy="14.8" rx="12" ry="3" fill="#fff" opacity="0.42" />
+            <ellipse cx="37" cy="16.2" rx="36.4" ry="13.4" fill="#e8e8e8" />
+            <ellipse cx="37" cy="15" rx="36.4" ry="13.4" fill="url(#tape-paper)" />
+            <ellipse cx="37" cy="15.3" rx="24" ry="8.6" fill="url(#tape-tube)" />
+            <ellipse cx="37" cy="12.4" rx="13" ry="2.6" fill="#fff" opacity="0.5" />
           </svg>
         </div>
       </div>
