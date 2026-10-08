@@ -372,11 +372,11 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
       <div className="relative mx-auto flex min-h-0 w-full max-w-[1180px] flex-1 flex-col px-3 pt-5 pb-5 sm:px-5 sm:pt-6 lg:px-4">
         <header className="animate-pop mb-3 shrink-0 sm:mb-4 lg:hidden">{heading}</header>
 
-        <div className="relative flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto no-scrollbar lg:flex-row lg:items-stretch lg:gap-10 lg:overflow-visible">
+        <div className="relative flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto no-scrollbar lg:flex-row lg:items-start lg:gap-10 lg:overflow-visible">
           {/* Adjustments LEFT — FigBuild 2-col grid */}
-          <section className="animate-pop order-last flex min-h-0 min-w-0 flex-1 flex-col lg:order-none lg:self-stretch lg:overflow-y-auto no-scrollbar lg:pt-1 lg:pr-1 lg:pb-1 [@media(min-height:860px)]:lg:pt-3 [@media(min-height:860px)]:lg:pb-2">
-            <div className="flex min-h-0 flex-1 flex-col gap-4 [@media(min-height:860px)]:gap-5">
-              <div className="grid grid-cols-1 gap-x-5 gap-y-4 sm:grid-cols-2 [@media(min-height:860px)]:gap-y-5">
+          <section className="animate-pop order-last flex min-h-0 min-w-0 flex-1 flex-col lg:order-none lg:overflow-y-auto no-scrollbar lg:pt-1 lg:pr-1 lg:pb-1">
+            <div className="flex min-h-0 flex-col gap-6 [@media(min-height:860px)]:gap-7">
+              <div className="grid grid-cols-1 gap-x-5 gap-y-6 sm:grid-cols-2 [@media(min-height:860px)]:gap-y-7">
                 <header className="hidden lg:col-start-1 lg:row-start-1 lg:block">{heading}</header>
                   <Panel title="Draw" className="sm:col-start-2 sm:row-start-1 sm:self-end">
                     <div className="grid grid-cols-4 gap-2">
@@ -447,7 +447,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                       </button>
                     </div>
                   </Panel>
-                <div className="flex min-w-0 flex-col gap-4 sm:col-start-1 sm:row-start-2 [@media(min-height:860px)]:gap-5">
+                <div className="flex min-w-0 flex-col gap-7 sm:col-start-1 sm:row-start-2 [@media(min-height:860px)]:gap-8">
                   <Panel title="Outer frame">
                     <div className="grid grid-cols-4 gap-2">
                       {(
@@ -531,7 +531,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                   </Panel>
               </div>
 
-              <Panel title="Stickers" className="lg:mt-auto">
+              <Panel title="Stickers">
                 <div className="mb-2 flex flex-wrap items-center gap-1">
                   {TABS.map((t) => (
                     <button
@@ -563,7 +563,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
           </section>
 
           {/* Badge RIGHT */}
-          <aside className="animate-pop flex shrink-0 flex-col items-center lg:h-full lg:w-[400px] lg:justify-end xl:w-[412px]">
+          <aside className="animate-pop flex shrink-0 flex-col items-center lg:w-[400px] xl:w-[412px]">
             <div className="relative flex w-full max-w-[380px] flex-col items-center overflow-visible">
               <Lanyard cord={state.cord} scale={1.1} className="lanyard-offscreen" />
               <BadgeFace
