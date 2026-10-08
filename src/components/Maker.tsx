@@ -484,7 +484,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                           type="button"
                           aria-label={CORDS[id].label}
                           onClick={() => push({ ...state, cord: id })}
-                          className={`track-box aspect-square overflow-hidden bg-[var(--panel)] p-0 ${
+                          className={`track-box aspect-square overflow-hidden bg-[var(--panel)] px-2 pt-2 pb-0 ${
                             state.cord === id ? 'is-selected' : ''
                           }`}
                         >
