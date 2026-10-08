@@ -544,10 +544,10 @@ button.track-box:not(.is-selected):hover video {
 
 .tape-stage {
   --tape-h: 96px;
-  --roll-d: 76px;
-  --curve: 26px;
-  --cap-h: 32px;
-  --hang: 26px;
+  --roll-d: 72px;
+  --curve: 28px;
+  --cap-h: 35px;
+  --hang: 22px;
   --strip-w: 0px;
   position: relative;
   height: calc(var(--tape-h) + var(--hang));
@@ -577,7 +577,8 @@ button.track-box:not(.is-selected):hover video {
   background: #ffffff;
   border: 1px solid #f0f0f0;
   border-right: 0;
-  border-radius: 4px var(--curve) 0 4px;
+  /* Round both right corners so the spool is a cylinder, not a square on an oval. */
+  border-radius: 4px var(--curve) var(--curve) 4px;
 }
 
 /* Specular on the remaining roll, not across a huge arc. */
@@ -599,10 +600,9 @@ button.track-box:not(.is-selected):hover video {
   filter: blur(0.7px);
 }
 
-/* Core hangs below the strip and slightly overlaps the bottom edge — no square neck. */
+/* Spool is one paper object: white oval behind the rounded strip, hole in front. */
 .tape-roll {
   position: absolute;
-  z-index: 3;
   top: 0;
   right: 0;
   width: var(--roll-d);
@@ -610,18 +610,25 @@ button.track-box:not(.is-selected):hover video {
   pointer-events: none;
 }
 
-.tape-roll-end {
+.tape-roll-paper,
+.tape-roll-hole {
   position: absolute;
-  z-index: 3;
   left: 0;
   right: 0;
-  /* Most of the oval hangs below; a thin overlap joins it to the strip. */
-  top: calc(var(--tape-h) - var(--cap-h) * 0.22);
+  top: calc(var(--tape-h) - var(--cap-h) * 0.42);
   width: 100%;
   height: var(--cap-h);
   display: block;
   overflow: visible;
+}
+
+.tape-roll-paper {
+  z-index: 1;
   filter: drop-shadow(0 5px 6px rgba(17, 17, 17, 0.14));
+}
+
+.tape-roll-hole {
+  z-index: 3;
 }
 
 .tape-track {
