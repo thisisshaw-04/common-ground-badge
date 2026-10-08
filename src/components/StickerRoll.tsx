@@ -16,13 +16,13 @@ interface StickerRollProps {
   onPeelStart: (def: StickerDef, e: ReactPointerEvent<HTMLButtonElement>) => void
 }
 
-const TAPE_H = 96
+const TAPE_H = 84
 /** Remaining roll width. Only the top-right wraps; the core hangs under a straight bottom. */
-const ROLL = 74
-const CURVE = 30
+const ROLL = 66
+const CURVE = 26
 const SQUASH = 0.4
 const CUT = 2
-const PAD = 14
+const PAD = 12
 const CLOSE_MS = 280
 const OPEN_MS = 560
 
@@ -159,7 +159,7 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
           <span className="tape-shine" />
         </div>
         <div className="tape-roll" aria-hidden>
-          <svg className="tape-roll-end" viewBox="0 0 74 30" preserveAspectRatio="none">
+          <svg className="tape-roll-end" viewBox="0 0 66 26" preserveAspectRatio="none">
             <defs>
               <radialGradient id="tape-paper" cx="50%" cy="30%" r="70%">
                 <stop offset="0%" stopColor="#ffffff" />
@@ -172,10 +172,10 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
                 <stop offset="100%" stopColor="#f8f8f8" />
               </linearGradient>
             </defs>
-            <ellipse cx="37" cy="16.2" rx="36.4" ry="13.4" fill="#e8e8e8" />
-            <ellipse cx="37" cy="15" rx="36.4" ry="13.4" fill="url(#tape-paper)" />
-            <ellipse cx="37" cy="15.3" rx="24" ry="8.6" fill="url(#tape-tube)" />
-            <ellipse cx="37" cy="12.4" rx="13" ry="2.6" fill="#fff" opacity="0.5" />
+            <ellipse cx="33" cy="14.1" rx="32.4" ry="11.6" fill="#e8e8e8" />
+            <ellipse cx="33" cy="13" rx="32.4" ry="11.6" fill="url(#tape-paper)" />
+            <ellipse cx="33" cy="13.3" rx="21.4" ry="7.4" fill="url(#tape-tube)" />
+            <ellipse cx="33" cy="10.7" rx="11.6" ry="2.2" fill="#fff" opacity="0.5" />
           </svg>
         </div>
       </div>

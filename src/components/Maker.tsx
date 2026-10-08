@@ -27,9 +27,9 @@ import { CordSwatch, Lanyard } from './Lanyard'
 import { StickerFace } from './StickerFace'
 import { StickerRoll } from './StickerRoll'
 
-const BADGE_W = 410
-const BODY_H = 172
-const FOOT_H = 223
+const BADGE_W = 368
+const BODY_H = 154
+const FOOT_H = 200
 
 interface MakerProps {
   state: BadgeState
@@ -355,7 +355,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
       >
         ← Back
       </button>
-      <h1 className="mt-1.5 text-[clamp(1.5rem,2.35vw,2.2rem)] leading-[1.1] font-medium tracking-[-0.025em] text-black">
+      <h1 className="mt-1 text-[clamp(1.3rem,1.9vw,1.75rem)] leading-[1.12] font-medium tracking-[-0.025em] text-black">
         Get Creative with
         <br />
         Your Common Ground
@@ -369,17 +369,17 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
     <div
       className={`page-fig relative flex h-dvh flex-col overflow-hidden${isPeeling ? ' is-peeling-sticker' : ''}`}
     >
-      <div className="relative mx-auto flex min-h-0 w-full max-w-[1440px] flex-1 flex-col px-2 pt-3 pb-4 sm:px-4 sm:pt-4 lg:px-5">
-        <header className="animate-pop mb-2 shrink-0 sm:mb-3 lg:hidden">{heading}</header>
+      <div className="relative mx-auto flex min-h-0 w-full max-w-[1180px] flex-1 flex-col px-3 pt-5 pb-5 sm:px-5 sm:pt-6 lg:px-4">
+        <header className="animate-pop mb-3 shrink-0 sm:mb-4 lg:hidden">{heading}</header>
 
-        <div className="relative flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto no-scrollbar lg:flex-row lg:items-stretch lg:gap-8 lg:overflow-visible">
+        <div className="relative flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto no-scrollbar lg:flex-row lg:items-stretch lg:gap-10 lg:overflow-visible">
           {/* Adjustments LEFT — FigBuild 2-col grid */}
-          <section className="animate-pop order-last flex min-h-0 min-w-0 flex-1 flex-col lg:order-none lg:self-stretch lg:overflow-y-auto no-scrollbar lg:pt-4 lg:pr-2 lg:pb-1 [@media(min-height:860px)]:lg:pt-8 [@media(min-height:860px)]:lg:pb-4">
-            <div className="flex min-h-0 flex-1 flex-col gap-5 [@media(min-height:860px)]:gap-6">
-              <div className="grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2 [@media(min-height:860px)]:gap-y-6">
+          <section className="animate-pop order-last flex min-h-0 min-w-0 flex-1 flex-col lg:order-none lg:self-stretch lg:overflow-y-auto no-scrollbar lg:pt-1 lg:pr-1 lg:pb-1 [@media(min-height:860px)]:lg:pt-3 [@media(min-height:860px)]:lg:pb-2">
+            <div className="flex min-h-0 flex-1 flex-col gap-4 [@media(min-height:860px)]:gap-5">
+              <div className="grid grid-cols-1 gap-x-5 gap-y-4 sm:grid-cols-2 [@media(min-height:860px)]:gap-y-5">
                 <header className="hidden lg:col-start-1 lg:row-start-1 lg:block">{heading}</header>
                   <Panel title="Draw" className="sm:col-start-2 sm:row-start-1 sm:self-end">
-                    <div className="grid grid-cols-4 gap-3">
+                    <div className="grid grid-cols-4 gap-2">
                       <button
                         type="button"
                         aria-label="Thin brush"
@@ -392,7 +392,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                           brush === 1 && stroke === 'round' && mode === 'draw' ? 'is-selected' : ''
                         }`}
                       >
-                        <span className="rounded-full bg-black" style={{ width: 8, height: 8 }} />
+                        <span className="rounded-full bg-black" style={{ width: 7, height: 7 }} />
                       </button>
                       <button
                         type="button"
@@ -410,7 +410,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                           stroke === 'sketch' && mode === 'draw' ? 'is-selected' : ''
                         }`}
                       >
-                        <svg viewBox="0 0 28 28" className="h-9 w-9" aria-hidden>
+                        <svg viewBox="0 0 28 28" className="h-7 w-7" aria-hidden>
                           <path
                             d="M3 17.2 6.2 12.4 8.1 16.8 11.4 10.6 13.8 17.4 17.2 11.8 19.6 16.1 22.8 12.2 25.2 16.6"
                             fill="none"
@@ -433,7 +433,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                           brush === 2 && stroke === 'round' && mode === 'draw' ? 'is-selected' : ''
                         }`}
                       >
-                        <span className="rounded-full bg-black" style={{ width: 14, height: 14 }} />
+                        <span className="rounded-full bg-black" style={{ width: 12, height: 12 }} />
                       </button>
                       <button
                         type="button"
@@ -447,13 +447,13 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                           brush === 3 && stroke === 'round' && mode === 'draw' ? 'is-selected' : ''
                         }`}
                       >
-                        <span className="rounded-full bg-black" style={{ width: 20, height: 20 }} />
+                        <span className="rounded-full bg-black" style={{ width: 17, height: 17 }} />
                       </button>
                     </div>
                   </Panel>
-                <div className="flex min-w-0 flex-col gap-5 sm:col-start-1 sm:row-start-2 [@media(min-height:860px)]:gap-6">
+                <div className="flex min-w-0 flex-col gap-4 sm:col-start-1 sm:row-start-2 [@media(min-height:860px)]:gap-5">
                   <Panel title="Outer frame">
-                    <div className="grid grid-cols-4 gap-3">
+                    <div className="grid grid-cols-4 gap-2">
                       {(
                         [
                           ['none', 'None'],
@@ -477,14 +477,14 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                     </div>
                   </Panel>
                   <Panel title="Cords">
-                    <div className="grid grid-cols-4 gap-3">
+                    <div className="grid grid-cols-4 gap-2">
                       {(Object.keys(CORDS) as CordId[]).map((id) => (
                         <button
                           key={id}
                           type="button"
                           aria-label={CORDS[id].label}
                           onClick={() => push({ ...state, cord: id })}
-                          className={`track-box aspect-square overflow-hidden bg-[var(--panel)] px-2 pt-2 pb-0 ${
+                          className={`track-box aspect-square overflow-hidden bg-[var(--panel)] px-1.5 pt-1.5 pb-0 ${
                             state.cord === id ? 'is-selected' : ''
                           }`}
                         >
@@ -495,7 +495,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                   </Panel>
                 </div>
                   <Panel title="Foot video" fill className="sm:col-start-2 sm:row-start-2">
-                    <div className="grid min-h-0 flex-1 auto-rows-fr grid-cols-2 gap-3">
+                    <div className="grid min-h-0 flex-1 auto-rows-fr grid-cols-2 gap-2">
                       {FOOT_VIDEO_ORDER.map((id) => {
                         const v = FOOT_VIDEOS[id]
                         return (
@@ -536,7 +536,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
               </div>
 
               <Panel title="Stickers" className="lg:mt-auto">
-                <div className="mb-3 flex flex-wrap items-center gap-1.5">
+                <div className="mb-2 flex flex-wrap items-center gap-1">
                   {TABS.map((t) => (
                     <button
                       key={t.id}
@@ -545,7 +545,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                         setTab(t.id)
                         setMode('stick')
                       }}
-                      className={`option-btn border border-black/20 bg-white px-2.5 py-1.5 font-mono text-[10px] tracking-wide text-[var(--muted)] ${
+                      className={`option-btn border border-black/20 bg-white px-2 py-1 font-mono text-[10px] tracking-wide text-[var(--muted)] ${
                         tab === t.id ? 'is-selected text-black' : ''
                       }`}
                     >
@@ -567,9 +567,9 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
           </section>
 
           {/* Badge RIGHT */}
-          <aside className="animate-pop flex shrink-0 flex-col items-center lg:h-full lg:w-[448px] lg:justify-end xl:w-[468px]">
-            <div className="relative flex w-full max-w-[420px] flex-col items-center overflow-visible">
-              <Lanyard cord={state.cord} scale={1.22} className="lanyard-offscreen" />
+          <aside className="animate-pop flex shrink-0 flex-col items-center lg:h-full lg:w-[400px] lg:justify-end xl:w-[412px]">
+            <div className="relative flex w-full max-w-[380px] flex-col items-center overflow-visible">
+              <Lanyard cord={state.cord} scale={1.1} className="lanyard-offscreen" />
               <BadgeFace
                 badgeRef={badgeRef}
                 width={BADGE_W}
@@ -586,7 +586,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                       onBlur={() => push(state)}
                       placeholder="YOUR NAME"
                       maxLength={22}
-                      className="poster-name-input absolute top-2 left-1/2 z-20 w-[84%] -translate-x-1/2 bg-transparent text-center text-[1.55rem] font-bold tracking-[-0.03em] text-black uppercase outline-none placeholder:font-bold placeholder:text-black/25"
+                      className="poster-name-input absolute top-2 left-1/2 z-20 w-[84%] -translate-x-1/2 bg-transparent text-center text-[1.35rem] font-bold tracking-[-0.03em] text-black uppercase outline-none placeholder:font-bold placeholder:text-black/25"
                     />
 
                     <canvas
@@ -632,27 +632,27 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                 })}
               />
 
-              <div className="mt-4 flex gap-2" style={{ width: BADGE_W, maxWidth: '100%' }}>
+              <div className="mt-3 flex gap-2" style={{ width: BADGE_W, maxWidth: '100%' }}>
                 <button
                   type="button"
                   onClick={undo}
                   disabled={!canUndo}
                   title="Undo (Ctrl/⌘ Z)"
-                  className="option-btn badge-edge-btn min-w-0 flex-1 bg-white py-2.5 text-sm font-semibold text-black disabled:pointer-events-none disabled:border-black/20 disabled:text-black/30"
+                  className="option-btn badge-edge-btn min-w-0 flex-1 bg-white py-2 text-[13px] font-semibold text-black disabled:pointer-events-none disabled:border-black/20 disabled:text-black/30"
                 >
                   Undo
                 </button>
                 <button
                   type="button"
                   onClick={clearAll}
-                  className="option-btn badge-edge-btn min-w-0 flex-1 bg-white py-2.5 text-sm font-semibold text-black"
+                  className="option-btn badge-edge-btn min-w-0 flex-1 bg-white py-2 text-[13px] font-semibold text-black"
                 >
                   Clear
                 </button>
                 <button
                   type="button"
                   onClick={onDone}
-                  className="option-btn btn-done badge-edge-btn min-w-0 flex-[1.4] bg-black py-2.5 text-sm font-bold text-white"
+                  className="option-btn btn-done badge-edge-btn min-w-0 flex-[1.4] bg-black py-2 text-[13px] font-bold text-white"
                 >
                   I&apos;m done!
                 </button>
