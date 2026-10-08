@@ -307,7 +307,7 @@ button.track-box:not(.is-selected):hover video {
   display: block;
   width: 100%;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.05;
   letter-spacing: 0.02em;
   text-align: center;
