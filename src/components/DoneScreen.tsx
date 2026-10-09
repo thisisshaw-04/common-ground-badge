@@ -64,72 +64,71 @@ export function DoneScreen({ state, onEdit }: DoneProps) {
 
   return (
     <div className="done-stage">
-      <section className="done-previews" aria-label="Story overlay">
-        {STORY_OVERLAY_ORDER.map((id) => {
-          const selected = overlay === id
-          return (
-            <div key={id} className="done-option-wrap">
-              <div className="done-option-head">
-                {id === 'dark' ? (
-                  <button
-                    type="button"
-                    onClick={onEdit}
-                    className="done-edit panel-title text-black/55 transition-colors hover:text-black"
-                  >
-                    ← Keep editing
-                  </button>
-                ) : null}
+      <button
+        type="button"
+        onClick={onEdit}
+        className="done-edit panel-title text-black/55 transition-colors hover:text-black"
+      >
+        ← Keep editing
+      </button>
+
+      <div className="done-cluster">
+        <section className="done-previews" aria-label="Story overlay">
+          {STORY_OVERLAY_ORDER.map((id) => {
+            const selected = overlay === id
+            return (
+              <div key={id} className="done-option-wrap">
                 <span className="done-option-tag panel-title">
                   {STORY_OVERLAYS[id].previewLabel}
                 </span>
-              </div>
-              <button
-                type="button"
-                data-story={id}
-                onClick={() => setOverlay(id)}
-                className={`done-option ${selected ? 'is-current' : ''}`}
-                aria-pressed={selected}
-                aria-label={`${STORY_OVERLAYS[id].label} overlay`}
-              >
-                <div className="done-option-frame">
-                  <StoryPoster state={state} overlay={id} format="story" />
-                </div>
-              </button>
-            </div>
-          )
-        })}
-      </section>
-
-      <aside className="done-copy">
-        <div className="done-copy-inner">
-          <h1 className="done-title">
-            Get in, makers.
-            <br />
-            We&apos;re going building.
-          </h1>
-          <p className="done-lede">Now let&apos;s make something happen!</p>
-          <p className="done-follow">
-            Show off your badge. Tag us with{' '}
-            <span className="done-hash">#CommonGround</span> on LinkedIn or IG.
-          </p>
-          <div className="done-actions">
-            {DOWNLOADS.map((item) => {
-              const key = downloadKey(item.overlay, item.format)
-              return (
                 <button
-                  key={key}
                   type="button"
-                  disabled={busy !== null}
-                  onClick={() => void download(item.overlay, item.format)}
-                  className="done-download option-btn"
+                  data-story={id}
+                  onClick={() => setOverlay(id)}
+                  className={`done-option ${selected ? 'is-current' : ''}`}
+                  aria-pressed={selected}
+                  aria-label={`${STORY_OVERLAYS[id].label} overlay`}
                 >
-                  {busy === key ? 'Recording…' : item.label}
+                  <div className="done-option-frame">
+                    <StoryPoster state={state} overlay={id} format="story" />
+                  </div>
                 </button>
-              )
-            })}
+              </div>
+            )
+          })}
+        </section>
+
+        <aside className="done-copy">
+          <div className="done-copy-inner">
+            <h1 className="done-title">
+              Get in, makers.
+              <br />
+              We&apos;re going building.
+            </h1>
+            <p className="done-lede">Now let&apos;s make something happen!</p>
+            <p className="done-follow">
+              Show off your badge. Tag us with{' '}
+              <span className="done-hash">#CommonGround</span> on LinkedIn or IG.
+            </p>
+            <div className="done-actions">
+              {DOWNLOADS.map((item) => {
+                const key = downloadKey(item.overlay, item.format)
+                return (
+                  <button
+                    key={key}
+                    type="button"
+                    disabled={busy !== null}
+                    onClick={() => void download(item.overlay, item.format)}
+                    className="done-download option-btn"
+                  >
+                    {busy === key ? 'Recording…' : item.label}
+                  </button>
+                )
+              })}
+            </div>
           </div>
-        </div>
-      </aside>
+        </aside>
+      </div>
 
       <div className="done-capture-well" aria-hidden>
         {STORY_OVERLAY_ORDER.map((id) => (

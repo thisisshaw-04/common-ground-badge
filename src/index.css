@@ -160,19 +160,45 @@ textarea {
   --copy-w: 20.5rem;
   position: relative;
   display: grid;
-  grid-template-columns:
-    minmax(0, calc(var(--preview-h) * 9 / 16 * 2 + var(--preview-gap)))
-    minmax(16.75rem, var(--copy-w));
-  justify-content: center;
+  grid-template-columns: minmax(max-content, 1fr) auto minmax(0, 1fr);
+  justify-content: stretch;
   align-content: center;
   align-items: stretch;
-  column-gap: clamp(1.75rem, 3vw, 3rem);
+  column-gap: 0;
   height: 100dvh;
   min-height: 100dvh;
   overflow: hidden;
   padding-inline: var(--done-gutter);
   background: #f2f2f2;
   box-sizing: border-box;
+}
+
+.done-edit.panel-title {
+  grid-column: 1;
+  grid-row: 1;
+  justify-self: start;
+  align-self: start;
+  z-index: 3;
+  margin: 0 1.15rem 0 0;
+  transform: translateY(calc(-100% - 0.45rem));
+  cursor: pointer;
+}
+
+.done-edit.panel-title:hover {
+  color: #111;
+  text-decoration: none;
+}
+
+.done-cluster {
+  grid-column: 2;
+  grid-row: 1;
+  display: grid;
+  grid-template-columns:
+    minmax(0, calc(var(--preview-h) * 9 / 16 * 2 + var(--preview-gap)))
+    minmax(16.75rem, var(--copy-w));
+  align-items: stretch;
+  column-gap: clamp(1.75rem, 3vw, 3rem);
+  min-width: 0;
 }
 
 .done-previews {
@@ -198,30 +224,6 @@ textarea {
   align-items: stretch;
 }
 
-.done-option-head {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 100%;
-  z-index: 3;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  column-gap: 1.15rem;
-  row-gap: 0.15rem;
-  margin-bottom: 0.45rem;
-}
-
-.done-edit.panel-title {
-  position: static;
-  cursor: pointer;
-}
-
-.done-edit.panel-title:hover {
-  color: #111;
-  text-decoration: none;
-}
-
 .done-option {
   display: flex;
   width: 100%;
@@ -236,8 +238,13 @@ textarea {
   text-align: left;
 }
 
-.done-option-tag {
-  margin: 0;
+.done-option-tag.panel-title {
+  position: absolute;
+  left: 0;
+  bottom: 100%;
+  z-index: 3;
+  margin: 0 0 0.45rem;
+  width: auto;
 }
 
 .done-option-frame {
@@ -261,6 +268,8 @@ textarea {
   position: fixed;
   left: 0;
   top: 0;
+  grid-column: 1;
+  grid-row: 1;
   z-index: -1;
   display: flex;
   pointer-events: none;
@@ -379,27 +388,26 @@ textarea {
     gap: 0;
   }
 
+  .done-cluster {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    flex-direction: column;
+  }
+
   .done-previews {
-    position: relative;
     width: 100%;
     height: auto;
     min-height: 0;
     justify-content: space-between;
-    padding: 2.85rem 0 1.75rem;
-  }
-
-  .done-option-wrap {
-    position: static;
+    padding: 1.75rem 0;
   }
 
   .done-edit.panel-title {
-    position: absolute;
-    left: 0;
-    top: 1.15rem;
-  }
-
-  .done-option-head {
     position: static;
+    transform: none;
+    align-self: flex-start;
+    margin: 1.15rem 0 0;
   }
 
   .done-copy {
