@@ -160,7 +160,7 @@ textarea {
   position: relative;
   display: flex;
   justify-content: center;
-  align-items: stretch;
+  align-items: center;
   gap: clamp(1.75rem, 3vw, 3rem);
   height: 100dvh;
   min-height: 100dvh;
@@ -188,10 +188,10 @@ textarea {
   width: calc(var(--preview-h) * 9 / 16 * 2 + var(--preview-gap));
   max-width: 100%;
   flex: 0 1 auto;
-  align-items: center;
+  align-items: stretch;
   justify-content: flex-start;
   gap: var(--preview-gap);
-  height: 100%;
+  height: var(--preview-h);
   min-height: 0;
   min-width: 0;
   padding: 0;
@@ -270,8 +270,10 @@ textarea {
   width: min(20.5rem, 100%);
   flex: 0 1 20.5rem;
   flex-direction: column;
+  align-self: center;
   align-items: stretch;
-  justify-content: center;
+  justify-content: flex-start;
+  height: var(--preview-h);
   min-width: 16.75rem;
   padding: 0;
 }
@@ -279,6 +281,8 @@ textarea {
 .done-copy-inner {
   display: flex;
   width: 100%;
+  height: 100%;
+  min-height: 0;
   flex-direction: column;
   align-items: stretch;
   text-align: left;
@@ -318,7 +322,8 @@ textarea {
   display: flex;
   flex-direction: column;
   gap: 0.7rem;
-  margin-top: 1.85rem;
+  margin-top: auto;
+  padding-top: 1.85rem;
 }
 
 .done-download {
@@ -375,13 +380,21 @@ textarea {
     flex: none;
     width: 100%;
     min-width: 0;
+    height: auto;
+    align-self: stretch;
     align-items: center;
     padding: 1.15rem 0 2.6rem;
   }
 
   .done-copy-inner {
+    height: auto;
     text-align: center;
     align-items: stretch;
+  }
+
+  .done-actions {
+    margin-top: 1.85rem;
+    padding-top: 0;
   }
 
   .done-lede,
