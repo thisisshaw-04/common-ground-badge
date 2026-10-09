@@ -260,15 +260,6 @@ textarea {
   text-decoration: underline;
 }
 
-.story-export {
-  position: fixed;
-  top: 0;
-  left: -14000px;
-  width: 1080px;
-  height: 1920px;
-  pointer-events: none;
-}
-
 @media (max-width: 900px) {
   .done-stage {
     flex-direction: column;

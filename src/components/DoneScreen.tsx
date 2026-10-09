@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { toPng } from 'html-to-image'
 import {
   STORY_OVERLAYS,
@@ -14,7 +14,6 @@ interface DoneProps {
 }
 
 const EXPORT_W = 1080
-const EXPORT_H = 1920
 
 function freezeVideos(root: HTMLElement) {
   const swaps: { video: HTMLVideoElement; img: HTMLImageElement }[] = []
@@ -44,20 +43,21 @@ function freezeVideos(root: HTMLElement) {
 export function DoneScreen({ state, onEdit }: DoneProps) {
   const [overlay, setOverlay] = useState<StoryOverlayId>('dark')
   const [busy, setBusy] = useState(false)
-  const exportRef = useRef<HTMLDivElement>(null)
 
   const download = async () => {
-    const node = exportRef.current
+    const node = document.querySelector(
+      '.done-option.is-current .done-option-frame',
+    ) as HTMLElement | null
     if (!node || busy) return
     setBusy(true)
     try {
-      await new Promise((r) => setTimeout(r, 120))
+      await new Promise((r) => setTimeout(r, 80))
       const restore = freezeVideos(node)
+      const ratio = EXPORT_W / Math.max(1, node.clientWidth)
       const url = await toPng(node, {
-        width: EXPORT_W,
-        height: EXPORT_H,
-        pixelRatio: 1,
+        pixelRatio: ratio,
         cacheBust: true,
+        backgroundColor: overlay === 'dark' ? '#0b0b0b' : '#c8c8c8',
       })
       restore()
       const a = document.createElement('a')
@@ -122,14 +122,6 @@ export function DoneScreen({ state, onEdit }: DoneProps) {
           </button>
         </div>
       </aside>
-
-      <div
-        ref={exportRef}
-        className="story-export"
-        aria-hidden
-      >
-        <StoryPoster state={state} overlay={overlay} />
-      </div>
     </div>
   )
 }
