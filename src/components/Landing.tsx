@@ -5,7 +5,7 @@ interface LandingProps {
   onStart: () => void
 }
 
-const BG = `${import.meta.env.BASE_URL}landing-scan.webp`
+const BG = `${import.meta.env.BASE_URL}landing-scan-2.webp`
 const BADGE_W = 320
 const BODY_H = 100
 const FOOT_H = 188
