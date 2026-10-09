@@ -175,8 +175,8 @@ textarea {
 }
 
 .maker-stage {
-  /* Width + height constrained so short phones still show the full badge + cord. */
-  --badge-s: max(0.42, min(0.76, (100vw - 2.25rem) / 368px, (100dvh - 22rem) / 520px));
+  /* Full badge card is ~534px tall (lockup + body + foot), not just body+foot. */
+  --badge-s: max(0.38, min(0.74, (100vw - 2.25rem) / 368px, (100dvh - 24rem) / 640px));
   flex: 1 1 auto;
   min-height: 0;
   display: flex;
@@ -190,10 +190,11 @@ textarea {
 
 /* Slot owns the scaled layout size; cluster paints at native size then scales. */
 .maker-badge-slot {
+  --badge-native-h: 534px;
   position: relative;
   flex: 0 0 auto;
   width: 368px;
-  height: 354px;
+  height: var(--badge-native-h);
   overflow: visible;
 }
 
@@ -203,9 +204,9 @@ textarea {
 }
 
 .maker-mobile .maker-badge-slot {
-  /* badge + visible cord stump */
+  /* badge + visible cord stump above the clip */
   width: calc(368px * var(--badge-s));
-  height: calc((354px + 96px) * var(--badge-s));
+  height: calc((var(--badge-native-h) + 88px) * var(--badge-s));
 }
 
 .maker-mobile .maker-badge-cluster {
