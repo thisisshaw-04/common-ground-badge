@@ -181,7 +181,7 @@ textarea {
   align-self: start;
   z-index: 3;
   /* In the left margin, with a little breathing room from the edge. */
-  margin: 0 0 0 calc(1.75rem - var(--done-gutter));
+  margin: 0 0 0 calc(2.65rem - var(--done-gutter));
   transform: translateY(calc(-100% - 0.45rem));
   cursor: pointer;
 }
