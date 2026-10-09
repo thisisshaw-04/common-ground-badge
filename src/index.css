@@ -1245,12 +1245,12 @@ button.track-box:not(.is-selected):hover video {
 }
 
 .tape-stage {
-  --tape-h: 62px;
-  --roll-now: 64px;
-  --cap-now: 20px;
-  --curve: 18px;
-  --overlap: 7px;
-  --hang: 12px;
+  --tape-h: 50px;
+  --roll-now: 58px;
+  --cap-now: 18px;
+  --curve: 16px;
+  --overlap: 6px;
+  --hang: 10px;
   --strip-w: 0px;
   position: relative;
   height: calc(var(--tape-h) + var(--hang));
@@ -1379,8 +1379,8 @@ button.track-box:not(.is-selected):hover video {
   display: flex;
   flex-shrink: 0;
   align-items: center;
-  gap: 0.55rem;
-  padding-right: 0.55rem;
+  gap: 0.4rem;
+  padding-right: 0.4rem;
 }
 
 .tape-item {
@@ -1414,22 +1414,33 @@ button.track-box:not(.is-selected):hover video {
 }
 
 .tape-item .sticker-nice-flower {
-  min-width: 3.25rem;
-  min-height: 3.25rem;
+  min-width: 2.85rem;
+  min-height: 2.85rem;
 }
 
 .tape-item .sticker-nice-star {
-  min-width: 3.5rem;
-  min-height: 3.5rem;
+  min-width: 3rem;
+  min-height: 3rem;
 }
 
 .tape-item .sticker-nice-burst {
-  min-width: 5.4rem;
-  min-height: 2.2rem;
+  min-width: 4.2rem;
+  min-height: 1.75rem;
+}
+
+.tape-item .sticker-nice-bump {
+  --bump: 1.35rem;
+  --bump-out: 0.45rem;
+  padding: 0.35rem 0.85rem;
+}
+
+.tape-item .sticker-nice-sun {
+  min-width: 2.85rem;
+  min-height: 2.85rem;
 }
 
 .tape-item .sticker-label {
-  font-size: 11px;
+  font-size: 10px;
 }
 
 .sticker-peel-ghost {

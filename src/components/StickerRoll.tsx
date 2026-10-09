@@ -17,22 +17,22 @@ interface StickerRollProps {
   onPeelStart: (def: StickerDef, e: ReactPointerEvent<HTMLButtonElement>) => void
 }
 
-/** Slimmer strip — stickers still fit via measure() scale. */
-const TAPE_H = 62
+/** Slim strip — every category set scales to fit height + visible width. */
+const TAPE_H = 50
 /** Sideways 3/4 roll: wrap on the right, shiny oval core hanging under that end. */
-const CURVE = 18
-const OVERLAP = 7
+const CURVE = 16
+const OVERLAP = 6
 const CUT = 2
-const PAD = 10
+const PAD = 8
 const CLOSE_MS = 280
 const OPEN_MS = 560
 /** Rest spool; outer rim widens a little while winding. Hub size stays fixed. */
-const ROLL_W_OUT = 64
-const ROLL_W_IN = 74
-const CAP_H = 20
+const ROLL_W_OUT = 58
+const ROLL_W_IN = 68
+const CAP_H = 18
 /** Fixed hub width — never stretches with the rim. */
-const HUB_W = 24
-const hang = 12
+const HUB_W = 22
+const hang = 10
 
 const easeOut = (t: number) => 1 - Math.pow(1 - t, 3)
 const easeIn = (t: number) => t * t * t
@@ -82,8 +82,12 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
       const setW = set?.offsetWidth ?? 0
       const setH = set?.offsetHeight ?? 0
       full.current = Math.max(0, stage.clientWidth - CUT)
-      const roomH = TAPE_H - 10
-      const scale = Math.min(1, setH ? roomH / setH : 1)
+      // Fit the whole category set inside the flat strip (before the wrap).
+      const roomH = Math.max(24, TAPE_H - 8)
+      const roomW = Math.max(80, full.current - ROLL_W_OUT * 0.55)
+      const scaleH = setH ? roomH / setH : 1
+      const scaleW = setW ? roomW / setW : 1
+      const scale = Math.min(1, scaleH, scaleW)
       const span = Math.max(setW * scale, 1)
       const copies = Math.max(2, Math.ceil((full.current + ROLL_W_IN * 0.6) / span))
       setFit((f) =>
