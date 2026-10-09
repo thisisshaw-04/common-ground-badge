@@ -2,9 +2,10 @@ import { toCanvas } from 'html-to-image'
 import {
   AudioBufferSource,
   BufferTarget,
-  CanvasSource,
   Mp4OutputFormat,
   Output,
+  VideoSample,
+  VideoSampleSource,
   getFirstEncodableAudioCodec,
   getFirstEncodableVideoCodec,
 } from 'mediabunny'
@@ -259,8 +260,33 @@ function silentAudio(seconds: number) {
   return ctx.createBuffer(2, frames, AAC_RATE)
 }
 
+/** BT.601 limited-range I420. Phones want yuv420p (tv), not jpeg-range yuvj420p. */
+function fillI420(rgba: Uint8ClampedArray, width: number, height: number, out: Uint8Array) {
+  const ySize = width * height
+  const cW = width >> 1
+  const cH = height >> 1
+  const uOff = ySize
+  const vOff = ySize + cW * cH
+  let yi = 0
+  for (let row = 0; row < height; row++) {
+    for (let col = 0; col < width; col++) {
+      const p = (row * width + col) << 2
+      const r = rgba[p]
+      const g = rgba[p + 1]
+      const b = rgba[p + 2]
+      out[yi++] = ((47 * r + 157 * g + 16 * b) >> 8) + 16
+      if ((row & 1) === 0 && (col & 1) === 0) {
+        const ci = (row >> 1) * cW + (col >> 1)
+        out[uOff + ci] = ((-26 * r - 87 * g + 112 * b) >> 8) + 128
+        out[vOff + ci] = ((112 * r - 102 * g - 10 * b) >> 8) + 128
+      }
+    }
+  }
+}
+
 async function encodeMp4Once(
   canvas: HTMLCanvasElement,
+  ctx: CanvasRenderingContext2D,
   paint: () => void,
   primary: HTMLVideoElement | null,
   clip: number,
@@ -280,7 +306,7 @@ async function encodeMp4Once(
 
   const target = new BufferTarget()
   const output = new Output({ format, target })
-  const source = new CanvasSource(canvas, {
+  const source = new VideoSampleSource({
     codec,
     bitrate: tryCfg.bitrate,
     keyFrameInterval: 1,
@@ -311,13 +337,34 @@ async function encodeMp4Once(
   }
   signal.addEventListener('abort', abort)
 
+  const i420 = new Uint8Array(
+    canvas.width * canvas.height + 2 * (canvas.width >> 1) * (canvas.height >> 1),
+  )
   const frameCount = Math.max(1, Math.round(clip * FPS))
   try {
     for (let i = 0; i < frameCount; i++) {
       if (signal.aborted) throw new Error('MP4 encoding cancelled.')
       if (primary) await seekVideo(primary, (i / FPS) % Math.max(primary.duration || clip, 0.1))
       paint()
-      await source.add(i / FPS, 1 / FPS)
+      fillI420(ctx.getImageData(0, 0, canvas.width, canvas.height).data, canvas.width, canvas.height, i420)
+      const sample = new VideoSample(i420.slice(), {
+        format: 'I420',
+        codedWidth: canvas.width,
+        codedHeight: canvas.height,
+        timestamp: i / FPS,
+        duration: 1 / FPS,
+        colorSpace: {
+          primaries: 'bt709',
+          transfer: 'bt709',
+          matrix: 'bt709',
+          fullRange: false,
+        },
+      })
+      try {
+        await source.add(sample)
+      } finally {
+        sample.close()
+      }
     }
     await output.finalize()
   } catch (err) {
@@ -336,6 +383,7 @@ async function encodeMp4Once(
 
 async function encodeMp4(
   canvas: HTMLCanvasElement,
+  ctx: CanvasRenderingContext2D,
   paint: () => void,
   primary: HTMLVideoElement | null,
   clip: number,
@@ -344,7 +392,7 @@ async function encodeMp4(
   let last: unknown
   for (const tryCfg of AVC_TRIES) {
     try {
-      return await encodeMp4Once(canvas, paint, primary, clip, signal, tryCfg)
+      return await encodeMp4Once(canvas, ctx, paint, primary, clip, signal, tryCfg)
     } catch (err) {
       last = err
       if (signal.aborted) throw err
@@ -518,7 +566,7 @@ export async function exportStoryVideo(node: HTMLElement, opts: StoryExportOptio
   const canvas = document.createElement('canvas')
   canvas.width = width
   canvas.height = height
-  const ctx = canvas.getContext('2d', { alpha: false, colorSpace: 'srgb' })
+  const ctx = canvas.getContext('2d', { alpha: false, colorSpace: 'srgb', willReadFrequently: true })
   if (!ctx) throw new Error('Could not open a canvas to record.')
 
   const paint = () =>
@@ -535,7 +583,7 @@ export async function exportStoryVideo(node: HTMLElement, opts: StoryExportOptio
     let blob: Blob | null = null
     try {
       blob = await withTimeout(
-        (signal) => encodeMp4(canvas, paint, primary, clip, signal),
+        (signal) => encodeMp4(canvas, ctx, paint, primary, clip, signal),
         MP4_BUDGET_MS,
         'MP4 encoding took too long.',
       )
