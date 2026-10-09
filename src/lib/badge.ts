@@ -127,6 +127,8 @@ export function storyOverlaySrc(id: StoryOverlayId) {
 export const BADGE_LAYOUT = {
   width: 368,
   bodyHeight: 154,
+  /** Backing-store multiplier so doodles stay sharp on retina and 1080p exports. */
+  drawScale: 3,
   footHeight: 200,
   lanyardScale: 1.1,
 } as const

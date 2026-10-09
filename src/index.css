@@ -1222,6 +1222,10 @@ button.track-box:not(.is-selected):hover video {
   font-family: var(--font-body);
 }
 
+.badge-doodle {
+  image-rendering: auto;
+}
+
 .poster-foot {
   border-top: none !important;
 }

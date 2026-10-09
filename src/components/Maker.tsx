@@ -31,6 +31,13 @@ import { StickerRoll } from './StickerRoll'
 const BADGE_W = BADGE_LAYOUT.width
 const BODY_H = BADGE_LAYOUT.bodyHeight
 const FOOT_H = BADGE_LAYOUT.footHeight
+const DRAW_SCALE = BADGE_LAYOUT.drawScale
+
+function prepDrawCtx(ctx: CanvasRenderingContext2D) {
+  ctx.setTransform(DRAW_SCALE, 0, 0, DRAW_SCALE, 0, 0)
+  ctx.imageSmoothingEnabled = true
+  ctx.imageSmoothingQuality = 'high'
+}
 
 interface MakerProps {
   state: BadgeState
@@ -193,8 +200,10 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
   useEffect(() => {
     const c = canvasRef.current
     if (!c) return
-    c.width = BADGE_W
-    c.height = BODY_H
+    c.width = Math.round(BADGE_W * DRAW_SCALE)
+    c.height = Math.round(BODY_H * DRAW_SCALE)
+    const ctx = c.getContext('2d')
+    if (ctx) prepDrawCtx(ctx)
   }, [])
 
   // Repaint when the drawing changes from outside the pen (undo, clear, mount).
@@ -205,13 +214,15 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
     const c = canvasRef.current
     const ctx = c?.getContext('2d')
     if (!c || !ctx) return
-    ctx.clearRect(0, 0, c.width, c.height)
+    prepDrawCtx(ctx)
+    ctx.clearRect(0, 0, BADGE_W, BODY_H)
     if (!url) return
     const img = new Image()
     img.onload = () => {
       if (paintedUrl.current !== url) return
-      ctx.clearRect(0, 0, c.width, c.height)
-      ctx.drawImage(img, 0, 0)
+      prepDrawCtx(ctx)
+      ctx.clearRect(0, 0, BADGE_W, BODY_H)
+      ctx.drawImage(img, 0, 0, BADGE_W, BODY_H)
     }
     img.src = url
   }, [state.drawingDataUrl])
@@ -227,8 +238,8 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
   const canvasPoint = (e: ReactPointerEvent<HTMLCanvasElement>, c: HTMLCanvasElement) => {
     const rect = c.getBoundingClientRect()
     return {
-      x: ((e.clientX - rect.left) / rect.width) * c.width,
-      y: ((e.clientY - rect.top) / rect.height) * c.height,
+      x: ((e.clientX - rect.left) / rect.width) * BADGE_W,
+      y: ((e.clientY - rect.top) / rect.height) * BODY_H,
     }
   }
 
@@ -272,6 +283,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
     c.setPointerCapture(e.pointerId)
     const ctx = c.getContext('2d')
     if (!ctx) return
+    prepDrawCtx(ctx)
     const p = canvasPoint(e, c)
     drawPt.current = p
     if (stroke === 'sketch') {
@@ -283,6 +295,10 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
     ctx.lineCap = 'round'
     ctx.lineJoin = 'round'
     ctx.beginPath()
+    ctx.arc(p.x, p.y, ctx.lineWidth / 2, 0, Math.PI * 2)
+    ctx.fillStyle = '#111'
+    ctx.fill()
+    ctx.beginPath()
     ctx.moveTo(p.x, p.y)
   }
 
@@ -292,14 +308,23 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
     if (!c) return
     const ctx = c.getContext('2d')
     if (!ctx) return
+    prepDrawCtx(ctx)
     const p = canvasPoint(e, c)
     if (stroke === 'sketch') {
       const prev = drawPt.current ?? p
-      if (Math.hypot(p.x - prev.x, p.y - prev.y) < 2) return
+      if (Math.hypot(p.x - prev.x, p.y - prev.y) < 1.2) return
       sketchSegment(ctx, prev.x, prev.y, p.x, p.y)
       drawPt.current = p
       return
     }
+    const prev = drawPt.current ?? p
+    ctx.strokeStyle = '#111'
+    ctx.lineWidth = brush * 2.2
+    ctx.lineCap = 'round'
+    ctx.lineJoin = 'round'
+    ctx.beginPath()
+    ctx.moveTo(prev.x, prev.y)
+    ctx.quadraticCurveTo(prev.x, prev.y, (prev.x + p.x) / 2, (prev.y + p.y) / 2)
     ctx.lineTo(p.x, p.y)
     ctx.stroke()
     drawPt.current = p
@@ -588,7 +613,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
 
                     <canvas
                       ref={canvasRef}
-                      className={`absolute inset-0 z-10 h-full w-full ${
+                      className={`badge-doodle absolute inset-0 z-10 h-full w-full ${
                         mode === 'draw' ? 'cursor-crosshair' : 'pointer-events-none'
                       }`}
                       onPointerDown={onDrawPointerDown}

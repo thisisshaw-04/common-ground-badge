@@ -30,7 +30,7 @@ export function BadgePreview({
             <img
               src={state.drawingDataUrl}
               alt=""
-              className="absolute inset-0 z-10 h-full w-full"
+              className="badge-doodle absolute inset-0 z-10 h-full w-full"
               draggable={false}
             />
           ) : null}
