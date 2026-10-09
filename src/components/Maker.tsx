@@ -713,26 +713,28 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
               >
                 Clear
               </button>
+              <button
+                type="button"
+                onClick={finish}
+                className="option-btn btn-done badge-edge-btn min-w-0 flex-[1.25] bg-black py-2.5 text-[13px] font-bold text-white"
+              >
+                Done!
+              </button>
             </div>
           </div>
 
           <div className="maker-drawer">
-            <nav className="maker-tabs-row" aria-label="Edit tools">
-              <div className="maker-tabs">
-                {DRAWER_TABS.map((t) => (
-                  <button
-                    key={t.id}
-                    type="button"
-                    onClick={() => openDrawer(t.id)}
-                    className={`maker-tab${drawer === t.id ? ' is-active' : ''}`}
-                  >
-                    {t.label}
-                  </button>
-                ))}
-              </div>
-              <button type="button" onClick={finish} className="maker-tab maker-tab-done">
-                Done!
-              </button>
+            <nav className="maker-tabs" aria-label="Edit tools">
+              {DRAWER_TABS.map((t) => (
+                <button
+                  key={t.id}
+                  type="button"
+                  onClick={() => openDrawer(t.id)}
+                  className={`maker-tab${drawer === t.id ? ' is-active' : ''}`}
+                >
+                  {t.label}
+                </button>
+              ))}
             </nav>
             <div className="maker-drawer-body">
               {drawer === 'stickers' ? (

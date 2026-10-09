@@ -176,15 +176,15 @@ textarea {
 
 .maker-stage {
   /* Full badge card is ~534px tall (lockup + body + foot), not just body+foot. */
-  --badge-s: max(0.38, min(0.74, (100vw - 2.25rem) / 368px, (100dvh - 24rem) / 640px));
+  --badge-s: max(0.36, min(0.68, (100vw - 2.5rem) / 368px, (100dvh - 25rem) / 640px));
   flex: 1 1 auto;
   min-height: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
-  gap: 0.55rem;
-  padding: 0.15rem 1rem 0.55rem;
+  gap: 0.5rem;
+  padding: 0.1rem 1rem 0.45rem;
   overflow: hidden;
 }
 
@@ -225,7 +225,7 @@ textarea {
 
 .maker-edge-actions {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.45rem;
   width: min(calc(368px * var(--badge-s)), calc(100vw - 2.5rem));
   z-index: 2;
 }
@@ -242,60 +242,40 @@ textarea {
   box-shadow: 0 -6px 28px rgba(17, 17, 17, 0.06);
 }
 
-.maker-tabs-row {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  min-width: 0;
-}
-
+/* All five tool tabs share one row — no horizontal scroll. */
 .maker-tabs {
   display: flex;
-  flex: 1 1 auto;
   flex-wrap: nowrap;
-  gap: 0.35rem;
+  gap: 0.3rem;
+  width: 100%;
   min-width: 0;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  padding-bottom: 0.1rem;
-}
-
-.maker-tabs::-webkit-scrollbar {
-  display: none;
+  overflow: hidden;
 }
 
 .maker-tab {
-  flex: 0 0 auto;
+  flex: 1 1 0;
+  min-width: 0;
   margin: 0;
-  padding: 0.55rem 0.8rem;
+  padding: 0.55rem 0.25rem;
   border: 1.5px solid #111;
   border-radius: 999px;
   background: #111;
   color: #fff;
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
   line-height: 1;
   cursor: pointer;
   white-space: nowrap;
   text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .maker-tab.is-active {
   background: #fff;
   color: #111;
-}
-
-.maker-tab-done {
-  flex: 0 0 auto;
-  background: #111;
-  color: #fff;
-}
-
-.maker-tab-done:active {
-  background: #333;
 }
 
 .maker-drawer-body {
