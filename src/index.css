@@ -172,6 +172,14 @@ textarea {
   border: 0;
   background: transparent;
   cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(17, 17, 17, 0.55);
+  line-height: 1.2;
+  white-space: nowrap;
 }
 
 .done-edit:hover {
@@ -180,6 +188,8 @@ textarea {
 }
 
 .done-previews {
+  grid-column: 1;
+  grid-row: 1;
   display: grid;
   grid-template-columns: 1fr 1fr;
   align-items: center;
@@ -251,6 +261,8 @@ textarea {
 }
 
 .done-copy {
+  grid-column: 2;
+  grid-row: 1;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -326,6 +338,12 @@ textarea {
 @media (max-width: 980px) {
   .done-stage {
     grid-template-columns: 1fr;
+  }
+
+  .done-previews,
+  .done-copy {
+    grid-column: 1;
+    grid-row: auto;
   }
 
   .done-previews {
