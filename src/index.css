@@ -160,7 +160,8 @@ textarea {
   --copy-w: 20.5rem;
   position: relative;
   display: grid;
-  grid-template-columns: minmax(max-content, 1fr) auto minmax(0, 1fr);
+  /* Left rail keeps the preview cluster put while Keep editing sits in the page margin. */
+  grid-template-columns: minmax(7.5rem, 1fr) auto minmax(0, 1fr);
   justify-content: stretch;
   align-content: center;
   align-items: stretch;
@@ -179,7 +180,8 @@ textarea {
   justify-self: start;
   align-self: start;
   z-index: 3;
-  margin: 0 1.15rem 0 0;
+  /* Sit near the viewport edge in the empty left margin. */
+  margin: 0 0 0 calc(0.55rem - var(--done-gutter));
   transform: translateY(calc(-100% - 0.45rem));
   cursor: pointer;
 }
