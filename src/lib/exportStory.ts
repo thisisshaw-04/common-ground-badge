@@ -1,3 +1,4 @@
+import { GIFEncoder, quantize, applyPalette } from 'gifenc'
 import { toCanvas } from 'html-to-image'
 import { footFramePath } from '../components/FootVideoFrame'
 
@@ -142,7 +143,6 @@ export async function exportStoryGif(node: HTMLElement, opts: StoryExportOptions
     }
   }
 
-  const { GIFEncoder, quantize, applyPalette } = await import('gifenc')
   const gif = GIFEncoder()
   const delay = Math.round(1000 / FPS)
 
