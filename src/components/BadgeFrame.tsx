@@ -1,4 +1,3 @@
-import { useLayoutEffect, useRef, useState } from 'react'
 import type { BorderId } from '../lib/badge'
 
 /** Small deterministic PRNG so the doodle looks the same on every render/export. */
@@ -67,27 +66,25 @@ export function outerShellClass(border: BorderId): string {
 }
 
 /** Doodle outer stroke — only rendered for the wiggle option. */
-export function BadgeOuterFrame({ border }: { border: BorderId }) {
-  const ref = useRef<SVGSVGElement>(null)
-  const [size, setSize] = useState({ w: 400, h: 580 })
+export function BadgeOuterFrame({
+  border,
+  width,
+  height,
+  path,
+}: {
+  border: BorderId
+  width?: number
+  height?: number
+  path?: string
+}) {
   const active = border === 'wiggly'
-
-  useLayoutEffect(() => {
-    const host = ref.current?.parentElement
-    if (!active || !host) return
-    const update = () => setSize({ w: host.clientWidth, h: host.clientHeight })
-    update()
-    const ro = new ResizeObserver(update)
-    ro.observe(host)
-    return () => ro.disconnect()
-  }, [active])
-
   if (!active) return null
-  const { w, h } = size
+  const w = width ?? 400
+  const h = height ?? 580
+  const d = path || doodlePath(w, h, 7)
 
   return (
     <svg
-      ref={ref}
       className="badge-outer-frame pointer-events-none absolute inset-0 z-[60] overflow-visible"
       width={w}
       height={h}
@@ -95,10 +92,10 @@ export function BadgeOuterFrame({ border }: { border: BorderId }) {
       aria-hidden
     >
       <path
-        d={doodlePath(w, h, 7)}
+        d={d}
         fill="none"
         stroke="#111"
-        strokeWidth="2.25"
+        strokeWidth="2.5"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
