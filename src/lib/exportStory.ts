@@ -131,10 +131,13 @@ async function hiddenVideoCopy(video: HTMLVideoElement) {
   return copy
 }
 
+type StickerLayer = { canvas: HTMLCanvasElement; box: Box }
+
 function paintFrame(
   ctx: CanvasRenderingContext2D,
   snap: HTMLCanvasElement,
   layers: Layer[],
+  stickers: StickerLayer | null,
   width: number,
   height: number,
   backgroundColor: string,
@@ -142,6 +145,8 @@ function paintFrame(
   ctx.fillStyle = backgroundColor
   ctx.fillRect(0, 0, width, height)
   ctx.drawImage(snap, 0, 0, width, height)
+  // Foot clips go above the static badge, then stickers go back on top —
+  // same stacking as the live maker (stickers z-100 over the foot video).
   for (const { video, box } of layers) {
     ctx.save()
     ctx.translate(box.x, box.y)
@@ -154,6 +159,9 @@ function paintFrame(
     ctx.fillRect(0, 0, box.w, box.h)
     drawCover(ctx, video, 0, 0, box.w, box.h)
     ctx.restore()
+  }
+  if (stickers) {
+    ctx.drawImage(stickers.canvas, stickers.box.x, stickers.box.y, stickers.box.w, stickers.box.h)
   }
 }
 
@@ -439,16 +447,18 @@ async function withTimeout<T>(
 
 /**
  * Capture the live poster without moving badge/lanyard layout (that was the cord flash).
- * Only hide videos + strip filters briefly, then composite the foot clip back in.
+ * Hide videos + stickers briefly (stickers are composited after the foot clip so they
+ * stay on top), strip filters, then restore.
  */
 async function capturePoster(node: HTMLElement, width: number, height: number, backgroundColor: string) {
   const videos = [...node.querySelectorAll('video')]
+  const stickerRoots = [...node.querySelectorAll<HTMLElement>('[data-badge-stickers]')]
   const filterRestore: { el: HTMLElement; filter: string }[] = []
-  const videoOpacity: { el: HTMLVideoElement; opacity: string }[] = []
+  const opacityRestore: { el: HTMLElement; opacity: string }[] = []
 
-  for (const video of videos) {
-    videoOpacity.push({ el: video, opacity: video.style.opacity })
-    video.style.opacity = '0'
+  for (const el of [...videos, ...stickerRoots]) {
+    opacityRestore.push({ el, opacity: el.style.opacity })
+    el.style.opacity = '0'
   }
   for (const el of [node, ...node.querySelectorAll<HTMLElement>('*')]) {
     if (getComputedStyle(el).filter === 'none') continue
@@ -479,7 +489,55 @@ async function capturePoster(node: HTMLElement, width: number, height: number, b
     return snap
   } finally {
     for (const { el, filter } of filterRestore) el.style.filter = filter
-    for (const { el, opacity } of videoOpacity) el.style.opacity = opacity
+    for (const { el, opacity } of opacityRestore) el.style.opacity = opacity
+  }
+}
+
+/** Transparent sticker stack — drawn above foot video in the export. */
+async function captureStickers(
+  node: HTMLElement,
+  width: number,
+  height: number,
+): Promise<StickerLayer | null> {
+  const layer = node.querySelector<HTMLElement>('[data-badge-stickers]')
+  if (!layer || layer.clientWidth < 2 || layer.clientHeight < 2) return null
+
+  const box = mediaBox(node, layer, width, height)
+  if (box.w < 1 || box.h < 1) return null
+
+  const filterRestore: { el: HTMLElement; filter: string }[] = []
+  for (const el of [layer, ...layer.querySelectorAll<HTMLElement>('*')]) {
+    if (getComputedStyle(el).filter === 'none') continue
+    filterRestore.push({ el, filter: el.style.filter })
+    el.style.filter = 'none'
+  }
+
+  await sleep(16)
+  try {
+    const ratio = box.w / Math.max(1, layer.clientWidth)
+    // Omit backgroundColor so the canvas keeps alpha — only sticker pixels cover the foot.
+    let canvas = await toCanvas(layer, {
+      ...SNAPSHOT,
+      pixelRatio: ratio,
+    })
+    if (canvas.width !== Math.round(box.w) || canvas.height !== Math.round(box.h)) {
+      const normalized = document.createElement('canvas')
+      normalized.width = Math.max(1, Math.round(box.w))
+      normalized.height = Math.max(1, Math.round(box.h))
+      const nctx = normalized.getContext('2d')
+      if (!nctx) return null
+      nctx.clearRect(0, 0, normalized.width, normalized.height)
+      nctx.drawImage(canvas, 0, 0, normalized.width, normalized.height)
+      canvas = normalized
+      box.w = normalized.width
+      box.h = normalized.height
+    }
+    return { canvas, box }
+  } catch (err) {
+    console.warn('Sticker layer capture failed; foot video may cover stickers.', err)
+    return null
+  } finally {
+    for (const { el, filter } of filterRestore) el.style.filter = filter
   }
 }
 
@@ -505,8 +563,10 @@ export async function exportStoryVideo(node: HTMLElement, opts: StoryExportOptio
   }
 
   let snap: HTMLCanvasElement
+  let stickers: StickerLayer | null = null
   try {
     snap = await capturePoster(node, width, height, opts.backgroundColor)
+    stickers = await captureStickers(node, width, height)
   } catch (err) {
     for (const video of scratchVideos) {
       video.pause()
@@ -527,7 +587,7 @@ export async function exportStoryVideo(node: HTMLElement, opts: StoryExportOptio
   const ctx = canvas.getContext('2d', { alpha: false, colorSpace: 'srgb', willReadFrequently: true })
   if (!ctx) throw new Error('Could not open a canvas to record.')
 
-  const paint = () => paintFrame(ctx, snap, layers, width, height, opts.backgroundColor)
+  const paint = () => paintFrame(ctx, snap, layers, stickers, width, height, opts.backgroundColor)
   const primary = layers[0]?.video ?? null
   const clip = clipSeconds(primary)
 
