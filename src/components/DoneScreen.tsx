@@ -64,7 +64,11 @@ export function DoneScreen({ state, onEdit }: DoneProps) {
 
   return (
     <div className="done-stage">
-      <button type="button" onClick={onEdit} className="done-edit">
+      <button
+        type="button"
+        onClick={onEdit}
+        className="done-edit panel-title text-black/55 transition-colors hover:text-black"
+      >
         ← Keep editing
       </button>
 

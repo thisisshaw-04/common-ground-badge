@@ -162,27 +162,15 @@ textarea {
   background: #f2f2f2;
 }
 
-.done-edit {
+.done-edit.panel-title {
   position: absolute;
   top: 1.15rem;
   left: 1.35rem;
   z-index: 3;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  background: transparent;
   cursor: pointer;
-  font-family: var(--font-body);
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: rgba(17, 17, 17, 0.55);
-  line-height: 1.2;
-  white-space: nowrap;
 }
 
-.done-edit:hover {
+.done-edit.panel-title:hover {
   color: #111;
   text-decoration: none;
 }
