@@ -691,31 +691,33 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
           </button>
 
           <div className="maker-stage">
-            {badgeCluster}
-            <div className="maker-edge-actions">
-              <button
-                type="button"
-                onClick={undo}
-                disabled={!canUndo}
-                title="Undo"
-                className="option-btn badge-edge-btn min-w-0 flex-1 bg-white py-2.5 text-[13px] font-semibold text-black disabled:pointer-events-none disabled:border-black/20 disabled:text-black/30"
-              >
-                Undo
-              </button>
-              <button
-                type="button"
-                onClick={clearAll}
-                className="option-btn badge-edge-btn min-w-0 flex-1 bg-white py-2.5 text-[13px] font-semibold text-black"
-              >
-                Clear
-              </button>
-              <button
-                type="button"
-                onClick={finish}
-                className="option-btn btn-done badge-edge-btn min-w-0 flex-[1.25] bg-black py-2.5 text-[13px] font-bold text-white"
-              >
-                Done!
-              </button>
+            <div className="maker-stage-stack">
+              {badgeCluster}
+              <div className="maker-edge-actions">
+                <button
+                  type="button"
+                  onClick={undo}
+                  disabled={!canUndo}
+                  title="Undo"
+                  className="option-btn badge-edge-btn min-w-0 flex-1 bg-white py-2.5 text-[13px] font-semibold text-black disabled:pointer-events-none disabled:border-black/20 disabled:text-black/30"
+                >
+                  Undo
+                </button>
+                <button
+                  type="button"
+                  onClick={clearAll}
+                  className="option-btn badge-edge-btn min-w-0 flex-1 bg-white py-2.5 text-[13px] font-semibold text-black"
+                >
+                  Clear
+                </button>
+                <button
+                  type="button"
+                  onClick={finish}
+                  className="option-btn btn-done badge-edge-btn min-w-0 flex-[1.25] bg-black py-2.5 text-[13px] font-bold text-white"
+                >
+                  Done!
+                </button>
+              </div>
             </div>
           </div>
 

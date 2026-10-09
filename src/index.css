@@ -186,10 +186,19 @@ textarea {
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
-  gap: 0.5rem;
   padding: 0.1rem 1rem 0.45rem;
-  /* Let the cord paint up through the header and off the top of the phone. */
+  /* Cord paints up through the header; clipped by .maker-mobile at the screen edge. */
   overflow: visible;
+}
+
+/* Badge + Undo/Clear/Done — shifted up as one unit so the cord leaves the top
+   without distorting the lanyard PNG. */
+.maker-stage-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  transform: translateY(calc(-1 * min(16dvh, 96px)));
 }
 
 /* Slot owns the scaled layout size; cluster paints at native size then scales. */
@@ -208,7 +217,7 @@ textarea {
 }
 
 .maker-mobile .maker-badge-slot {
-  /* badge only — cord hangs above and is allowed to leave the screen */
+  /* badge only — cord hangs above at its natural aspect ratio */
   width: calc(368px * var(--badge-s));
   height: calc(var(--badge-native-h) * var(--badge-s));
 }
@@ -218,12 +227,6 @@ textarea {
   left: 50%;
   bottom: 0;
   transform: translateX(-50%) scale(var(--badge-s));
-  transform-origin: bottom center;
-}
-
-/* Stretch straps upward from the clip so the printed cut-off never sits on-screen. */
-.maker-mobile .lanyard-offscreen {
-  transform: translateX(-50%) scaleY(2.6);
   transform-origin: bottom center;
 }
 
