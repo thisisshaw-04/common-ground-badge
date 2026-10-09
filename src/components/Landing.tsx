@@ -12,18 +12,18 @@ const BG = `${import.meta.env.BASE_URL}landing-scan-3.webp`
 const BADGE_W = 320
 const BODY_H = 100
 const FOOT_H = 188
-const MAX_RY = 16
-const MAX_RX = 9
+const MAX_RY = 8
+const MAX_RX = 4.5
 
 function useHangTilt() {
   const sceneRef = useRef<HTMLDivElement>(null)
   const tiltRef = useRef<HTMLDivElement>(null)
-  const shineRef = useRef<HTMLDivElement>(null)
+  const glareRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const scene = sceneRef.current
     const tilt = tiltRef.current
-    const shine = shineRef.current
+    const glare = glareRef.current
     if (!scene || !tilt) return
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 
@@ -31,18 +31,22 @@ function useHangTilt() {
     const cur = { x: 0, y: 0 }
     let raf = 0
 
+    const paintGlare = (x: number, y: number) => {
+      if (!glare) return
+      const mag = Math.hypot(x, y)
+      glare.style.setProperty('--sx', `${(48 + x * 22).toFixed(2)}%`)
+      glare.style.setProperty('--sy', `${(30 + y * 16).toFixed(2)}%`)
+      glare.style.setProperty('--ang', `${(118 + x * 14).toFixed(2)}deg`)
+      glare.style.setProperty('--glare-o', (0.26 + mag * 0.24).toFixed(3))
+    }
+
     const tick = () => {
-      cur.x += (target.x - cur.x) * 0.14
-      cur.y += (target.y - cur.y) * 0.14
+      cur.x += (target.x - cur.x) * 0.09
+      cur.y += (target.y - cur.y) * 0.09
       const ry = cur.x * MAX_RY
       const rx = cur.y * -MAX_RX
       tilt.style.transform = `rotateX(${rx.toFixed(3)}deg) rotateY(${ry.toFixed(3)}deg)`
-      if (shine) {
-        const px = 50 + cur.x * 32
-        const py = 40 + cur.y * 22
-        shine.style.background = `radial-gradient(circle at ${px}% ${py}%, rgba(255,255,255,0.34), transparent 46%)`
-        shine.style.opacity = String(0.35 + Math.hypot(cur.x, cur.y) * 0.4)
-      }
+      paintGlare(cur.x, cur.y)
       raf = requestAnimationFrame(tick)
     }
     raf = requestAnimationFrame(tick)
@@ -54,8 +58,8 @@ function useHangTilt() {
       const cy = r.top + r.height * 0.2
       const nx = (e.clientX - cx) / Math.max(r.width, 1)
       const ny = (e.clientY - cy) / Math.max(r.height, 1)
-      target.x = Math.max(-1, Math.min(1, nx * 1.35))
-      target.y = Math.max(-1, Math.min(1, ny * 1.1))
+      target.x = Math.max(-1, Math.min(1, nx * 0.82))
+      target.y = Math.max(-1, Math.min(1, ny * 0.7))
     }
     const onLeave = () => {
       target.x = 0
@@ -70,11 +74,11 @@ function useHangTilt() {
     }
   }, [])
 
-  return { sceneRef, tiltRef, shineRef }
+  return { sceneRef, tiltRef, glareRef }
 }
 
 export function Landing({ onStart }: LandingProps) {
-  const { sceneRef, tiltRef, shineRef } = useHangTilt()
+  const { sceneRef, tiltRef, glareRef } = useHangTilt()
 
   return (
     <div className="landing-hero relative isolate min-h-dvh overflow-hidden">
@@ -116,7 +120,11 @@ export function Landing({ onStart }: LandingProps) {
                   )
                 })}
               />
-              <div ref={shineRef} className="landing-tilt-shine" aria-hidden />
+              <div ref={glareRef} className="landing-tilt-glare" aria-hidden>
+                <span className="landing-tilt-iris" />
+                <span className="landing-tilt-streak" />
+                <span className="landing-tilt-spec" />
+              </div>
             </div>
           </div>
         </div>

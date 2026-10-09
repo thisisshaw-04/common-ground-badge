@@ -172,12 +172,10 @@ export const STICKERS: StickerDef[] = [
 
 /** Sample placements for the landing preview badge. */
 export const DEMO_STICKERS: PlacedSticker[] = [
-  { uid: 'demo-dev', defId: 'developer', x: 22, y: 40, rotation: -8, trackId: '214' },
-  { uid: 'demo-des', defId: 'designer', x: 78, y: 46, rotation: 10, trackId: '318' },
-  { uid: 'demo-win', defId: 'win', x: 70, y: 32, rotation: 6, trackId: '441' },
-  { uid: 'demo-pro', defId: 'theythem', x: 28, y: 58, rotation: -4, trackId: '102' },
-  { uid: 'demo-ai', defId: 'ailarper', x: 54, y: 52, rotation: -7, trackId: '508' },
-  { uid: 'demo-owl', defId: 'nightowl', x: 76, y: 68, rotation: 8, trackId: '612' },
+  { uid: 'demo-dev', defId: 'developer', x: 24, y: 41, rotation: -8, trackId: '214' },
+  { uid: 'demo-win', defId: 'win', x: 80, y: 33, rotation: 8, trackId: '441' },
+  { uid: 'demo-des', defId: 'designer', x: 24, y: 70, rotation: -6, trackId: '318' },
+  { uid: 'demo-owl', defId: 'nightowl', x: 80, y: 76, rotation: 7, trackId: '612' },
 ]
 
 export const TABS: { id: StickerTab; label: string }[] = [

@@ -290,7 +290,7 @@ textarea {
 
 .landing-tilt-scene {
   width: min(86vw, 20rem);
-  perspective: 1200px;
+  perspective: 1600px;
   perspective-origin: 50% 0%;
 }
 
@@ -311,16 +311,66 @@ textarea {
 
 .landing-hero .landing-badge {
   width: 100%;
-  box-shadow: 0 22px 56px rgba(0, 0, 0, 0.5);
+  box-shadow:
+    0 22px 56px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55);
 }
 
-.landing-tilt-shine {
+.landing-badge-shell .sticker-on-badge {
+  zoom: 1.04;
+}
+
+.landing-tilt-glare {
   pointer-events: none;
   position: absolute;
   inset: 0;
-  z-index: 9;
+  z-index: 120;
+  overflow: hidden;
+  --sx: 48%;
+  --sy: 30%;
+  --ang: 118deg;
+  --glare-o: 0.26;
+}
+
+.landing-tilt-iris,
+.landing-tilt-streak,
+.landing-tilt-spec {
+  position: absolute;
+  inset: 0;
+}
+
+.landing-tilt-iris {
+  background: linear-gradient(
+    var(--ang),
+    transparent 30%,
+    rgba(150, 215, 255, 0.12) 44%,
+    rgba(255, 170, 230, 0.09) 54%,
+    rgba(255, 230, 150, 0.07) 64%,
+    transparent 80%
+  );
+  mix-blend-mode: soft-light;
+  opacity: 0.48;
+}
+
+.landing-tilt-streak {
+  background: linear-gradient(
+    var(--ang),
+    transparent 36%,
+    rgba(255, 255, 255, 0.14) 46%,
+    rgba(255, 255, 255, 0.48) 50.5%,
+    rgba(255, 255, 255, 0.12) 55%,
+    transparent 66%
+  );
   mix-blend-mode: overlay;
-  opacity: 0.35;
+  opacity: var(--glare-o);
+}
+
+.landing-tilt-spec {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.14), transparent 18%),
+    radial-gradient(16rem 10rem at var(--sx) var(--sy), rgba(255, 255, 255, 0.32), transparent 40%);
+  mix-blend-mode: overlay;
+  opacity: 0.38;
 }
 
 .landing-copy {
