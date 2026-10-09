@@ -97,12 +97,13 @@ export function DoneScreen({ state, onEdit }: DoneProps) {
       <aside className="done-copy">
         <div className="done-copy-inner">
           <h1 className="done-title">
-            GET IN, MAKERS.
+            Get in, makers.
             <br />
-            WE&apos;RE GOING BUILDING.
+            We&apos;re going building.
           </h1>
-          <p className="done-lede">
-            Now let&apos;s make something happen. Show off your badge. Tag us with{' '}
+          <p className="done-lede">Now let&apos;s make something happen!</p>
+          <p className="done-follow">
+            Show off your badge. Tag us with{' '}
             <span className="done-hash">#CommonGround</span> on LinkedIn or IG.
           </p>
           <div className="done-actions">

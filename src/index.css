@@ -286,18 +286,25 @@ textarea {
   color: #111;
   font-size: clamp(1.55rem, 2.7vw, 2.45rem);
   font-weight: 500;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.035em;
   line-height: 1.08;
-  text-transform: uppercase;
 }
 
-.done-lede {
-  margin-top: 1.15rem;
+.done-lede,
+.done-follow {
   max-width: 24rem;
   color: rgba(17, 17, 17, 0.48);
   font-size: clamp(1rem, 1.45vw, 1.18rem);
   font-weight: 400;
   line-height: 1.4;
+}
+
+.done-lede {
+  margin-top: 1.15rem;
+}
+
+.done-follow {
+  margin-top: 0.7rem;
 }
 
 .done-hash {
@@ -386,7 +393,8 @@ textarea {
     align-items: stretch;
   }
 
-  .done-lede {
+  .done-lede,
+  .done-follow {
     margin-left: auto;
     margin-right: auto;
   }
