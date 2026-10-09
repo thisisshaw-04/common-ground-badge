@@ -715,17 +715,19 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
           </div>
 
           <div className="maker-drawer">
-            <nav className="maker-tabs" aria-label="Edit tools">
-              {DRAWER_TABS.map((t) => (
-                <button
-                  key={t.id}
-                  type="button"
-                  onClick={() => openDrawer(t.id)}
-                  className={`maker-tab${drawer === t.id ? ' is-active' : ''}`}
-                >
-                  {t.label}
-                </button>
-              ))}
+            <nav className="maker-tabs-row" aria-label="Edit tools">
+              <div className="maker-tabs">
+                {DRAWER_TABS.map((t) => (
+                  <button
+                    key={t.id}
+                    type="button"
+                    onClick={() => openDrawer(t.id)}
+                    className={`maker-tab${drawer === t.id ? ' is-active' : ''}`}
+                  >
+                    {t.label}
+                  </button>
+                ))}
+              </div>
               <button type="button" onClick={finish} className="maker-tab maker-tab-done">
                 Done!
               </button>
