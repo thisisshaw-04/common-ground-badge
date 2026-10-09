@@ -7,9 +7,11 @@ export interface StoryExportOptions {
   backgroundColor: string
 }
 
-const FPS = 30
-const MIN_SECONDS = 2
-const MAX_SECONDS = 6
+const FPS = 8
+const MIN_SECONDS = 1.5
+const MAX_SECONDS = 2
+/** GIFs stay shareable; 9:16 1080p is too heavy for a looping gif. */
+const MAX_GIF_WIDTH = 360
 
 function even(n: number) {
   const v = Math.max(2, Math.round(n))
@@ -17,7 +19,7 @@ function even(n: number) {
 }
 
 function sleep(ms: number) {
-  return new Promise<void>((r) => window.setTimeout(r, ms))
+  return new Promise<void>((resolve) => window.setTimeout(resolve, ms))
 }
 
 function seekVideo(video: HTMLVideoElement, time: number) {
@@ -85,10 +87,11 @@ function mediaBox(node: HTMLElement, media: HTMLElement, width: number, height: 
   }
 }
 
-/** 9:16 (or any) story card → MP4, with the foot video still moving. */
-export async function exportStoryMp4(node: HTMLElement, opts: StoryExportOptions) {
-  const width = even(opts.width)
-  const height = even(opts.height)
+/** Story / grid card → looping GIF, with the foot video still moving. */
+export async function exportStoryGif(node: HTMLElement, opts: StoryExportOptions) {
+  const scale = Math.min(1, MAX_GIF_WIDTH / Math.max(1, opts.width))
+  const width = even(opts.width * scale)
+  const height = even(opts.height * scale)
   const videos = [...node.querySelectorAll('video')]
   const hidden: HTMLVideoElement[] = []
 
@@ -110,7 +113,7 @@ export async function exportStoryMp4(node: HTMLElement, opts: StoryExportOptions
   const canvas = document.createElement('canvas')
   canvas.width = width
   canvas.height = height
-  const ctx = canvas.getContext('2d', { alpha: false })
+  const ctx = canvas.getContext('2d', { alpha: false, willReadFrequently: true })
   if (!ctx) throw new Error('Could not open a canvas to record.')
 
   const layers = videos
@@ -139,41 +142,9 @@ export async function exportStoryMp4(node: HTMLElement, opts: StoryExportOptions
     }
   }
 
-  const {
-    BufferTarget,
-    CanvasSource,
-    Mp4OutputFormat,
-    Output,
-    QUALITY_HIGH,
-    getFirstEncodableVideoCodec,
-  } = await import('mediabunny')
-
-  const format = new Mp4OutputFormat({ fastStart: 'in-memory' })
-  const codec = await getFirstEncodableVideoCodec(
-    [
-      'avc',
-      ...format.getSupportedVideoCodecs().filter((c) => c !== 'avc'),
-    ],
-    {
-      width,
-      height,
-      quality: QUALITY_HIGH,
-      frameRate: FPS,
-    },
-  )
-  if (!codec) {
-    throw new Error('This browser cannot encode MP4. Try Chrome, Edge, or Safari.')
-  }
-
-  const target = new BufferTarget()
-  const output = new Output({ format, target })
-  const source = new CanvasSource(canvas, {
-    codec,
-    quality: QUALITY_HIGH,
-    keyFrameInterval: 1,
-  })
-  output.addVideoTrack(source, { frameRate: FPS })
-  await output.start()
+  const { GIFEncoder, quantize, applyPalette } = await import('gifenc')
+  const gif = GIFEncoder()
+  const delay = Math.round(1000 / FPS)
 
   const primary = layers[0]?.video ?? null
   const clip =
@@ -190,16 +161,21 @@ export async function exportStoryMp4(node: HTMLElement, opts: StoryExportOptions
       primary.loop = true
     }
 
+    let palette: number[][] | undefined
     for (let i = 0; i < frameCount; i++) {
       if (primary) await seekVideo(primary, (i / FPS) % Math.max(primary.duration || clip, 0.1))
       paint()
-      await source.add(i / FPS, 1 / FPS)
+      const rgba = new Uint8Array(ctx.getImageData(0, 0, width, height).data)
+      palette ??= quantize(rgba, 64, { format: 'rgb444' })
+      const index = applyPalette(rgba, palette, 'rgb444')
+      gif.writeFrame(index, width, height, {
+        palette,
+        delay,
+        repeat: i === 0 ? 0 : undefined,
+      })
     }
 
-    await output.finalize()
-  } catch (err) {
-    await output.cancel().catch(() => {})
-    throw err
+    gif.finish()
   } finally {
     if (primary) {
       primary.currentTime = resumeAt
@@ -207,9 +183,11 @@ export async function exportStoryMp4(node: HTMLElement, opts: StoryExportOptions
     }
   }
 
-  const buffer = target.buffer
-  if (!buffer) throw new Error('MP4 encoding produced an empty file.')
-  return new Blob([buffer], { type: 'video/mp4' })
+  const bytes = gif.bytes()
+  if (!bytes || bytes.byteLength < 32) throw new Error('GIF encoding produced an empty file.')
+  const out = new Uint8Array(bytes.byteLength)
+  out.set(bytes)
+  return new Blob([out], { type: 'image/gif' })
 }
 
 export function downloadBlob(blob: Blob, filename: string) {

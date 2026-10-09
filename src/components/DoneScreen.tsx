@@ -9,7 +9,7 @@ import {
   type PosterFormat,
   type StoryOverlayId,
 } from '../lib/badge'
-import { downloadBlob, exportStoryMp4 } from '../lib/exportStory'
+import { downloadBlob, exportStoryGif } from '../lib/exportStory'
 import { StoryPoster } from './StoryPoster'
 
 interface DoneProps {
@@ -47,16 +47,16 @@ export function DoneScreen({ state, onEdit }: DoneProps) {
     setBusy(key)
     try {
       const size = POSTER_SIZES[format]
-      const blob = await exportStoryMp4(node, {
+      const blob = await exportStoryGif(node, {
         width: size.width,
         height: size.height,
         backgroundColor: posterBackground(id, format),
       })
       const name = (visibleBadgeName(state.name) || 'maker').replace(/\s+/g, '-')
-      downloadBlob(blob, `CommonGround-${name}-${id}-${format}.mp4`)
+      downloadBlob(blob, `CommonGround-${name}-${id}-${format}.gif`)
     } catch (err) {
       console.error(err)
-      alert('Could not export the video — try Chrome or Safari, then again.')
+      alert('Could not export the GIF — try again in Chrome or Safari.')
     } finally {
       setBusy(null)
     }
@@ -64,7 +64,11 @@ export function DoneScreen({ state, onEdit }: DoneProps) {
 
   return (
     <div className="done-stage">
-      <button type="button" onClick={onEdit} className="done-edit">
+      <button
+        type="button"
+        onClick={onEdit}
+        className="done-edit panel-title text-black/55 transition-colors hover:text-black"
+      >
         ← Keep editing
       </button>
 
@@ -93,12 +97,12 @@ export function DoneScreen({ state, onEdit }: DoneProps) {
       <aside className="done-copy">
         <div className="done-copy-inner">
           <h1 className="done-title">
-            Get in, makers.
+            GET IN, MAKERS.
             <br />
-            We're going building.
+            WE&apos;RE GOING BUILDING.
           </h1>
           <p className="done-lede">
-            Now let's make something happen. Show off your badge. Tag us with{' '}
+            Now let&apos;s make something happen. Show off your badge. Tag us with{' '}
             <span className="done-hash">#CommonGround</span> on LinkedIn or IG.
           </p>
           <div className="done-actions">
@@ -112,7 +116,7 @@ export function DoneScreen({ state, onEdit }: DoneProps) {
                   onClick={() => void download(item.overlay, item.format)}
                   className="done-download"
                 >
-                  {busy === key ? 'Recording…' : item.label}
+                  {busy === key ? 'Exporting…' : item.label}
                 </button>
               )
             })}

@@ -402,9 +402,9 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
           {/* Adjustments LEFT — FigBuild 2-col grid */}
           <section className="animate-pop order-last flex min-h-0 min-w-0 flex-1 flex-col lg:order-none lg:overflow-y-auto no-scrollbar lg:pt-1 lg:pr-1 lg:pb-1">
             <div className="flex min-h-0 flex-col gap-6 [@media(min-height:860px)]:gap-7">
-              <div className="grid grid-cols-1 gap-x-5 gap-y-7 sm:grid-cols-2 [@media(min-height:860px)]:gap-y-8">
+              <div className="grid grid-cols-1 items-start gap-x-5 gap-y-7 sm:grid-cols-2 [@media(min-height:860px)]:gap-y-8">
                 <header className="hidden lg:col-start-1 lg:row-start-1 lg:block">{heading}</header>
-                  <Panel title="Draw" className="sm:col-start-2 sm:row-start-1 sm:self-end">
+                  <Panel title="Draw" className="sm:col-start-2 sm:row-start-1">
                     <div className="grid grid-cols-4 gap-2">
                       <button
                         type="button"
@@ -608,7 +608,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                       onBlur={() => push(state)}
                       placeholder="YOUR NAME"
                       maxLength={22}
-                      className="poster-name-input absolute top-2 left-1/2 z-20 w-[84%] -translate-x-1/2 bg-transparent text-center text-[1.35rem] font-bold tracking-[-0.03em] text-black uppercase outline-none placeholder:font-bold placeholder:text-black/25"
+                      className="poster-name-input absolute top-2 left-1/2 z-20 w-[84%] -translate-x-1/2 bg-transparent text-center text-black uppercase outline-none placeholder:font-medium placeholder:text-black/25"
                     />
 
                     <canvas
