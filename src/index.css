@@ -313,6 +313,70 @@ textarea {
   padding: 0.2rem 0 0.05rem;
 }
 
+/* Sticker category chips — one compact row, no wrap. */
+.sticker-tabs {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 0.3rem;
+  width: 100%;
+  min-width: 0;
+}
+
+.sticker-tab {
+  flex: 1 1 0;
+  min-width: 0;
+  margin: 0;
+  padding: 0.28rem 0.15rem;
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  border-radius: 0;
+  background: #fff;
+  color: var(--muted);
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1.1;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.sticker-tab.is-selected {
+  border-color: #e11d8f;
+  color: #111;
+}
+
+.sticker-tabs-hint {
+  display: none;
+  margin: 0 0 0 auto;
+  flex: 0 0 auto;
+  font-size: 11px;
+  color: var(--muted);
+  text-align: right;
+  white-space: nowrap;
+}
+
+@media (min-width: 1024px) {
+  .sticker-tabs {
+    flex-wrap: wrap;
+    gap: 0.4rem 0.55rem;
+  }
+
+  .sticker-tab {
+    flex: 0 0 auto;
+    padding: 0.35rem 0.55rem;
+    font-size: 10px;
+  }
+
+  .sticker-tabs-hint {
+    display: block;
+  }
+}
+
 .page-fig.is-landing {
   background: #111;
 }

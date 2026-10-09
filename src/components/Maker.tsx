@@ -571,7 +571,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
 
   const stickerControls = (
     <>
-      <div className="mb-2 flex flex-wrap items-center gap-x-3 gap-y-1.5">
+      <div className="sticker-tabs mb-2">
         {TABS.map((t) => (
           <button
             key={t.id}
@@ -580,16 +580,12 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
               setTab(t.id)
               setMode('stick')
             }}
-            className={`option-btn border border-black/20 bg-white px-2 py-1 font-mono text-[10px] tracking-wide text-[var(--muted)] ${
-              tab === t.id ? 'is-selected text-black' : ''
-            }`}
+            className={`sticker-tab${tab === t.id ? ' is-selected' : ''}`}
           >
             {t.label}
           </button>
         ))}
-        <p className="ml-auto hidden text-right text-[11px] text-[var(--muted)] lg:block">
-          Drag onto the card · double-click to delete
-        </p>
+        <p className="sticker-tabs-hint">Drag onto the card · double-click to delete</p>
       </div>
       <StickerRoll
         tabKey={tab}
