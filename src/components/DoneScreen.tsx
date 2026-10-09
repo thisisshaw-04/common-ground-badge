@@ -115,7 +115,7 @@ export function DoneScreen({ state, onEdit }: DoneProps) {
                   type="button"
                   disabled={busy !== null}
                   onClick={() => void download(item.overlay, item.format)}
-                  className="done-download"
+                  className="done-download option-btn"
                 >
                   {busy === key ? 'Recording…' : item.label}
                 </button>

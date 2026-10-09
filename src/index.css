@@ -329,6 +329,7 @@ textarea {
 }
 
 .done-download {
+  position: relative;
   width: 100%;
   margin: 0;
   padding: 0.95rem 1.2rem;
@@ -340,14 +341,10 @@ textarea {
   font-weight: 500;
   letter-spacing: -0.015em;
   cursor: pointer;
-  transition:
-    background 0.15s ease,
-    color 0.15s ease;
 }
 
 .done-download:hover:not(:disabled) {
-  background: #111;
-  color: #fff;
+  z-index: 1;
 }
 
 .done-download:disabled {
