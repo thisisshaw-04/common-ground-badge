@@ -1,12 +1,10 @@
 import { toCanvas } from 'html-to-image'
 import {
-  AudioBufferSource,
   BufferTarget,
   Mp4OutputFormat,
   Output,
   VideoSample,
   VideoSampleSource,
-  getFirstEncodableAudioCodec,
   getFirstEncodableVideoCodec,
 } from 'mediabunny'
 import { footFramePath } from '../components/FootVideoFrame'
@@ -27,7 +25,7 @@ const MIN_SECONDS = 1.5
 const MAX_SECONDS = 2
 /** 720-wide keeps WebCodecs reliable and matches H.264 Level 3.1. */
 const MAX_VIDEO_WIDTH = 720
-const MP4_BUDGET_MS = 32000
+const MP4_BUDGET_MS = 45000
 
 type Box = { x: number; y: number; w: number; h: number }
 type Layer = { video: HTMLVideoElement; box: Box }
@@ -35,8 +33,7 @@ type Layer = { video: HTMLVideoElement; box: Box }
 /** Constrained Baseline 3.1 — iPhone, Android, IG, LinkedIn, VLC. */
 const AVC_BASELINE = 'avc1.42E01F'
 const AVC_MAIN = 'avc1.4D401F'
-const AVC_BITRATE = 2_500_000
-const AAC_RATE = 44100
+const AVC_BITRATE = 2_800_000
 
 const SNAPSHOT = {
   cacheBust: true,
@@ -68,7 +65,7 @@ function seekVideo(video: HTMLVideoElement, time: number) {
     }
     video.addEventListener('seeked', finish)
     video.currentTime = t
-    window.setTimeout(finish, 90)
+    window.setTimeout(finish, 120)
   })
 }
 
@@ -118,14 +115,6 @@ function mediaBox(node: HTMLElement, media: HTMLElement, width: number, height: 
   }
 }
 
-function unionBox(a: Box, b: Box): Box {
-  const left = Math.min(a.x, b.x)
-  const top = Math.min(a.y, b.y)
-  const right = Math.max(a.x + a.w, b.x + b.w)
-  const bottom = Math.max(a.y + a.h, b.y + b.h)
-  return { x: left, y: top, w: right - left, h: bottom - top }
-}
-
 function copyCanvases(from: HTMLElement, to: HTMLElement) {
   const src = [...from.querySelectorAll('canvas')]
   const dst = [...to.querySelectorAll('canvas')]
@@ -138,25 +127,29 @@ function copyCanvases(from: HTMLElement, to: HTMLElement) {
   })
 }
 
-/** Off-screen copy of the poster so the live preview never jumps. */
+/**
+ * In-viewport invisible clone so html-to-image rasterizes the real layout
+ * (off-left clones often come back blank) without flashing the live preview.
+ */
 function mountClone(node: HTMLElement) {
   const clone = node.cloneNode(true) as HTMLElement
   copyCanvases(node, clone)
-  for (const video of clone.querySelectorAll('video')) {
-    video.remove()
-  }
+  for (const video of clone.querySelectorAll('video')) video.remove()
   for (const el of [clone, ...clone.querySelectorAll<HTMLElement>('*')]) {
     if (getComputedStyle(el).filter !== 'none') el.style.filter = 'none'
   }
+  clone.setAttribute('data-export-clone', '1')
   clone.style.cssText = [
     'position:fixed',
-    'left:-14000px',
+    'left:0',
     'top:0',
     `width:${node.clientWidth}px`,
     `height:${node.clientHeight}px`,
     'margin:0',
+    'opacity:0',
     'pointer-events:none',
     'z-index:-1',
+    'overflow:hidden',
   ].join(';')
   document.body.appendChild(clone)
   return clone
@@ -171,7 +164,8 @@ async function hiddenVideoCopy(video: HTMLVideoElement) {
   copy.setAttribute('playsinline', '')
   copy.preload = 'auto'
   copy.crossOrigin = video.crossOrigin
-  copy.style.cssText = 'position:fixed;left:-9999px;width:2px;height:2px;opacity:0;pointer-events:none'
+  copy.style.cssText =
+    'position:fixed;left:0;top:0;width:2px;height:2px;opacity:0;pointer-events:none;z-index:-1'
   document.body.appendChild(copy)
   await waitForVideo(copy)
   return copy
@@ -179,9 +173,7 @@ async function hiddenVideoCopy(video: HTMLVideoElement) {
 
 function paintFrame(
   ctx: CanvasRenderingContext2D,
-  bgSnap: HTMLCanvasElement,
-  badgeSnap: HTMLCanvasElement | null,
-  badgeBox: Box | null,
+  snap: HTMLCanvasElement,
   layers: Layer[],
   width: number,
   height: number,
@@ -189,10 +181,7 @@ function paintFrame(
 ) {
   ctx.fillStyle = backgroundColor
   ctx.fillRect(0, 0, width, height)
-  ctx.drawImage(bgSnap, 0, 0, width, height)
-  if (badgeSnap && badgeBox) {
-    ctx.drawImage(badgeSnap, badgeBox.x, badgeBox.y, badgeBox.w, badgeBox.h)
-  }
+  ctx.drawImage(snap, 0, 0, width, height)
   for (const { video, box } of layers) {
     ctx.save()
     ctx.translate(box.x, box.y)
@@ -223,6 +212,7 @@ function phoneSafeAvcProfile(profile: number) {
 }
 
 async function assertPhoneSafeMp4(blob: Blob) {
+  if (blob.size < 1024) throw new Error('MP4 file is empty.')
   const buf = new Uint8Array(await blob.slice(0, 768_000).arrayBuffer())
   const tag = String.fromCharCode(buf[4], buf[5], buf[6], buf[7])
   if (tag !== 'ftyp') throw new Error('Not a real MP4 (missing ftyp).')
@@ -244,7 +234,7 @@ const AVC_TRIES: AvcTry[] = [
   { fullCodecString: AVC_BASELINE, hardwareAcceleration: 'prefer-software', bitrate: AVC_BITRATE },
   { fullCodecString: AVC_BASELINE, hardwareAcceleration: 'no-preference', bitrate: AVC_BITRATE },
   { fullCodecString: AVC_MAIN, hardwareAcceleration: 'prefer-software', bitrate: AVC_BITRATE },
-  { fullCodecString: AVC_MAIN, hardwareAcceleration: 'no-preference', bitrate: 2_000_000 },
+  { fullCodecString: AVC_MAIN, hardwareAcceleration: 'no-preference', bitrate: 2_200_000 },
 ]
 
 function clipSeconds(primary: HTMLVideoElement | null) {
@@ -254,13 +244,7 @@ function clipSeconds(primary: HTMLVideoElement | null) {
   return MIN_SECONDS
 }
 
-function silentAudio(seconds: number) {
-  const frames = Math.max(AAC_RATE, Math.ceil(AAC_RATE * seconds))
-  const ctx = new OfflineAudioContext(2, frames, AAC_RATE)
-  return ctx.createBuffer(2, frames, AAC_RATE)
-}
-
-/** BT.601 limited-range I420. Phones want yuv420p (tv), not jpeg-range yuvj420p. */
+/** BT.709 limited-range I420 — phones want yuv420p (tv), not jpeg-range yuvj420p. */
 function fillI420(rgba: Uint8ClampedArray, width: number, height: number, out: Uint8Array) {
   const ySize = width * height
   const cW = width >> 1
@@ -317,20 +301,7 @@ async function encodeMp4Once(
     contentHint: 'detail',
   })
   output.addVideoTrack(source, { frameRate: FPS })
-
-  const audioCodec = await getFirstEncodableAudioCodec(['aac'], {
-    numberOfChannels: 2,
-    sampleRate: AAC_RATE,
-    bitrate: 64_000,
-  })
-  let audio: AudioBufferSource | null = null
-  if (audioCodec) {
-    audio = new AudioBufferSource({ codec: audioCodec, bitrate: 64_000 })
-    output.addAudioTrack(audio)
-  }
-
   await output.start()
-  if (audio) await audio.add(silentAudio(clip))
 
   const abort = () => {
     void output.cancel().catch(() => {})
@@ -420,7 +391,7 @@ async function encodeRecorder(
   const mime = recorderMime()
   if (!mime) throw new Error('This browser cannot record an MP4 from a canvas.')
 
-  canvas.style.cssText = 'position:fixed;left:-99999px;top:0;pointer-events:none'
+  canvas.style.cssText = 'position:fixed;left:0;top:0;opacity:0;pointer-events:none;z-index:-1'
   document.body.appendChild(canvas)
 
   const stream = canvas.captureStream(FPS)
@@ -461,12 +432,11 @@ async function encodeRecorder(
   })
 
   if (rec.state !== 'inactive') rec.stop()
-  await Promise.race([stopped, sleep(2000)])
+  await Promise.race([stopped, sleep(2500)])
   stream.getTracks().forEach((t) => t.stop())
   canvas.remove()
 
   const blob = new Blob(chunks, { type: 'video/mp4' })
-  if (blob.size < 64) throw new Error('Video recording produced an empty file.')
   await assertPhoneSafeMp4(blob)
   return blob
 }
@@ -500,68 +470,54 @@ export async function exportStoryVideo(node: HTMLElement, opts: StoryExportOptio
     throw new Error('The poster is not on screen yet — wait a beat and try again.')
   }
 
-  const fit = node.querySelector('[data-story-fit]') as HTMLElement | null
-  const lan = fit?.querySelector('.lanyard-hang') as HTMLElement | null
-  const fitBox = fit ? mediaBox(node, fit, width, height) : null
-  const lanBox = lan ? mediaBox(node, lan, width, height) : null
-  const badgeBox = fitBox && lanBox ? unionBox(fitBox, lanBox) : fitBox
-  const ratio = width / Math.max(1, node.clientWidth)
+  // Measure video slots from the live node before cloning.
+  const liveBoxes = liveVideos.map((video) => {
+    const media = (video.closest('.foot-frame-media') as HTMLElement | null) ?? video
+    return mediaBox(node, media, width, height)
+  })
 
-  const clones: HTMLElement[] = []
   const scratchVideos: HTMLVideoElement[] = []
-  let bgSnap: HTMLCanvasElement
-  let badgeSnap: HTMLCanvasElement | null = null
+  let snap: HTMLCanvasElement
+  let clone: HTMLElement | null = null
 
   try {
-    const posterClone = mountClone(node)
-    clones.push(posterClone)
-    await sleep(30)
+    for (const video of liveVideos) {
+      scratchVideos.push(await hiddenVideoCopy(video))
+    }
 
-    bgSnap = await toCanvas(posterClone, {
+    clone = mountClone(node)
+    await sleep(48)
+
+    const ratio = width / Math.max(1, node.clientWidth)
+    snap = await toCanvas(clone, {
       ...SNAPSHOT,
       pixelRatio: ratio,
       backgroundColor: opts.backgroundColor,
-      filter: (el) => !el.hasAttribute('data-story-fit'),
     })
-
-    const fitClone = posterClone.querySelector('[data-story-fit]') as HTMLElement | null
-    if (fitClone) {
-      const lanClone = fitClone.querySelector('.lanyard-hang') as HTMLElement | null
-      fitClone.style.transform = 'none'
-      fitClone.style.left = '0px'
-      fitClone.style.top = '0px'
-      fitClone.style.position = 'relative'
-      if (lanClone) {
-        lanClone.style.position = 'relative'
-        lanClone.style.left = 'auto'
-        lanClone.style.bottom = 'auto'
-        lanClone.style.transform = 'none'
-        lanClone.style.marginLeft = 'auto'
-        lanClone.style.marginRight = 'auto'
-      }
-      await sleep(30)
-      badgeSnap = await toCanvas(fitClone, {
-        ...SNAPSHOT,
-        pixelRatio: badgeBox ? badgeBox.w / Math.max(1, fitClone.offsetWidth) : ratio,
-      })
-    }
-
-    for (const video of liveVideos) {
-      const copy = await hiddenVideoCopy(video)
-      scratchVideos.push(copy)
-    }
   } finally {
-    for (const el of clones) el.remove()
+    clone?.remove()
+  }
+
+  if (snap.width < 2 || snap.height < 2) {
+    throw new Error('Could not capture the poster — try again.')
+  }
+
+  // Normalize to exact even export size (html-to-image can be ±1px).
+  if (snap.width !== width || snap.height !== height) {
+    const normalized = document.createElement('canvas')
+    normalized.width = width
+    normalized.height = height
+    const nctx = normalized.getContext('2d', { alpha: false })
+    if (!nctx) throw new Error('Could not normalize the poster capture.')
+    nctx.fillStyle = opts.backgroundColor
+    nctx.fillRect(0, 0, width, height)
+    nctx.drawImage(snap, 0, 0, width, height)
+    snap = normalized
   }
 
   const layers = scratchVideos
-    .map((video, i) => {
-      const original = liveVideos[i]
-      const media =
-        (original?.closest('.foot-frame-media') as HTMLElement | null) ?? original ?? video
-      return { video, box: mediaBox(node, media, width, height) }
-    })
-    .filter((layer) => layer.video.videoWidth > 0)
+    .map((video, i) => ({ video, box: liveBoxes[i]! }))
+    .filter((layer) => layer.video.videoWidth > 0 && layer.box.w > 1 && layer.box.h > 1)
 
   const canvas = document.createElement('canvas')
   canvas.width = width
@@ -569,8 +525,7 @@ export async function exportStoryVideo(node: HTMLElement, opts: StoryExportOptio
   const ctx = canvas.getContext('2d', { alpha: false, colorSpace: 'srgb', willReadFrequently: true })
   if (!ctx) throw new Error('Could not open a canvas to record.')
 
-  const paint = () =>
-    paintFrame(ctx, bgSnap, badgeSnap, badgeBox, layers, width, height, opts.backgroundColor)
+  const paint = () => paintFrame(ctx, snap, layers, width, height, opts.backgroundColor)
   const primary = layers[0]?.video ?? null
   const clip = clipSeconds(primary)
 
@@ -580,7 +535,7 @@ export async function exportStoryVideo(node: HTMLElement, opts: StoryExportOptio
       primary.loop = true
     }
 
-    let blob: Blob | null = null
+    let blob: Blob
     try {
       blob = await withTimeout(
         (signal) => encodeMp4(canvas, ctx, paint, primary, clip, signal),
@@ -603,32 +558,44 @@ export async function exportStoryVideo(node: HTMLElement, opts: StoryExportOptio
   }
 }
 
+/** Always lands a real .mp4 — share sheet when useful, anchor download as the reliable path. */
 export async function downloadBlob(blob: Blob, filename: string) {
-  const file = new File([blob], filename, { type: blob.type || 'video/mp4' })
+  const file = new File([blob], filename, { type: 'video/mp4' })
+
+  const saveViaAnchor = () => {
+    const url = URL.createObjectURL(file)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = filename
+    a.rel = 'noopener'
+    a.type = 'video/mp4'
+    a.style.display = 'none'
+    document.body.appendChild(a)
+    a.click()
+    window.setTimeout(() => {
+      a.remove()
+      URL.revokeObjectURL(url)
+    }, 8_000)
+  }
+
   const nav = navigator as Navigator & {
     canShare?: (data: ShareData) => boolean
     share?: (data: ShareData) => Promise<void>
   }
-  if (typeof nav.share === 'function' && nav.canShare?.({ files: [file] })) {
+
+  // Mobile: share sheet is the best “Save Video” UX. If the user cancels, still
+  // fall through to an anchor download so they are never left with nothing.
+  const mobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+  if (mobile && typeof nav.share === 'function' && nav.canShare?.({ files: [file] })) {
     try {
       await nav.share({ files: [file], title: filename })
       return
     } catch (err) {
-      if ((err as DOMException).name === 'AbortError') return
+      if ((err as DOMException).name !== 'AbortError') {
+        console.warn('Share failed, falling back to download.', err)
+      }
     }
   }
 
-  const url = URL.createObjectURL(file)
-  const a = document.createElement('a')
-  a.href = url
-  a.download = filename
-  a.rel = 'noopener'
-  a.type = file.type
-  a.style.display = 'none'
-  document.body.appendChild(a)
-  a.click()
-  window.setTimeout(() => {
-    a.remove()
-    URL.revokeObjectURL(url)
-  }, 4000)
+  saveViaAnchor()
 }

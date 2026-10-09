@@ -56,7 +56,8 @@ export function DoneScreen({ state, onEdit }: DoneProps) {
       await downloadBlob(file.blob, `CommonGround-${name}-${id}-${format}.mp4`)
     } catch (err) {
       console.error(err)
-      alert('Could not export the video — try again in Chrome or Safari.')
+      const detail = err instanceof Error ? err.message : 'Unknown error'
+      alert(`Could not export the video (${detail}). Try Chrome or Safari, then tap Download again.`)
     } finally {
       setBusy(null)
     }

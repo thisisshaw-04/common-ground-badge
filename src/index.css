@@ -257,13 +257,13 @@ textarea {
 }
 
 .story-badge-slot {
-  top: 15%;
-  width: 68%;
+  top: 18%;
+  width: 66%;
 }
 
 .story-poster.is-grid .story-badge-slot {
-  top: 12%;
-  width: 64%;
+  top: 16%;
+  width: 62%;
 }
 
 .done-capture-well {
