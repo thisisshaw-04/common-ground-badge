@@ -243,8 +243,9 @@ textarea {
 }
 
 .maker-edge-actions .badge-edge-btn {
-  padding-block: 0.35rem;
-  font-size: 11px;
+  /* Match .panel-title section-header size; slightly taller than the tight chip. */
+  padding-block: 0.48rem;
+  font-size: 12px;
   line-height: 1.2;
   font-weight: 600;
 }
