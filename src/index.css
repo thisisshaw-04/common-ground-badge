@@ -380,11 +380,26 @@ textarea {
   }
 
   .done-previews {
+    position: relative;
     width: 100%;
     height: auto;
     min-height: 0;
     justify-content: space-between;
-    padding: 2.4rem 0 1.75rem;
+    padding: 2.85rem 0 1.75rem;
+  }
+
+  .done-option-wrap {
+    position: static;
+  }
+
+  .done-edit.panel-title {
+    position: absolute;
+    left: 0;
+    top: 1.15rem;
+  }
+
+  .done-option-head {
+    position: static;
   }
 
   .done-copy {
