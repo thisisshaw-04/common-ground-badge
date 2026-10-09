@@ -22,7 +22,7 @@ export function BadgePreview({
       body={
         <>
           {name ? (
-            <p className="poster-name-input absolute top-2 left-1/2 z-20 w-[84%] -translate-x-1/2 text-center text-black uppercase">
+            <p className="poster-name-input poster-name-final absolute top-2 left-1/2 z-20 w-[84%] -translate-x-1/2 text-center text-black uppercase">
               {name}
             </p>
           ) : null}
