@@ -963,31 +963,8 @@ button.track-box:not(.is-selected):hover video {
   border: 1px solid #f0f0f0;
   border-right: 0;
   border-bottom: 0;
-  /* Wrap only at the top-right. Square BR is covered by ::after so the oval is the edge. */
+  /* Wrap only at the top-right. The core SVG covers the square BR ear. */
   border-radius: 4px var(--curve) 0 4px;
-}
-
-/* Hide the square bottom-right ears; the punched ellipse is the paper meeting the core. */
-.tape-strip::after {
-  content: '';
-  position: absolute;
-  z-index: 5;
-  right: 0;
-  bottom: 0;
-  width: var(--roll-d);
-  height: calc(var(--cap-h) / 2);
-  pointer-events: none;
-  background: var(--bg);
-  -webkit-mask-image: radial-gradient(
-    ellipse calc(var(--roll-d) / 2) calc(var(--cap-h) / 2) at 50% 100%,
-    transparent 99%,
-    #000 100%
-  );
-  mask-image: radial-gradient(
-    ellipse calc(var(--roll-d) / 2) calc(var(--cap-h) / 2) at 50% 100%,
-    transparent 99%,
-    #000 100%
-  );
 }
 
 /* Specular on the remaining roll, not across a huge arc. */
@@ -1012,6 +989,7 @@ button.track-box:not(.is-selected):hover video {
 /* Core oval shares the strip’s bottom-right quarter-ellipse. */
 .tape-roll {
   position: absolute;
+  z-index: 3;
   top: 0;
   right: 0;
   width: var(--roll-d);
@@ -1024,7 +1002,6 @@ button.track-box:not(.is-selected):hover video {
   z-index: 3;
   left: 0;
   right: 0;
-  /* Ellipse center sits on the strip bottom; top half is the paper’s BR edge. */
   top: calc(var(--tape-h) - var(--cap-h) * 0.5);
   width: 100%;
   height: var(--cap-h);

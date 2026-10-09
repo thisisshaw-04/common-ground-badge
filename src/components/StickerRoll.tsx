@@ -160,9 +160,11 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
         </div>
         <div className="tape-roll" aria-hidden>
           <svg className="tape-roll-end" viewBox="0 0 66 26.4" preserveAspectRatio="none">
-            <ellipse cx="33" cy="14.5" rx="33" ry="12" fill="#e4e4e4" />
+            <ellipse cx="33" cy="14.6" rx="33" ry="12" fill="#dedede" />
+            {/* TR quadrant only: hides the strip’s square ear. White oval paints next, so the curve is the edge. */}
+            <rect x="33" y="-1" width="34" height="15" fill="var(--bg)" />
             <ellipse cx="33" cy="13.2" rx="33" ry="13.2" fill="#ffffff" />
-            <ellipse cx="33" cy="13.2" rx="18" ry="7.2" fill="#c6c6c6" />
+            <ellipse cx="33" cy="13.2" rx="17.5" ry="7" fill="#c4c4c4" />
           </svg>
         </div>
       </div>
