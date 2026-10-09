@@ -955,8 +955,8 @@ button.track-box:not(.is-selected):hover video {
   background: #ffffff;
   border: 1px solid #f0f0f0;
   border-right: 0;
-  /* Wrap only at the top-right. The core hangs under a straight bottom edge. */
-  border-radius: 4px var(--curve) 0 4px;
+  /* Top-right wraps; bottom-right tucks into the core oval. */
+  border-radius: 4px var(--curve) calc(var(--cap-h) * 0.42) 4px;
 }
 
 /* Specular on the remaining roll, not across a huge arc. */
@@ -978,7 +978,7 @@ button.track-box:not(.is-selected):hover video {
   filter: blur(0.7px);
 }
 
-/* Core sits on the straight bottom edge — same white paper, hole looking into the tube. */
+/* Core oval centered on the strip’s bottom edge so the paper meets the roll. */
 .tape-roll {
   position: absolute;
   top: 0;
@@ -993,7 +993,7 @@ button.track-box:not(.is-selected):hover video {
   z-index: 3;
   left: 0;
   right: 0;
-  top: calc(var(--tape-h) - var(--cap-h) * 0.28);
+  top: calc(var(--tape-h) - var(--cap-h) * 0.5);
   width: 100%;
   height: var(--cap-h);
   display: block;

@@ -166,16 +166,10 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
                 <stop offset="70%" stopColor="#f6f6f6" />
                 <stop offset="100%" stopColor="#e2e2e2" />
               </radialGradient>
-              <linearGradient id="tape-tube" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#b0b0b0" />
-                <stop offset="40%" stopColor="#d2d2d2" />
-                <stop offset="100%" stopColor="#f8f8f8" />
-              </linearGradient>
             </defs>
-            <ellipse cx="33" cy="14.1" rx="32.4" ry="11.6" fill="#e8e8e8" />
-            <ellipse cx="33" cy="13" rx="32.4" ry="11.6" fill="url(#tape-paper)" />
-            <ellipse cx="33" cy="13.3" rx="21.4" ry="7.4" fill="url(#tape-tube)" />
-            <ellipse cx="33" cy="10.7" rx="11.6" ry="2.2" fill="#fff" opacity="0.5" />
+            <ellipse cx="33" cy="14.2" rx="33" ry="11.8" fill="#e8e8e8" />
+            <ellipse cx="33" cy="13" rx="33" ry="11.8" fill="url(#tape-paper)" />
+            <ellipse cx="33" cy="13.2" rx="20.2" ry="7.1" fill="#c2c2c2" />
           </svg>
         </div>
       </div>
