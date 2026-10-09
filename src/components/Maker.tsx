@@ -48,8 +48,22 @@ interface MakerProps {
   badgeRef: RefObject<HTMLDivElement | null>
 }
 
+type DrawerTab = 'stickers' | 'cords' | 'frame' | 'foot' | 'draw'
+
+const DRAWER_TABS: { id: DrawerTab; label: string }[] = [
+  { id: 'stickers', label: 'Stickers' },
+  { id: 'cords', label: 'Cord' },
+  { id: 'frame', label: 'Frame' },
+  { id: 'foot', label: 'Foot' },
+  { id: 'draw', label: 'Draw' },
+]
+
 export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps) {
   const [tab, setTab] = useState<StickerTab>('role')
+  const [drawer, setDrawer] = useState<DrawerTab>('stickers')
+  const [isDesktop, setIsDesktop] = useState(() =>
+    typeof window !== 'undefined' ? window.matchMedia('(min-width: 1024px)').matches : true,
+  )
   const [mode, setMode] = useState<'stick' | 'draw'>('stick')
   const [brush, setBrush] = useState<1 | 2 | 3>(2)
   const [stroke, setStroke] = useState<'round' | 'sketch'>('round')
@@ -104,6 +118,14 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
   }, [undo])
+
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 1024px)')
+    const sync = () => setIsDesktop(mq.matches)
+    sync()
+    mq.addEventListener('change', sync)
+    return () => mq.removeEventListener('change', sync)
+  }, [])
 
   const clearAll = () => {
     push({
@@ -385,7 +407,200 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
     }
   }
 
-  const heading = (
+  const openDrawer = (id: DrawerTab) => {
+    setDrawer(id)
+    if (id === 'draw') setMode('draw')
+    else setMode('stick')
+  }
+
+  const finish = () => {
+    saveDrawing()
+    onDone()
+  }
+
+  const drawControls = (
+    <div className="grid grid-cols-4 gap-2">
+      <button
+        type="button"
+        aria-label="Thin brush"
+        onClick={() => {
+          setBrush(1)
+          setStroke('round')
+          setMode('draw')
+        }}
+        className={`track-box flex aspect-square items-center justify-center bg-[var(--panel)] ${
+          brush === 1 && stroke === 'round' && mode === 'draw' ? 'is-selected' : ''
+        }`}
+      >
+        <span className="rounded-full bg-black" style={{ width: 7, height: 7 }} />
+      </button>
+      <button
+        type="button"
+        aria-label="Rough sketch circle"
+        onClick={() => {
+          if (mode === 'draw' && stroke === 'sketch') {
+            setMode('stick')
+            return
+          }
+          setBrush(2)
+          setStroke('sketch')
+          setMode('draw')
+        }}
+        className={`track-box flex aspect-square items-center justify-center bg-[var(--panel)] ${
+          stroke === 'sketch' && mode === 'draw' ? 'is-selected' : ''
+        }`}
+      >
+        <svg viewBox="0 0 28 28" className="h-7 w-7" aria-hidden>
+          <path
+            d="M13.74 5.4 C 14.45 5.55 15.53 6.3 16.27 6.43 C 17.01 6.57 17.65 5.81 18.19 6.21 C 18.74 6.6 19.05 8.22 19.53 8.79 C 20.02 9.36 20.57 9.09 21.1 9.61 C 21.64 10.13 22.65 11.24 22.76 11.93 C 22.87 12.63 21.88 13.02 21.75 13.77 C 21.61 14.51 21.96 15.66 21.95 16.39 C 21.94 17.12 22.18 17.64 21.71 18.15 C 21.23 18.65 19.65 18.91 19.11 19.42 C 18.57 19.94 19.01 20.84 18.47 21.23 C 17.92 21.62 16.54 21.48 15.84 21.79 C 15.14 22.09 14.94 23.12 14.27 23.05 C 13.6 22.97 12.51 21.6 11.8 21.33 C 11.09 21.05 10.71 21.62 10.02 21.4 C 9.33 21.17 8.07 20.54 7.67 19.96 C 7.27 19.39 7.95 18.61 7.62 17.94 C 7.29 17.28 5.94 16.58 5.68 15.96 C 5.42 15.35 6.09 14.99 6.05 14.24 C 6.02 13.48 5.28 12.09 5.48 11.44 C 5.67 10.79 6.76 10.95 7.22 10.35 C 7.67 9.75 7.72 8.28 8.21 7.85 C 8.69 7.41 9.5 8.13 10.14 7.75 C 10.77 7.37 11.41 5.97 12.01 5.58 C 12.61 5.19 13.03 5.26 13.74 5.4 Z"
+            fill="#111"
+          />
+        </svg>
+      </button>
+      <button
+        type="button"
+        aria-label="Medium brush"
+        onClick={() => {
+          setBrush(2)
+          setStroke('round')
+          setMode('draw')
+        }}
+        className={`track-box flex aspect-square items-center justify-center bg-[var(--panel)] ${
+          brush === 2 && stroke === 'round' && mode === 'draw' ? 'is-selected' : ''
+        }`}
+      >
+        <span className="rounded-full bg-black" style={{ width: 12, height: 12 }} />
+      </button>
+      <button
+        type="button"
+        aria-label="Thick brush"
+        onClick={() => {
+          setBrush(3)
+          setStroke('round')
+          setMode('draw')
+        }}
+        className={`track-box flex aspect-square items-center justify-center bg-[var(--panel)] ${
+          brush === 3 && stroke === 'round' && mode === 'draw' ? 'is-selected' : ''
+        }`}
+      >
+        <span className="rounded-full bg-black" style={{ width: 17, height: 17 }} />
+      </button>
+    </div>
+  )
+
+  const frameControls = (
+    <div className="grid grid-cols-4 gap-2">
+      {(
+        [
+          ['none', 'None'],
+          ['dashed', 'Dash'],
+          ['dotted', 'Dots'],
+          ['wiggly', 'Wiggle'],
+        ] as [BorderId, string][]
+      ).map(([id, label]) => (
+        <button
+          key={id}
+          type="button"
+          onClick={() => push({ ...state, border: id })}
+          className={`track-box flex aspect-square flex-col items-center justify-center gap-1 bg-[var(--panel)] ${
+            state.border === id ? 'is-selected' : ''
+          }`}
+        >
+          <FrameSwatch border={id} />
+          <span className="font-mono text-[10px] uppercase tracking-wide">{label}</span>
+        </button>
+      ))}
+    </div>
+  )
+
+  const cordControls = (
+    <div className="grid grid-cols-4 gap-2">
+      {(Object.keys(CORDS) as CordId[]).map((id) => (
+        <button
+          key={id}
+          type="button"
+          aria-label={CORDS[id].label}
+          onClick={() => push({ ...state, cord: id })}
+          className={`track-box aspect-square overflow-hidden bg-[var(--panel)] p-0 ${
+            state.cord === id ? 'is-selected' : ''
+          }`}
+        >
+          <CordSwatch cord={id} />
+        </button>
+      ))}
+    </div>
+  )
+
+  const footControls = (
+    <div className="grid min-h-0 flex-1 auto-rows-fr grid-cols-2 gap-2">
+      {FOOT_VIDEO_ORDER.map((id) => {
+        const v = FOOT_VIDEOS[id]
+        return (
+          <button
+            key={id}
+            type="button"
+            onClick={() => push({ ...state, footVideo: id })}
+            onMouseEnter={(e) => {
+              void e.currentTarget.querySelector('video')?.play().catch(() => {})
+            }}
+            onMouseLeave={(e) => {
+              const vid = e.currentTarget.querySelector('video')
+              if (!vid) return
+              vid.pause()
+              vid.currentTime = 0
+            }}
+            className={`track-box flex text-left ${state.footVideo === id ? 'is-selected' : ''}`}
+            aria-label={v.label}
+            title={v.label}
+          >
+            <div className="relative min-h-8 w-full flex-1 overflow-hidden bg-[#d8d8d8] sm:min-h-9">
+              <video
+                src={`${import.meta.env.BASE_URL}foot-videos/${v.file}`}
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                className="absolute inset-0 h-full w-full object-cover object-center"
+              />
+            </div>
+          </button>
+        )
+      })}
+    </div>
+  )
+
+  const stickerControls = (
+    <>
+      <div className="mb-2 flex flex-wrap items-center gap-x-3 gap-y-1.5">
+        {TABS.map((t) => (
+          <button
+            key={t.id}
+            type="button"
+            onClick={() => {
+              setTab(t.id)
+              setMode('stick')
+            }}
+            className={`option-btn border border-black/20 bg-white px-2 py-1 font-mono text-[10px] tracking-wide text-[var(--muted)] ${
+              tab === t.id ? 'is-selected text-black' : ''
+            }`}
+          >
+            {t.label}
+          </button>
+        ))}
+        <p className="ml-auto hidden text-right text-[11px] text-[var(--muted)] lg:block">
+          Drag onto the card · double-click to delete
+        </p>
+      </div>
+      <StickerRoll
+        tabKey={tab}
+        stickers={STICKERS.filter((s) => s.tab === tab)}
+        peelingId={peel?.def.id ?? null}
+        onPeelStart={onPeelStart}
+      />
+    </>
+  )
+
+  const desktopHeading = (
     <>
       <button
         type="button"
@@ -404,304 +619,203 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
     </>
   )
 
+  const badgeCluster = (
+    <div className="maker-badge-cluster">
+      <Lanyard cord={state.cord} scale={BADGE_LAYOUT.lanyardScale} className="lanyard-offscreen" />
+      <BadgeFace
+        badgeRef={badgeRef}
+        width={BADGE_W}
+        footVideo={state.footVideo}
+        border={state.border}
+        bodyHeight={BODY_H}
+        footHeight={FOOT_H}
+        className="relative z-[1]"
+        body={
+          <>
+            <input
+              value={state.name}
+              onChange={(e) => onChange({ ...state, name: e.target.value })}
+              onBlur={() => push(state)}
+              placeholder="YOUR NAME"
+              maxLength={22}
+              className="poster-name-input absolute top-2 left-1/2 z-20 w-[84%] -translate-x-1/2 bg-transparent text-center text-black uppercase outline-none placeholder:font-normal placeholder:text-black/25"
+            />
+            <canvas
+              ref={canvasRef}
+              className={`badge-doodle absolute inset-0 z-10 h-full w-full ${
+                mode === 'draw' ? 'cursor-crosshair' : 'pointer-events-none'
+              }`}
+              onPointerDown={onDrawPointerDown}
+              onPointerMove={onDrawPointerMove}
+              onPointerUp={onDrawPointerUp}
+              onPointerLeave={onDrawPointerUp}
+            />
+          </>
+        }
+        overlay={state.stickers.map((s, i) => {
+          const def = stickerById(s.defId)
+          if (!def) return null
+          return (
+            <button
+              key={s.uid}
+              type="button"
+              className={`sticker-on-badge absolute cursor-grab touch-none select-none active:cursor-grabbing ${
+                mode === 'draw' ? 'pointer-events-none' : 'pointer-events-auto'
+              }`}
+              style={{
+                left: `${s.x}%`,
+                top: `${s.y}%`,
+                zIndex: draggingUid === s.uid ? 1000 : i + 1,
+                transform: stickerBadgeTransform(s.rotation),
+              }}
+              onPointerDown={(e) => onStickerPointerDown(e, s.uid)}
+              onPointerMove={(e) => onStickerPointerMove(e, s.uid)}
+              onPointerUp={onStickerPointerUp}
+              onPointerCancel={onStickerPointerUp}
+              onDoubleClick={() => removeSticker(s.uid)}
+            >
+              <StickerFace def={def} large dragging={draggingUid === s.uid} />
+            </button>
+          )
+        })}
+      />
+    </div>
+  )
+
   return (
     <div
-      className={`page-fig relative flex h-dvh flex-col overflow-hidden${isPeeling ? ' is-peeling-sticker' : ''}`}
+      className={`page-fig maker-shell relative flex h-dvh flex-col overflow-hidden${isPeeling ? ' is-peeling-sticker' : ''}`}
     >
-      <div className="relative mx-auto flex min-h-0 w-full max-w-[1180px] flex-1 flex-col px-3 pt-5 pb-5 sm:px-5 sm:pt-6 lg:justify-center lg:px-4 lg:py-8">
-        <header className="animate-pop mb-3 shrink-0 sm:mb-4 lg:hidden">{heading}</header>
+      {!isDesktop ? (
+        <div className="maker-mobile">
+          <button type="button" onClick={onBack} className="maker-back">
+            ← Back
+          </button>
 
-        <div className="relative flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto no-scrollbar lg:flex-none lg:flex-row lg:items-end lg:gap-10 lg:overflow-visible">
-          {/* Adjustments LEFT — FigBuild 2-col grid */}
-          <section className="animate-pop order-last flex min-h-0 min-w-0 flex-1 flex-col lg:order-none lg:overflow-y-auto no-scrollbar lg:pt-1 lg:pr-1 lg:pb-1">
-            <div className="flex min-h-0 flex-col gap-6 [@media(min-height:860px)]:gap-7">
-              <div className="grid grid-cols-1 items-start gap-x-5 gap-y-7 sm:grid-cols-2 [@media(min-height:860px)]:gap-y-8">
-                <header className="hidden lg:col-start-1 lg:row-start-1 lg:flex lg:h-full lg:flex-col lg:items-start lg:justify-between lg:self-stretch">
-                  {heading}
-                </header>
-                  <Panel title="Draw" className="sm:col-start-2 sm:row-start-1">
-                    <div className="grid grid-cols-4 gap-2">
-                      <button
-                        type="button"
-                        aria-label="Thin brush"
-                        onClick={() => {
-                          setBrush(1)
-                          setStroke('round')
-                          setMode('draw')
-                        }}
-                        className={`track-box flex aspect-square items-center justify-center bg-[var(--panel)] ${
-                          brush === 1 && stroke === 'round' && mode === 'draw' ? 'is-selected' : ''
-                        }`}
-                      >
-                        <span className="rounded-full bg-black" style={{ width: 7, height: 7 }} />
-                      </button>
-                      <button
-                        type="button"
-                        aria-label="Rough sketch circle"
-                        onClick={() => {
-                          if (mode === 'draw' && stroke === 'sketch') {
-                            setMode('stick')
-                            return
-                          }
-                          setBrush(2)
-                          setStroke('sketch')
-                          setMode('draw')
-                        }}
-                        className={`track-box flex aspect-square items-center justify-center bg-[var(--panel)] ${
-                          stroke === 'sketch' && mode === 'draw' ? 'is-selected' : ''
-                        }`}
-                      >
-                        <svg viewBox="0 0 28 28" className="h-7 w-7" aria-hidden>
-                          <path
-                            d="M13.74 5.4 C 14.45 5.55 15.53 6.3 16.27 6.43 C 17.01 6.57 17.65 5.81 18.19 6.21 C 18.74 6.6 19.05 8.22 19.53 8.79 C 20.02 9.36 20.57 9.09 21.1 9.61 C 21.64 10.13 22.65 11.24 22.76 11.93 C 22.87 12.63 21.88 13.02 21.75 13.77 C 21.61 14.51 21.96 15.66 21.95 16.39 C 21.94 17.12 22.18 17.64 21.71 18.15 C 21.23 18.65 19.65 18.91 19.11 19.42 C 18.57 19.94 19.01 20.84 18.47 21.23 C 17.92 21.62 16.54 21.48 15.84 21.79 C 15.14 22.09 14.94 23.12 14.27 23.05 C 13.6 22.97 12.51 21.6 11.8 21.33 C 11.09 21.05 10.71 21.62 10.02 21.4 C 9.33 21.17 8.07 20.54 7.67 19.96 C 7.27 19.39 7.95 18.61 7.62 17.94 C 7.29 17.28 5.94 16.58 5.68 15.96 C 5.42 15.35 6.09 14.99 6.05 14.24 C 6.02 13.48 5.28 12.09 5.48 11.44 C 5.67 10.79 6.76 10.95 7.22 10.35 C 7.67 9.75 7.72 8.28 8.21 7.85 C 8.69 7.41 9.5 8.13 10.14 7.75 C 10.77 7.37 11.41 5.97 12.01 5.58 C 12.61 5.19 13.03 5.26 13.74 5.4 Z"
-                            fill="#111"
-                          />
-                        </svg>
-                      </button>
-                      <button
-                        type="button"
-                        aria-label="Medium brush"
-                        onClick={() => {
-                          setBrush(2)
-                          setStroke('round')
-                          setMode('draw')
-                        }}
-                        className={`track-box flex aspect-square items-center justify-center bg-[var(--panel)] ${
-                          brush === 2 && stroke === 'round' && mode === 'draw' ? 'is-selected' : ''
-                        }`}
-                      >
-                        <span className="rounded-full bg-black" style={{ width: 12, height: 12 }} />
-                      </button>
-                      <button
-                        type="button"
-                        aria-label="Thick brush"
-                        onClick={() => {
-                          setBrush(3)
-                          setStroke('round')
-                          setMode('draw')
-                        }}
-                        className={`track-box flex aspect-square items-center justify-center bg-[var(--panel)] ${
-                          brush === 3 && stroke === 'round' && mode === 'draw' ? 'is-selected' : ''
-                        }`}
-                      >
-                        <span className="rounded-full bg-black" style={{ width: 17, height: 17 }} />
-                      </button>
-                    </div>
-                  </Panel>
-                <div className="flex min-w-0 flex-col gap-8 sm:col-start-1 sm:row-start-2 [@media(min-height:860px)]:gap-9">
-                  <Panel title="Outer frame">
-                    <div className="grid grid-cols-4 gap-2">
-                      {(
-                        [
-                          ['none', 'None'],
-                          ['dashed', 'Dash'],
-                          ['dotted', 'Dots'],
-                          ['wiggly', 'Wiggle'],
-                        ] as [BorderId, string][]
-                      ).map(([id, label]) => (
-                        <button
-                          key={id}
-                          type="button"
-                          onClick={() => push({ ...state, border: id })}
-                          className={`track-box flex aspect-square flex-col items-center justify-center gap-1 bg-[var(--panel)] ${
-                            state.border === id ? 'is-selected' : ''
-                          }`}
-                        >
-                          <FrameSwatch border={id} />
-                          <span className="font-mono text-[10px] uppercase tracking-wide">{label}</span>
-                        </button>
-                      ))}
-                    </div>
-                  </Panel>
-                  <Panel title="Cords">
-                    <div className="grid grid-cols-4 gap-2">
-                      {(Object.keys(CORDS) as CordId[]).map((id) => (
-                        <button
-                          key={id}
-                          type="button"
-                          aria-label={CORDS[id].label}
-                          onClick={() => push({ ...state, cord: id })}
-                          className={`track-box aspect-square overflow-hidden bg-[var(--panel)] p-0 ${
-                            state.cord === id ? 'is-selected' : ''
-                          }`}
-                        >
-                          <CordSwatch cord={id} />
-                        </button>
-                      ))}
-                    </div>
-                  </Panel>
-                </div>
-                  <Panel title="Foot video" fill className="sm:col-start-2 sm:row-start-2">
-                    <div className="grid min-h-0 flex-1 auto-rows-fr grid-cols-2 gap-2">
-                      {FOOT_VIDEO_ORDER.map((id) => {
-                        const v = FOOT_VIDEOS[id]
-                        return (
-                          <button
-                            key={id}
-                            type="button"
-                            onClick={() => push({ ...state, footVideo: id })}
-                            onMouseEnter={(e) => {
-                              void e.currentTarget.querySelector('video')?.play().catch(() => {})
-                            }}
-                            onMouseLeave={(e) => {
-                              const vid = e.currentTarget.querySelector('video')
-                              if (!vid) return
-                              vid.pause()
-                              vid.currentTime = 0
-                            }}
-                            className={`track-box flex text-left ${
-                              state.footVideo === id ? 'is-selected' : ''
-                            }`}
-                            aria-label={v.label}
-                            title={v.label}
-                          >
-                            <div className="relative min-h-8 w-full flex-1 overflow-hidden bg-[#d8d8d8] sm:min-h-9">
-                              <video
-                                src={`${import.meta.env.BASE_URL}foot-videos/${v.file}`}
-                                muted
-                                loop
-                                playsInline
-                                preload="metadata"
-                                className="absolute inset-0 h-full w-full object-cover object-center"
-                              />
-                            </div>
-                          </button>
-                        )
-                      })}
-                    </div>
-                  </Panel>
-              </div>
-
-              <Panel title="Stickers">
-                <div className="mb-2 flex flex-wrap items-center gap-x-3 gap-y-1.5">
-                  {TABS.map((t) => (
-                    <button
-                      key={t.id}
-                      type="button"
-                      onClick={() => {
-                        setTab(t.id)
-                        setMode('stick')
-                      }}
-                      className={`option-btn border border-black/20 bg-white px-2 py-1 font-mono text-[10px] tracking-wide text-[var(--muted)] ${
-                        tab === t.id ? 'is-selected text-black' : ''
-                      }`}
-                    >
-                      {t.label}
-                    </button>
-                  ))}
-                  <p className="ml-auto text-right text-[11px] text-[var(--muted)]">
-                    Drag onto the card · double-click to delete
-                  </p>
-                </div>
-                <StickerRoll
-                  tabKey={tab}
-                  stickers={STICKERS.filter((s) => s.tab === tab)}
-                  peelingId={peel?.def.id ?? null}
-                  onPeelStart={onPeelStart}
-                />
-              </Panel>
+          <div className="maker-stage">
+            {badgeCluster}
+            <div className="maker-edge-actions">
+              <button
+                type="button"
+                onClick={undo}
+                disabled={!canUndo}
+                title="Undo"
+                className="option-btn badge-edge-btn min-w-0 flex-1 bg-white py-2.5 text-[13px] font-semibold text-black disabled:pointer-events-none disabled:border-black/20 disabled:text-black/30"
+              >
+                Undo
+              </button>
+              <button
+                type="button"
+                onClick={clearAll}
+                className="option-btn badge-edge-btn min-w-0 flex-1 bg-white py-2.5 text-[13px] font-semibold text-black"
+              >
+                Clear
+              </button>
             </div>
-          </section>
+          </div>
 
-          {/* Badge RIGHT */}
-          <aside className="animate-pop flex shrink-0 flex-col items-center lg:w-[400px] xl:w-[412px] lg:pb-1">
-            <div className="relative flex w-full max-w-[380px] flex-col items-center overflow-visible">
-              <Lanyard cord={state.cord} scale={BADGE_LAYOUT.lanyardScale} className="lanyard-offscreen" />
-              <BadgeFace
-                badgeRef={badgeRef}
-                width={BADGE_W}
-                footVideo={state.footVideo}
-                border={state.border}
-                bodyHeight={BODY_H}
-                footHeight={FOOT_H}
-                className="relative z-[1]"
-                body={
-                  <>
-                    <input
-                      value={state.name}
-                      onChange={(e) => onChange({ ...state, name: e.target.value })}
-                      onBlur={() => push(state)}
-                      placeholder="YOUR NAME"
-                      maxLength={22}
-                      className="poster-name-input absolute top-2 left-1/2 z-20 w-[84%] -translate-x-1/2 bg-transparent text-center text-black uppercase outline-none placeholder:font-normal placeholder:text-black/25"
-                    />
-
-                    <canvas
-                      ref={canvasRef}
-                      className={`badge-doodle absolute inset-0 z-10 h-full w-full ${
-                        mode === 'draw' ? 'cursor-crosshair' : 'pointer-events-none'
-                      }`}
-                      onPointerDown={onDrawPointerDown}
-                      onPointerMove={onDrawPointerMove}
-                      onPointerUp={onDrawPointerUp}
-                      onPointerLeave={onDrawPointerUp}
-                    />
-                  </>
-                }
-                overlay={state.stickers.map((s, i) => {
-                  const def = stickerById(s.defId)
-                  if (!def) return null
-                  return (
-                    <button
-                      key={s.uid}
-                      type="button"
-                      className={`sticker-on-badge absolute cursor-grab touch-none select-none active:cursor-grabbing ${
-                        mode === 'draw' ? 'pointer-events-none' : 'pointer-events-auto'
-                      }`}
-                      style={{
-                        left: `${s.x}%`,
-                        top: `${s.y}%`,
-                        zIndex: draggingUid === s.uid ? 1000 : i + 1,
-                        transform: stickerBadgeTransform(s.rotation),
-                      }}
-                      onPointerDown={(e) => onStickerPointerDown(e, s.uid)}
-                      onPointerMove={(e) => onStickerPointerMove(e, s.uid)}
-                      onPointerUp={onStickerPointerUp}
-                      onPointerCancel={onStickerPointerUp}
-                      onDoubleClick={() => removeSticker(s.uid)}
-                    >
-                      <StickerFace
-                        def={def}
-                        large
-                        dragging={draggingUid === s.uid}
-                      />
-                    </button>
-                  )
-                })}
-              />
-
-              <div className="mt-3 flex gap-2" style={{ width: BADGE_W, maxWidth: '100%' }}>
+          <div className="maker-drawer">
+            <nav className="maker-tabs" aria-label="Edit tools">
+              {DRAWER_TABS.map((t) => (
                 <button
+                  key={t.id}
                   type="button"
-                  onClick={undo}
-                  disabled={!canUndo}
-                  title="Undo (Ctrl/⌘ Z)"
-                  className="option-btn badge-edge-btn min-w-0 flex-1 bg-white py-2 text-[13px] font-semibold text-black disabled:pointer-events-none disabled:border-black/20 disabled:text-black/30"
+                  onClick={() => openDrawer(t.id)}
+                  className={`maker-tab${drawer === t.id ? ' is-active' : ''}`}
                 >
-                  Undo
+                  {t.label}
                 </button>
-                <button
-                  type="button"
-                  onClick={clearAll}
-                  className="option-btn badge-edge-btn min-w-0 flex-1 bg-white py-2 text-[13px] font-semibold text-black"
-                >
-                  Clear
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    saveDrawing()
-                    onDone()
-                  }}
-                  className="option-btn btn-done badge-edge-btn min-w-0 flex-[1.4] bg-black py-2 text-[13px] font-bold text-white"
-                >
-                  I&apos;m done!
-                </button>
-              </div>
+              ))}
+              <button type="button" onClick={finish} className="maker-tab maker-tab-done">
+                Done!
+              </button>
+            </nav>
+            <div className="maker-drawer-body">
+              {drawer === 'stickers' ? (
+                <Panel title="Stickers" bare>
+                  {stickerControls}
+                </Panel>
+              ) : null}
+              {drawer === 'cords' ? (
+                <Panel title="Cords" bare>
+                  {cordControls}
+                </Panel>
+              ) : null}
+              {drawer === 'frame' ? (
+                <Panel title="Outer frame" bare>
+                  {frameControls}
+                </Panel>
+              ) : null}
+              {drawer === 'foot' ? (
+                <Panel title="Foot video" bare fill>
+                  {footControls}
+                </Panel>
+              ) : null}
+              {drawer === 'draw' ? (
+                <Panel title="Draw" bare>
+                  {drawControls}
+                </Panel>
+              ) : null}
             </div>
-          </aside>
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className="relative mx-auto flex min-h-0 w-full max-w-[1180px] flex-1 flex-col justify-center px-4 py-8">
+          <div className="relative flex min-h-0 flex-1 flex-row items-end gap-10 overflow-visible">
+            <section className="animate-pop flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto no-scrollbar pt-1 pr-1 pb-1">
+              <div className="flex min-h-0 flex-col gap-6 [@media(min-height:860px)]:gap-7">
+                <div className="grid grid-cols-2 items-start gap-x-5 gap-y-7 [@media(min-height:860px)]:gap-y-8">
+                  <header className="col-start-1 row-start-1 flex h-full flex-col items-start justify-between self-stretch">
+                    {desktopHeading}
+                  </header>
+                  <Panel title="Draw" className="col-start-2 row-start-1">
+                    {drawControls}
+                  </Panel>
+                  <div className="col-start-1 row-start-2 flex min-w-0 flex-col gap-8 [@media(min-height:860px)]:gap-9">
+                    <Panel title="Outer frame">{frameControls}</Panel>
+                    <Panel title="Cords">{cordControls}</Panel>
+                  </div>
+                  <Panel title="Foot video" fill className="col-start-2 row-start-2">
+                    {footControls}
+                  </Panel>
+                </div>
+                <Panel title="Stickers">{stickerControls}</Panel>
+              </div>
+            </section>
+
+            <aside className="animate-pop flex w-[400px] shrink-0 flex-col items-center pb-1 xl:w-[412px]">
+              <div className="relative flex w-full max-w-[380px] flex-col items-center overflow-visible">
+                {badgeCluster}
+                <div className="mt-3 flex gap-2" style={{ width: BADGE_W, maxWidth: '100%' }}>
+                  <button
+                    type="button"
+                    onClick={undo}
+                    disabled={!canUndo}
+                    title="Undo (Ctrl/⌘ Z)"
+                    className="option-btn badge-edge-btn min-w-0 flex-1 bg-white py-2 text-[13px] font-semibold text-black disabled:pointer-events-none disabled:border-black/20 disabled:text-black/30"
+                  >
+                    Undo
+                  </button>
+                  <button
+                    type="button"
+                    onClick={clearAll}
+                    className="option-btn badge-edge-btn min-w-0 flex-1 bg-white py-2 text-[13px] font-semibold text-black"
+                  >
+                    Clear
+                  </button>
+                  <button
+                    type="button"
+                    onClick={finish}
+                    className="option-btn btn-done badge-edge-btn min-w-0 flex-[1.4] bg-black py-2 text-[13px] font-bold text-white"
+                  >
+                    I&apos;m done!
+                  </button>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </div>
+      )}
 
       {peel ? (
         <div
@@ -721,16 +835,21 @@ function Panel({
   children,
   className = '',
   fill = false,
+  bare = false,
 }: {
   title: string
   children: ReactNode
   className?: string
   fill?: boolean
+  /** Mobile drawer: title + content, no heavy bordered card. */
+  bare?: boolean
 }) {
   return (
     <div className={`panel-wrap min-w-0 ${fill ? 'h-full' : ''} ${className}`}>
       <p className="panel-title">{title}</p>
-      <div className={`panel ${fill ? 'flex flex-1 flex-col' : ''}`}>{children}</div>
+      <div className={`${bare ? 'panel-bare' : 'panel'} ${fill ? 'flex flex-1 flex-col' : ''}`}>
+        {children}
+      </div>
     </div>
   )
 }
