@@ -533,7 +533,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
               </div>
 
               <Panel title="Stickers">
-                <div className="mb-2 flex flex-wrap items-center gap-1">
+                <div className="mb-2 flex flex-wrap items-center gap-x-3 gap-y-1.5">
                   {TABS.map((t) => (
                     <button
                       key={t.id}
