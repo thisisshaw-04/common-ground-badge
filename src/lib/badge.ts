@@ -198,7 +198,7 @@ export const DEMO_STICKERS: PlacedSticker[] = [
   { uid: 'demo-dev', defId: 'developer', x: 24, y: 41, rotation: -8, trackId: '214' },
   { uid: 'demo-win', defId: 'win', x: 80, y: 33, rotation: 8, trackId: '441' },
   { uid: 'demo-des', defId: 'designer', x: 24, y: 70, rotation: -6, trackId: '318' },
-  { uid: 'demo-owl', defId: 'nightowl', x: 80, y: 76, rotation: 7, trackId: '612' },
+  { uid: 'demo-owl', defId: 'nightowl', x: 80, y: 66, rotation: 7, trackId: '612' },
 ]
 
 export const TABS: { id: StickerTab; label: string }[] = [
