@@ -700,21 +700,21 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                   onClick={undo}
                   disabled={!canUndo}
                   title="Undo"
-                  className="option-btn badge-edge-btn min-w-0 flex-1 bg-white py-2.5 text-[13px] font-semibold text-black disabled:pointer-events-none disabled:border-black/20 disabled:text-black/30"
+                  className="option-btn badge-edge-btn min-w-0 flex-1 bg-white py-1.5 text-[11px] font-semibold text-black disabled:pointer-events-none disabled:border-black/20 disabled:text-black/30"
                 >
                   Undo
                 </button>
                 <button
                   type="button"
                   onClick={clearAll}
-                  className="option-btn badge-edge-btn min-w-0 flex-1 bg-white py-2.5 text-[13px] font-semibold text-black"
+                  className="option-btn badge-edge-btn min-w-0 flex-1 bg-white py-1.5 text-[11px] font-semibold text-black"
                 >
                   Clear
                 </button>
                 <button
                   type="button"
                   onClick={finish}
-                  className="option-btn btn-done badge-edge-btn min-w-0 flex-[1.25] bg-black py-2.5 text-[13px] font-bold text-white"
+                  className="option-btn btn-done badge-edge-btn min-w-0 flex-[1.25] bg-black py-1.5 text-[11px] font-bold text-white"
                 >
                   Done!
                 </button>
