@@ -1,12 +1,4 @@
 import { toCanvas } from 'html-to-image'
-import {
-  BufferTarget,
-  CanvasSource,
-  Mp4OutputFormat,
-  Output,
-  QUALITY_HIGH,
-  getFirstEncodableVideoCodec,
-} from 'mediabunny'
 import { footFramePath } from '../components/FootVideoFrame'
 
 export interface StoryExportOptions {
@@ -146,6 +138,15 @@ export async function exportStoryMp4(node: HTMLElement, opts: StoryExportOptions
       ctx.restore()
     }
   }
+
+  const {
+    BufferTarget,
+    CanvasSource,
+    Mp4OutputFormat,
+    Output,
+    QUALITY_HIGH,
+    getFirstEncodableVideoCodec,
+  } = await import('mediabunny')
 
   const format = new Mp4OutputFormat({ fastStart: 'in-memory' })
   const codec = await getFirstEncodableVideoCodec(
