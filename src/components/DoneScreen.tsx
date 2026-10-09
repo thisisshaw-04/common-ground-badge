@@ -64,32 +64,38 @@ export function DoneScreen({ state, onEdit }: DoneProps) {
 
   return (
     <div className="done-stage">
-      <button
-        type="button"
-        onClick={onEdit}
-        className="done-edit panel-title text-black/55 transition-colors hover:text-black"
-      >
-        ← Keep editing
-      </button>
-
       <section className="done-previews" aria-label="Story overlay">
         {STORY_OVERLAY_ORDER.map((id) => {
           const selected = overlay === id
           return (
-            <button
-              key={id}
-              type="button"
-              data-story={id}
-              onClick={() => setOverlay(id)}
-              className={`done-option ${selected ? 'is-current' : ''}`}
-              aria-pressed={selected}
-              aria-label={`${STORY_OVERLAYS[id].label} overlay`}
-            >
-              <span className="done-option-tag">{STORY_OVERLAYS[id].previewLabel}</span>
-              <div className="done-option-frame">
-                <StoryPoster state={state} overlay={id} format="story" />
+            <div key={id} className="done-option-wrap">
+              <div className="done-option-head">
+                {id === 'dark' ? (
+                  <button
+                    type="button"
+                    onClick={onEdit}
+                    className="done-edit panel-title text-black/55 transition-colors hover:text-black"
+                  >
+                    ← Keep editing
+                  </button>
+                ) : null}
+                <span className="done-option-tag panel-title">
+                  {STORY_OVERLAYS[id].previewLabel}
+                </span>
               </div>
-            </button>
+              <button
+                type="button"
+                data-story={id}
+                onClick={() => setOverlay(id)}
+                className={`done-option ${selected ? 'is-current' : ''}`}
+                aria-pressed={selected}
+                aria-label={`${STORY_OVERLAYS[id].label} overlay`}
+              >
+                <div className="done-option-frame">
+                  <StoryPoster state={state} overlay={id} format="story" />
+                </div>
+              </button>
+            </div>
           )
         })}
       </section>

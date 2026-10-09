@@ -92,8 +92,8 @@ export const STORY_OVERLAYS: Record<
   StoryOverlayId,
   { label: string; previewLabel: string; file: string }
 > = {
-  dark: { label: 'Dark', previewLabel: 'DARK PREVIEW', file: 'dark.webp' },
-  light: { label: 'Light', previewLabel: 'LIGHT PREVIEW', file: 'light.webp' },
+  dark: { label: 'Dark', previewLabel: 'Dark preview', file: 'dark.webp' },
+  light: { label: 'Light', previewLabel: 'Light preview', file: 'light.webp' },
 }
 
 export const GRID_OVERLAYS: Record<StoryOverlayId, { file: string }> = {
