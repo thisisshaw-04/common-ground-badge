@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { toPng } from 'html-to-image'
 import {
   STORY_OVERLAYS,
   STORY_OVERLAY_ORDER,
@@ -7,6 +6,7 @@ import {
   type BadgeState,
   type StoryOverlayId,
 } from '../lib/badge'
+import { downloadBlob, exportStoryMp4 } from '../lib/exportStory'
 import { StoryPoster } from './StoryPoster'
 
 interface DoneProps {
@@ -15,31 +15,7 @@ interface DoneProps {
 }
 
 const EXPORT_W = 1080
-
-function freezeVideos(root: HTMLElement) {
-  const swaps: { video: HTMLVideoElement; img: HTMLImageElement }[] = []
-  root.querySelectorAll('video').forEach((video) => {
-    const w = video.videoWidth || video.clientWidth
-    const h = video.videoHeight || video.clientHeight
-    if (!w || !h) return
-    const canvas = document.createElement('canvas')
-    canvas.width = w
-    canvas.height = h
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return
-    ctx.drawImage(video, 0, 0, w, h)
-    const img = document.createElement('img')
-    img.src = canvas.toDataURL('image/png')
-    img.className = video.className
-    img.style.cssText = video.style.cssText
-    img.alt = ''
-    video.replaceWith(img)
-    swaps.push({ video, img })
-  })
-  return () => {
-    for (const { video, img } of swaps) img.replaceWith(video)
-  }
-}
+const EXPORT_H = 1920
 
 export function DoneScreen({ state, onEdit }: DoneProps) {
   const [overlay, setOverlay] = useState<StoryOverlayId>('dark')
@@ -52,23 +28,16 @@ export function DoneScreen({ state, onEdit }: DoneProps) {
     if (!node || busy) return
     setBusy(id)
     try {
-      await new Promise((r) => setTimeout(r, 80))
-      const restore = freezeVideos(node)
-      const ratio = EXPORT_W / Math.max(1, node.clientWidth)
-      const url = await toPng(node, {
-        pixelRatio: ratio,
-        cacheBust: true,
+      const blob = await exportStoryMp4(node, {
+        width: EXPORT_W,
+        height: EXPORT_H,
         backgroundColor: id === 'dark' ? '#0b0b0b' : '#c8c8c8',
       })
-      restore()
-      const a = document.createElement('a')
       const name = (visibleBadgeName(state.name) || 'maker').replace(/\s+/g, '-')
-      a.download = `CommonGround-${name}-${id}-story.png`
-      a.href = url
-      a.click()
+      downloadBlob(blob, `CommonGround-${name}-${id}-story.mp4`)
     } catch (err) {
       console.error(err)
-      alert('Could not export — try again.')
+      alert('Could not export the story video — try Chrome or Safari, then again.')
     } finally {
       setBusy(null)
     }
@@ -125,7 +94,7 @@ export function DoneScreen({ state, onEdit }: DoneProps) {
                 className="done-download"
               >
                 {busy === id
-                  ? 'Saving…'
+                  ? 'Recording…'
                   : `Download ${STORY_OVERLAYS[id].label} story`}
               </button>
             ))}
