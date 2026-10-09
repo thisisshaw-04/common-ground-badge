@@ -19,16 +19,19 @@ interface StickerRollProps {
 
 const TAPE_H = 84
 /** Sideways 3/4 roll: wrap on the right, shiny oval core hanging under that end. */
-const ROLL = 74
+const ROLL = 82
 const CURVE = 22
-const CAP_H = 34
-const OVERLAP = 12
+const CAP_H = 18
+const OVERLAP = 7
 const CUT = 2
 const PAD = 12
 const CLOSE_MS = 280
 const OPEN_MS = 560
+/** Remaining spool: wide/thin pancake when wound, narrower leftover when the strip is out. */
+const FAT_OUT = 0.48
+const FAT_IN = 1
 
-const hang = CAP_H - OVERLAP
+const hang = 14
 
 const easeOut = (t: number) => 1 - Math.pow(1 - t, 3)
 const easeIn = (t: number) => t * t * t
@@ -48,6 +51,9 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
     if (!el) return
     feed.current = v
     el.style.setProperty('--strip-w', `${(v * Math.max(0, full.current)).toFixed(2)}px`)
+    const remain = 1 - Math.min(1, Math.max(0, v))
+    const fat = FAT_OUT + remain * (FAT_IN - FAT_OUT)
+    el.style.setProperty('--roll-fat', fat.toFixed(3))
   }
 
   const run = (to: number, ms: number, ease: (t: number) => number) =>
@@ -118,6 +124,7 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
           {
             '--tape-h': `${TAPE_H}px`,
             '--roll-d': `${ROLL}px`,
+            '--roll-fat': '1',
             '--curve': `${CURVE}px`,
             '--cap-h': `${CAP_H}px`,
             '--overlap': `${OVERLAP}px`,
@@ -163,7 +170,7 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
           <span className="tape-wrap" />
         </div>
         <div className="tape-roll" aria-hidden>
-          <svg className="tape-roll-end" viewBox="0 0 74 34" preserveAspectRatio="none">
+          <svg className="tape-roll-end" viewBox="0 0 82 18" preserveAspectRatio="none">
             <defs>
               <radialGradient id={`${gid}-rim`} cx="42%" cy="32%" r="78%">
                 <stop offset="0%" stopColor="#ffffff" />
@@ -182,30 +189,30 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
                 <stop offset="100%" stopColor="#ffffff" stopOpacity="0.95" />
               </linearGradient>
               <mask id={`${gid}-ring`}>
-                <ellipse cx="37" cy="16" rx="37" ry="16" fill="#fff" />
-                <ellipse cx="37" cy="16.2" rx="17.5" ry="7.4" fill="#000" />
+                <ellipse cx="41" cy="9" rx="41" ry="8.6" fill="#fff" />
+                <ellipse cx="41" cy="9.2" rx="15.2" ry="3.4" fill="#000" />
               </mask>
             </defs>
-            <ellipse cx="37" cy="22" rx="34" ry="13" fill="#111111" opacity="0.12" />
-            <ellipse cx="37" cy="16" rx="37" ry="16" fill={`url(#${gid}-rim)`} />
+            <ellipse cx="41" cy="12.4" rx="37" ry="6.4" fill="#111111" opacity="0.12" />
+            <ellipse cx="41" cy="9" rx="41" ry="8.6" fill={`url(#${gid}-rim)`} />
             <ellipse
-              cx="37"
-              cy="21"
-              rx="28"
-              ry="9.5"
+              cx="41"
+              cy="12.2"
+              rx="31"
+              ry="5.1"
               fill={`url(#${gid}-gloss)`}
               mask={`url(#${gid}-ring)`}
             />
-            <ellipse cx="37" cy="16.2" rx="17.5" ry="7.4" fill={`url(#${gid}-core)`} />
+            <ellipse cx="41" cy="9.2" rx="15.2" ry="3.4" fill={`url(#${gid}-core)`} />
             <ellipse
-              cx="37"
-              cy="15.4"
-              rx="16.2"
-              ry="6.6"
+              cx="41"
+              cy="8.7"
+              rx="14.1"
+              ry="3"
               fill="none"
               stroke="#ffffff"
               strokeOpacity="0.55"
-              strokeWidth="1.3"
+              strokeWidth="1.15"
             />
           </svg>
         </div>
