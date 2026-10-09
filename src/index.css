@@ -1012,8 +1012,8 @@ button.track-box:not(.is-selected):hover video {
 
 .tape-stage {
   --tape-h: 84px;
-  --roll-now: 110px;
-  --cap-now: 12px;
+  --roll-now: 74px;
+  --cap-now: 22px;
   --curve: 22px;
   --overlap: 8px;
   --hang: 16px;

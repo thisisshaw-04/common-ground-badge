@@ -25,11 +25,10 @@ const CUT = 2
 const PAD = 12
 const CLOSE_MS = 280
 const OPEN_MS = 560
-/** Unwound rest: flatter than the old disc, similar width. Wound: wider and thinner. */
+/** Rest spool; widen a little while winding. Cap height stays put so the oval never squashes. */
 const ROLL_W_OUT = 74
-const ROLL_W_IN = 110
-const CAP_H_OUT = 22
-const CAP_H_IN = 12
+const ROLL_W_IN = 92
+const CAP_H = 22
 const hang = 16
 
 const easeOut = (t: number) => 1 - Math.pow(1 - t, 3)
@@ -52,9 +51,8 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
     el.style.setProperty('--strip-w', `${(v * Math.max(0, full.current)).toFixed(2)}px`)
     const remain = 1 - Math.min(1, Math.max(0, v))
     const w = ROLL_W_OUT + remain * (ROLL_W_IN - ROLL_W_OUT)
-    const h = CAP_H_OUT + remain * (CAP_H_IN - CAP_H_OUT)
     el.style.setProperty('--roll-now', `${w.toFixed(2)}px`)
-    el.style.setProperty('--cap-now', `${h.toFixed(2)}px`)
+    el.style.setProperty('--cap-now', `${CAP_H}px`)
   }
 
   const run = (to: number, ms: number, ease: (t: number) => number) =>
@@ -124,8 +122,8 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
         style={
           {
             '--tape-h': `${TAPE_H}px`,
-            '--roll-now': `${ROLL_W_IN}px`,
-            '--cap-now': `${CAP_H_IN}px`,
+            '--roll-now': `${ROLL_W_OUT}px`,
+            '--cap-now': `${CAP_H}px`,
             '--curve': `${CURVE}px`,
             '--overlap': `${OVERLAP}px`,
             '--hang': `${hang}px`,
