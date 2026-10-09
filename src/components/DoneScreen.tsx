@@ -83,7 +83,7 @@ export function DoneScreen({ state, onEdit }: DoneProps) {
               key={id}
               type="button"
               onClick={() => setOverlay(id)}
-              className={`done-option ${selected ? 'is-selected' : ''}`}
+              className={`done-option ${selected ? 'is-current' : ''}`}
               aria-pressed={selected}
               aria-label={`${STORY_OVERLAYS[id].label} overlay`}
             >

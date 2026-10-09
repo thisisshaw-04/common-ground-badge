@@ -46,8 +46,8 @@ export function StoryPoster({ state, overlay, className = '' }: StoryPosterProps
       />
       <div
         ref={slotRef}
-        className="story-badge-slot absolute left-1/2 w-[72%] -translate-x-1/2"
-        style={{ top: '11%', height: Math.max(1, fitH * scale) }}
+        className="story-badge-slot absolute left-1/2 w-[68%] -translate-x-1/2"
+        style={{ top: '15%', height: Math.max(1, fitH * scale) }}
       >
         <div
           ref={fitRef}
