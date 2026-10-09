@@ -288,13 +288,39 @@ textarea {
   padding-top: clamp(5.5rem, 16vh, 9.5rem);
 }
 
-.landing-stage {
+.landing-tilt-scene {
   width: min(86vw, 20rem);
+  perspective: 1200px;
+  perspective-origin: 50% 0%;
+}
+
+.landing-tilt {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform-origin: 50% 0;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.landing-badge-shell {
+  width: 100%;
+  transform-style: preserve-3d;
 }
 
 .landing-hero .landing-badge {
   width: 100%;
   box-shadow: 0 22px 56px rgba(0, 0, 0, 0.5);
+}
+
+.landing-tilt-shine {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 9;
+  mix-blend-mode: overlay;
+  opacity: 0.35;
 }
 
 .landing-copy {
@@ -355,7 +381,7 @@ textarea {
     padding-top: clamp(3.5rem, 10vh, 6rem);
   }
 
-  .landing-stage {
+  .landing-tilt-scene {
     width: min(72vw, 17.5rem);
   }
 
