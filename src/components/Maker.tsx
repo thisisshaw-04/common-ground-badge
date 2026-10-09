@@ -369,7 +369,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
     <div
       className={`page-fig relative flex h-dvh flex-col overflow-hidden${isPeeling ? ' is-peeling-sticker' : ''}`}
     >
-      <div className="relative mx-auto flex min-h-0 w-full max-w-[1180px] flex-1 flex-col px-3 pt-5 pb-5 sm:px-5 sm:pt-6 lg:px-4">
+      <div className="relative mx-auto flex min-h-0 w-full max-w-[1180px] flex-1 flex-col px-3 pt-5 pb-5 sm:px-5 sm:pt-6 lg:justify-center lg:px-4 lg:py-8">
         <header className="animate-pop mb-3 shrink-0 sm:mb-4 lg:hidden">{heading}</header>
 
         <div className="relative flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto no-scrollbar lg:flex-none lg:flex-row lg:items-end lg:gap-10 lg:overflow-visible">
