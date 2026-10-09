@@ -307,8 +307,10 @@ textarea {
 }
 
 .maker-drawer-body .tape-bed {
+  /* Bleed to drawer edges so the strip reads longer on phone. */
   background: transparent;
-  padding: 0.35rem 0 0.15rem;
+  margin-inline: -0.75rem;
+  padding: 0.2rem 0 0.05rem;
 }
 
 .page-fig.is-landing {
@@ -1173,18 +1175,18 @@ button.track-box:not(.is-selected):hover video {
 /* Sideways 3/4 roll: one cylinder — wrap on the right, oval core under that end. */
 .tape-bed {
   background: var(--bg);
-  padding: 0.6rem 0.55rem 0.85rem;
+  padding: 0.35rem 0.15rem 0.55rem;
   overflow: visible;
   user-select: none;
 }
 
 .tape-stage {
-  --tape-h: 84px;
-  --roll-now: 74px;
-  --cap-now: 22px;
-  --curve: 22px;
-  --overlap: 8px;
-  --hang: 16px;
+  --tape-h: 62px;
+  --roll-now: 64px;
+  --cap-now: 20px;
+  --curve: 18px;
+  --overlap: 7px;
+  --hang: 12px;
   --strip-w: 0px;
   position: relative;
   height: calc(var(--tape-h) + var(--hang));
@@ -1314,8 +1316,8 @@ button.track-box:not(.is-selected):hover video {
   display: flex;
   flex-shrink: 0;
   align-items: center;
-  gap: 0.7rem;
-  padding-right: 0.7rem;
+  gap: 0.55rem;
+  padding-right: 0.55rem;
 }
 
 .tape-item {
@@ -1349,18 +1351,22 @@ button.track-box:not(.is-selected):hover video {
 }
 
 .tape-item .sticker-nice-flower {
-  min-width: 3.9rem;
-  min-height: 3.9rem;
+  min-width: 3.25rem;
+  min-height: 3.25rem;
 }
 
 .tape-item .sticker-nice-star {
-  min-width: 4.3rem;
-  min-height: 4.3rem;
+  min-width: 3.5rem;
+  min-height: 3.5rem;
 }
 
 .tape-item .sticker-nice-burst {
-  min-width: 6.4rem;
-  min-height: 2.6rem;
+  min-width: 5.4rem;
+  min-height: 2.2rem;
+}
+
+.tape-item .sticker-label {
+  font-size: 11px;
 }
 
 .sticker-peel-ghost {
