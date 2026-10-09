@@ -115,46 +115,6 @@ function mediaBox(node: HTMLElement, media: HTMLElement, width: number, height: 
   }
 }
 
-function copyCanvases(from: HTMLElement, to: HTMLElement) {
-  const src = [...from.querySelectorAll('canvas')]
-  const dst = [...to.querySelectorAll('canvas')]
-  src.forEach((source, i) => {
-    const target = dst[i]
-    if (!target) return
-    target.width = source.width
-    target.height = source.height
-    target.getContext('2d')?.drawImage(source, 0, 0)
-  })
-}
-
-/**
- * In-viewport invisible clone so html-to-image rasterizes the real layout
- * (off-left clones often come back blank) without flashing the live preview.
- */
-function mountClone(node: HTMLElement) {
-  const clone = node.cloneNode(true) as HTMLElement
-  copyCanvases(node, clone)
-  for (const video of clone.querySelectorAll('video')) video.remove()
-  for (const el of [clone, ...clone.querySelectorAll<HTMLElement>('*')]) {
-    if (getComputedStyle(el).filter !== 'none') el.style.filter = 'none'
-  }
-  clone.setAttribute('data-export-clone', '1')
-  clone.style.cssText = [
-    'position:fixed',
-    'left:0',
-    'top:0',
-    `width:${node.clientWidth}px`,
-    `height:${node.clientHeight}px`,
-    'margin:0',
-    'opacity:0',
-    'pointer-events:none',
-    'z-index:-1',
-    'overflow:hidden',
-  ].join(';')
-  document.body.appendChild(clone)
-  return clone
-}
-
 async function hiddenVideoCopy(video: HTMLVideoElement) {
   const copy = document.createElement('video')
   copy.src = video.currentSrc || video.src
@@ -165,7 +125,7 @@ async function hiddenVideoCopy(video: HTMLVideoElement) {
   copy.preload = 'auto'
   copy.crossOrigin = video.crossOrigin
   copy.style.cssText =
-    'position:fixed;left:0;top:0;width:2px;height:2px;opacity:0;pointer-events:none;z-index:-1'
+    'position:fixed;left:-9999px;top:0;width:2px;height:2px;opacity:0;pointer-events:none'
   document.body.appendChild(copy)
   await waitForVideo(copy)
   return copy
@@ -206,7 +166,6 @@ function findAvcC(buf: Uint8Array) {
   return -1
 }
 
-/** Baseline / Main / High 8-bit 4:2:0. High 4:4:4 (0xF4) will not play on phones. */
 function phoneSafeAvcProfile(profile: number) {
   return profile === 0x42 || profile === 0x4d || profile === 0x64
 }
@@ -265,6 +224,25 @@ function fillI420(rgba: Uint8ClampedArray, width: number, height: number, out: U
         out[vOff + ci] = ((112 * r - 102 * g - 10 * b) >> 8) + 128
       }
     }
+  }
+}
+
+function assertSnapHasContent(snap: HTMLCanvasElement, backgroundColor: string) {
+  const ctx = snap.getContext('2d', { willReadFrequently: true })
+  if (!ctx) return
+  const { width, height } = snap
+  const sample = ctx.getImageData(
+    Math.floor(width * 0.3),
+    Math.floor(height * 0.25),
+    Math.max(1, Math.floor(width * 0.4)),
+    Math.max(1, Math.floor(height * 0.45)),
+  ).data
+  let bright = 0
+  for (let i = 0; i < sample.length; i += 20) {
+    if (sample[i]! + sample[i + 1]! + sample[i + 2]! > 60) bright++
+  }
+  if (bright < 12) {
+    throw new Error(`Poster capture looked empty (${backgroundColor}). Try Download again.`)
   }
 }
 
@@ -391,7 +369,7 @@ async function encodeRecorder(
   const mime = recorderMime()
   if (!mime) throw new Error('This browser cannot record an MP4 from a canvas.')
 
-  canvas.style.cssText = 'position:fixed;left:0;top:0;opacity:0;pointer-events:none;z-index:-1'
+  canvas.style.cssText = 'position:fixed;left:-99999px;top:0;pointer-events:none'
   document.body.appendChild(canvas)
 
   const stream = canvas.captureStream(FPS)
@@ -459,6 +437,52 @@ async function withTimeout<T>(
   }
 }
 
+/**
+ * Capture the live poster without moving badge/lanyard layout (that was the cord flash).
+ * Only hide videos + strip filters briefly, then composite the foot clip back in.
+ */
+async function capturePoster(node: HTMLElement, width: number, height: number, backgroundColor: string) {
+  const videos = [...node.querySelectorAll('video')]
+  const filterRestore: { el: HTMLElement; filter: string }[] = []
+  const videoOpacity: { el: HTMLVideoElement; opacity: string }[] = []
+
+  for (const video of videos) {
+    videoOpacity.push({ el: video, opacity: video.style.opacity })
+    video.style.opacity = '0'
+  }
+  for (const el of [node, ...node.querySelectorAll<HTMLElement>('*')]) {
+    if (getComputedStyle(el).filter === 'none') continue
+    filterRestore.push({ el, filter: el.style.filter })
+    el.style.filter = 'none'
+  }
+
+  await sleep(32)
+  try {
+    const ratio = width / Math.max(1, node.clientWidth)
+    let snap = await toCanvas(node, {
+      ...SNAPSHOT,
+      pixelRatio: ratio,
+      backgroundColor,
+    })
+    if (snap.width !== width || snap.height !== height) {
+      const normalized = document.createElement('canvas')
+      normalized.width = width
+      normalized.height = height
+      const nctx = normalized.getContext('2d', { alpha: false })
+      if (!nctx) throw new Error('Could not normalize the poster capture.')
+      nctx.fillStyle = backgroundColor
+      nctx.fillRect(0, 0, width, height)
+      nctx.drawImage(snap, 0, 0, width, height)
+      snap = normalized
+    }
+    assertSnapHasContent(snap, backgroundColor)
+    return snap
+  } finally {
+    for (const { el, filter } of filterRestore) el.style.filter = filter
+    for (const { el, opacity } of videoOpacity) el.style.opacity = opacity
+  }
+}
+
 /** Story / grid card → looping H.264 MP4 phones and laptops can both play. */
 export async function exportStoryVideo(node: HTMLElement, opts: StoryExportOptions): Promise<StoryVideoFile> {
   const scale = Math.min(1, MAX_VIDEO_WIDTH / Math.max(1, opts.width))
@@ -470,49 +494,27 @@ export async function exportStoryVideo(node: HTMLElement, opts: StoryExportOptio
     throw new Error('The poster is not on screen yet — wait a beat and try again.')
   }
 
-  // Measure video slots from the live node before cloning.
   const liveBoxes = liveVideos.map((video) => {
     const media = (video.closest('.foot-frame-media') as HTMLElement | null) ?? video
     return mediaBox(node, media, width, height)
   })
 
   const scratchVideos: HTMLVideoElement[] = []
+  for (const video of liveVideos) {
+    scratchVideos.push(await hiddenVideoCopy(video))
+  }
+
   let snap: HTMLCanvasElement
-  let clone: HTMLElement | null = null
-
   try {
-    for (const video of liveVideos) {
-      scratchVideos.push(await hiddenVideoCopy(video))
+    snap = await capturePoster(node, width, height, opts.backgroundColor)
+  } catch (err) {
+    for (const video of scratchVideos) {
+      video.pause()
+      video.removeAttribute('src')
+      video.load()
+      video.remove()
     }
-
-    clone = mountClone(node)
-    await sleep(48)
-
-    const ratio = width / Math.max(1, node.clientWidth)
-    snap = await toCanvas(clone, {
-      ...SNAPSHOT,
-      pixelRatio: ratio,
-      backgroundColor: opts.backgroundColor,
-    })
-  } finally {
-    clone?.remove()
-  }
-
-  if (snap.width < 2 || snap.height < 2) {
-    throw new Error('Could not capture the poster — try again.')
-  }
-
-  // Normalize to exact even export size (html-to-image can be ±1px).
-  if (snap.width !== width || snap.height !== height) {
-    const normalized = document.createElement('canvas')
-    normalized.width = width
-    normalized.height = height
-    const nctx = normalized.getContext('2d', { alpha: false })
-    if (!nctx) throw new Error('Could not normalize the poster capture.')
-    nctx.fillStyle = opts.backgroundColor
-    nctx.fillRect(0, 0, width, height)
-    nctx.drawImage(snap, 0, 0, width, height)
-    snap = normalized
+    throw err
   }
 
   const layers = scratchVideos
@@ -583,8 +585,6 @@ export async function downloadBlob(blob: Blob, filename: string) {
     share?: (data: ShareData) => Promise<void>
   }
 
-  // Mobile: share sheet is the best “Save Video” UX. If the user cancels, still
-  // fall through to an anchor download so they are never left with nothing.
   const mobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
   if (mobile && typeof nav.share === 'function' && nav.canShare?.({ files: [file] })) {
     try {
