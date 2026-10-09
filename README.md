@@ -13,7 +13,7 @@ https://thisisshaw-04.github.io/common-ground-badge/
 - FigBuild-style landing — badge left, welcome + CTA right
 - Maker with stickers, doodle, cords & borders
 - Three.js woven-rope lanyard cords
-- Done screen with 9:16 / 3:4 GIF download + #CommonGround send-off
+- Done screen with 9:16 / 3:4 video download + #CommonGround send-off
 
 ## Run locally
 

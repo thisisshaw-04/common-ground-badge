@@ -9,7 +9,7 @@ import {
   type PosterFormat,
   type StoryOverlayId,
 } from '../lib/badge'
-import { downloadBlob, exportStoryGif } from '../lib/exportStory'
+import { downloadBlob, exportStoryVideo } from '../lib/exportStory'
 import { StoryPoster } from './StoryPoster'
 
 interface DoneProps {
@@ -22,10 +22,10 @@ const DOWNLOADS: {
   format: PosterFormat
   label: string
 }[] = [
-  { overlay: 'dark', format: 'story', label: 'Download 9:16 Dark GIF' },
-  { overlay: 'light', format: 'story', label: 'Download 9:16 Light GIF' },
-  { overlay: 'dark', format: 'grid', label: 'Download 3:4 Dark GIF' },
-  { overlay: 'light', format: 'grid', label: 'Download 3:4 Light GIF' },
+  { overlay: 'dark', format: 'story', label: 'Download 9:16 Dark' },
+  { overlay: 'light', format: 'story', label: 'Download 9:16 Light' },
+  { overlay: 'dark', format: 'grid', label: 'Download 3:4 Dark' },
+  { overlay: 'light', format: 'grid', label: 'Download 3:4 Light' },
 ]
 
 function downloadKey(overlay: StoryOverlayId, format: PosterFormat) {
@@ -47,16 +47,16 @@ export function DoneScreen({ state, onEdit }: DoneProps) {
     setBusy(key)
     try {
       const size = POSTER_SIZES[format]
-      const blob = await exportStoryGif(node, {
+      const file = await exportStoryVideo(node, {
         width: size.width,
         height: size.height,
         backgroundColor: posterBackground(id, format),
       })
       const name = (visibleBadgeName(state.name) || 'maker').replace(/\s+/g, '-')
-      downloadBlob(blob, `CommonGround-${name}-${id}-${format}.gif`)
+      downloadBlob(file.blob, `CommonGround-${name}-${id}-${format}.${file.ext}`)
     } catch (err) {
       console.error(err)
-      alert('Could not export the GIF — try again in Chrome or Safari.')
+      alert('Could not export the video — try again in Chrome or Safari.')
     } finally {
       setBusy(null)
     }
@@ -116,7 +116,7 @@ export function DoneScreen({ state, onEdit }: DoneProps) {
                   onClick={() => void download(item.overlay, item.format)}
                   className="done-download"
                 >
-                  {busy === key ? 'Exporting…' : item.label}
+                  {busy === key ? 'Recording…' : item.label}
                 </button>
               )
             })}
