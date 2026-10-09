@@ -937,26 +937,13 @@ textarea {
   overflow: hidden;
 }
 
-/*
- * Selection ring drawn INSIDE the control via ::after so overflow:hidden
- * (ellipsis / swatch clip) can never crop the pink highlight.
- */
+/* Single thin pink border — no inner ring / double outline. */
 .track-box.is-selected,
 .sticker-tab.is-selected,
 .is-selected {
   outline: none;
   border-color: var(--select);
   box-shadow: none;
-}
-
-.track-box.is-selected::after,
-.sticker-tab.is-selected::after {
-  content: '';
-  position: absolute;
-  inset: 1px;
-  border: 2px solid var(--select);
-  pointer-events: none;
-  z-index: 5;
 }
 
 /* Desktop panels: keep a little breathing room around grids. */
