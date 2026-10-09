@@ -89,7 +89,7 @@ export function Landing({ onStart }: LandingProps) {
         fetchPriority="high"
       />
 
-      <main className="landing-main relative z-10 flex min-h-dvh flex-col items-center px-4 pb-10">
+      <main className="landing-main relative z-10 flex min-h-dvh flex-col items-center px-4">
         <div ref={sceneRef} className="landing-tilt-scene">
           <div ref={tiltRef} className="landing-tilt">
             <Lanyard cord="ink" scale={1} className="lanyard-offscreen" />

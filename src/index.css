@@ -280,7 +280,7 @@ textarea {
 
 .done-lede {
   margin-top: 1.15rem;
-  max-width: 22rem;
+  max-width: 24rem;
   color: rgba(17, 17, 17, 0.48);
   font-size: clamp(1rem, 1.45vw, 1.18rem);
   font-weight: 400;
@@ -362,11 +362,12 @@ textarea {
 }
 
 .landing-main {
-  padding-top: clamp(5.5rem, 16vh, 9.5rem);
+  padding-top: clamp(5.5rem, 15vh, 9rem);
+  padding-bottom: clamp(2.75rem, 8vh, 4.5rem);
 }
 
 .landing-tilt-scene {
-  width: min(86vw, 20rem);
+  width: min(80vw, 18.75rem);
   perspective: 1600px;
   perspective-origin: 50% 0%;
 }
@@ -395,6 +396,11 @@ textarea {
 
 .landing-badge-shell .sticker-on-badge {
   zoom: 1.04;
+}
+
+.landing-badge-shell .sticker-on-badge .sticker-nice-flower {
+  min-width: 3.85rem;
+  min-height: 3.85rem;
 }
 
 .landing-tilt-glare {
@@ -451,7 +457,7 @@ textarea {
 }
 
 .landing-copy {
-  margin-top: 2.15rem;
+  margin-top: 1.85rem;
 }
 
 .landing-kicker {
@@ -463,7 +469,7 @@ textarea {
 }
 
 .landing-lede {
-  margin-top: 2.1rem;
+  margin-top: 1.6rem;
   color: rgba(255, 255, 255, 0.92);
   font-size: clamp(0.95rem, 2vw, 1.12rem);
   font-weight: 400;
@@ -505,19 +511,20 @@ textarea {
 
 @media (max-height: 720px) {
   .landing-main {
-    padding-top: clamp(3.5rem, 10vh, 6rem);
+    padding-top: clamp(3.75rem, 10vh, 6rem);
+    padding-bottom: clamp(1.75rem, 5vh, 3rem);
   }
 
   .landing-tilt-scene {
-    width: min(72vw, 17.5rem);
+    width: min(70vw, 16.75rem);
   }
 
   .landing-copy {
-    margin-top: 1.5rem;
+    margin-top: 1.35rem;
   }
 
   .landing-lede {
-    margin-top: 1.5rem;
+    margin-top: 1.2rem;
   }
 }
 
