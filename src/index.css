@@ -175,7 +175,8 @@ textarea {
 }
 
 .maker-stage {
-  --badge-s: min(0.76, (100vw - 2.25rem) / 368px);
+  /* Width + height constrained so short phones still show the full badge + cord. */
+  --badge-s: max(0.42, min(0.76, (100vw - 2.25rem) / 368px, (100dvh - 22rem) / 480px));
   flex: 1 1 auto;
   min-height: 0;
   display: flex;
@@ -197,9 +198,15 @@ textarea {
   transform: scale(var(--badge-s));
   transform-origin: top center;
   /* Room for the hanging lanyard above the scaled card */
-  margin-top: calc(118px * var(--badge-s));
+  margin-top: calc(110px * var(--badge-s));
   /* Reclaim layout space stolen by the unscaled box */
   margin-bottom: calc((354px + 8px) * (var(--badge-s) - 1));
+}
+
+@media (max-height: 700px) {
+  .maker-drawer {
+    max-height: min(40dvh, 300px);
+  }
 }
 
 .maker-edge-actions {
