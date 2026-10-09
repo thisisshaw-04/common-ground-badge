@@ -330,10 +330,12 @@ textarea {
 }
 
 .maker-drawer-body .tape-bed {
-  /* Bleed to drawer edges so the strip reads longer on phone. */
+  /* Cancel drawer-body padding only — stay inside overflow-x:hidden so the
+     spool’s right rim isn’t clipped. */
   background: transparent;
-  margin-inline: -0.75rem;
-  padding: 0.2rem 0 0.05rem;
+  margin-inline: -5px;
+  /* Right inset keeps the cylinder rim + drop-shadow fully inside the clip. */
+  padding: 0.2rem 8px 0.05rem 0;
 }
 
 /* Sticker category chips — one compact row, no wrap. */
