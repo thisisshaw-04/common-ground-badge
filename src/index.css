@@ -1120,6 +1120,21 @@ button.track-box:not(.is-selected):hover video {
   filter: drop-shadow(0 4px 5px rgba(17, 17, 17, 0.12));
 }
 
+/* Fixed hub — stays the same size while the white rim breathes with --roll-now. */
+.tape-roll-hub {
+  --hub-w: 27px;
+  position: absolute;
+  z-index: 4;
+  top: calc(var(--tape-h) - var(--overlap));
+  left: 50%;
+  width: var(--hub-w);
+  height: var(--cap-now);
+  transform: translateX(-50%);
+  display: block;
+  overflow: visible;
+  pointer-events: none;
+}
+
 .tape-track {
   position: absolute;
   top: 50%;

@@ -25,10 +25,12 @@ const CUT = 2
 const PAD = 12
 const CLOSE_MS = 280
 const OPEN_MS = 560
-/** Rest spool; widen a little while winding. Cap height stays put so the oval never squashes. */
+/** Rest spool; outer rim widens a little while winding. Hub size stays fixed. */
 const ROLL_W_OUT = 74
-const ROLL_W_IN = 92
+const ROLL_W_IN = 84
 const CAP_H = 22
+/** Fixed hub width — matches rest-state core (17.5/48 of 74px). Never stretches with the rim. */
+const HUB_W = 27
 const hang = 16
 
 const easeOut = (t: number) => 1 - Math.pow(1 - t, 3)
@@ -124,6 +126,7 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
             '--tape-h': `${TAPE_H}px`,
             '--roll-now': `${ROLL_W_OUT}px`,
             '--cap-now': `${CAP_H}px`,
+            '--hub-w': `${HUB_W}px`,
             '--curve': `${CURVE}px`,
             '--overlap': `${OVERLAP}px`,
             '--hang': `${hang}px`,
@@ -168,6 +171,7 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
           <span className="tape-wrap" />
         </div>
         <div className="tape-roll" aria-hidden>
+          {/* Outer rim stretches with --roll-now; hub is a separate fixed-size layer. */}
           <svg className="tape-roll-end" viewBox="0 0 96 22" preserveAspectRatio="none">
             <defs>
               <radialGradient id={`${gid}-rim`} cx="42%" cy="32%" r="78%">
@@ -175,11 +179,6 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
                 <stop offset="38%" stopColor="#f7f7fa" />
                 <stop offset="68%" stopColor="#e4e4ea" />
                 <stop offset="100%" stopColor="#c8c8d0" />
-              </radialGradient>
-              <radialGradient id={`${gid}-core`} cx="48%" cy="40%" r="72%">
-                <stop offset="0%" stopColor="#7a7a82" />
-                <stop offset="55%" stopColor="#9a9aa2" />
-                <stop offset="100%" stopColor="#b8b8be" />
               </radialGradient>
               <linearGradient id={`${gid}-gloss`} x1="0.5" y1="0" x2="0.5" y2="1">
                 <stop offset="0%" stopColor="#ffffff" stopOpacity="0" />
@@ -201,9 +200,18 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
               fill={`url(#${gid}-gloss)`}
               mask={`url(#${gid}-ring)`}
             />
-            <ellipse cx="48" cy="11.2" rx="17.5" ry="4.2" fill={`url(#${gid}-core)`} />
+          </svg>
+          <svg className="tape-roll-hub" viewBox="0 0 35 22" preserveAspectRatio="xMidYMid meet">
+            <defs>
+              <radialGradient id={`${gid}-core`} cx="48%" cy="40%" r="72%">
+                <stop offset="0%" stopColor="#7a7a82" />
+                <stop offset="55%" stopColor="#9a9aa2" />
+                <stop offset="100%" stopColor="#b8b8be" />
+              </radialGradient>
+            </defs>
+            <ellipse cx="17.5" cy="11.2" rx="17.5" ry="4.2" fill={`url(#${gid}-core)`} />
             <ellipse
-              cx="48"
+              cx="17.5"
               cy="10.6"
               rx="16.2"
               ry="3.7"
