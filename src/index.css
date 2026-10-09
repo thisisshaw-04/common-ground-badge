@@ -155,11 +155,13 @@ textarea {
 
 .done-stage {
   --done-gutter: clamp(3.25rem, 9vw, 8rem);
+  --preview-h: 80dvh;
+  --preview-gap: clamp(1.25rem, 2.6vw, 2.5rem);
   position: relative;
   display: grid;
   grid-template-columns:
     minmax(var(--done-gutter), 1fr)
-    minmax(0, auto)
+    minmax(0, calc(var(--preview-h) * 9 / 16 * 2 + var(--preview-gap)))
     minmax(16.75rem, 20.5rem)
     minmax(var(--done-gutter), 1fr);
   column-gap: clamp(1.5rem, 2.8vw, 2.75rem);
@@ -186,13 +188,12 @@ textarea {
 }
 
 .done-previews {
-  --preview-h: 80dvh;
   grid-column: 2;
   grid-row: 1;
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: clamp(1.25rem, 2.6vw, 2.5rem);
+  gap: var(--preview-gap);
   height: 100%;
   min-height: 0;
   min-width: 0;
@@ -203,7 +204,7 @@ textarea {
 .done-option {
   position: relative;
   display: flex;
-  width: min(100%, calc(var(--preview-h) * 9 / 16));
+  width: calc((100% - var(--preview-gap)) / 2);
   min-width: 0;
   flex: 0 1 auto;
   flex-direction: column;
@@ -373,18 +374,10 @@ textarea {
   }
 
   .done-previews {
-    --preview-h: min(
-      80dvh,
-      calc((100vw - 2 * var(--done-gutter) - 1.25rem) / 2 * 16 / 9)
-    );
     height: auto;
     min-height: 0;
     justify-content: space-between;
     padding: 4.75rem 0 1.75rem;
-  }
-
-  .done-option {
-    width: min(100%, calc(var(--preview-h) * 9 / 16));
   }
 
   .done-copy {
