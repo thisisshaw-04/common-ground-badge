@@ -237,9 +237,16 @@ textarea {
 
 .maker-edge-actions {
   display: flex;
-  gap: 0.45rem;
+  gap: 0.4rem;
   width: min(calc(368px * var(--badge-s)), calc(100vw - 2.5rem));
   z-index: 2;
+}
+
+.maker-edge-actions .badge-edge-btn {
+  padding-block: 0.35rem;
+  font-size: 11px;
+  line-height: 1.2;
+  font-weight: 600;
 }
 
 .maker-drawer {
