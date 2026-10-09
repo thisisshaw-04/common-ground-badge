@@ -180,8 +180,8 @@ textarea {
   justify-self: start;
   align-self: start;
   z-index: 3;
-  /* Sit near the viewport edge in the empty left margin. */
-  margin: 0 0 0 calc(0.55rem - var(--done-gutter));
+  /* In the left margin, with a little breathing room from the edge. */
+  margin: 0 0 0 calc(1.75rem - var(--done-gutter));
   transform: translateY(calc(-100% - 0.45rem));
   cursor: pointer;
 }
