@@ -966,9 +966,9 @@ button.track-box:not(.is-selected):hover video {
   --tape-h: 84px;
   --roll-d: 74px;
   --curve: 22px;
-  --cap-h: 32px;
-  --overlap: 7px;
-  --hang: 25px;
+  --cap-h: 34px;
+  --overlap: 12px;
+  --hang: 22px;
   --strip-w: 0px;
   position: relative;
   height: calc(var(--tape-h) + var(--hang));
@@ -1017,12 +1017,12 @@ button.track-box:not(.is-selected):hover video {
     linear-gradient(
       90deg,
       transparent 0%,
-      rgba(255, 255, 255, 0.08) 28%,
-      rgba(255, 255, 255, 0.55) 44%,
-      rgba(255, 255, 255, 0.96) 52%,
-      rgba(230, 230, 238, 0.35) 62%,
-      rgba(170, 170, 182, 0.28) 82%,
-      rgba(130, 130, 142, 0.22) 100%
+      rgba(255, 255, 255, 0.04) 36%,
+      rgba(255, 255, 255, 0.42) 46%,
+      rgba(255, 255, 255, 0.95) 53%,
+      rgba(236, 236, 242, 0.28) 64%,
+      rgba(168, 168, 180, 0.22) 84%,
+      rgba(124, 124, 136, 0.18) 100%
     );
 }
 
