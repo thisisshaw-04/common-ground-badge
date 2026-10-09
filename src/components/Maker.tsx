@@ -620,65 +620,67 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
   )
 
   const badgeCluster = (
-    <div className="maker-badge-cluster">
-      <Lanyard cord={state.cord} scale={BADGE_LAYOUT.lanyardScale} className="lanyard-offscreen" />
-      <BadgeFace
-        badgeRef={badgeRef}
-        width={BADGE_W}
-        footVideo={state.footVideo}
-        border={state.border}
-        bodyHeight={BODY_H}
-        footHeight={FOOT_H}
-        className="relative z-[1]"
-        body={
-          <>
-            <input
-              value={state.name}
-              onChange={(e) => onChange({ ...state, name: e.target.value })}
-              onBlur={() => push(state)}
-              placeholder="YOUR NAME"
-              maxLength={22}
-              className="poster-name-input absolute top-2 left-1/2 z-20 w-[84%] -translate-x-1/2 bg-transparent text-center text-black uppercase outline-none placeholder:font-normal placeholder:text-black/25"
-            />
-            <canvas
-              ref={canvasRef}
-              className={`badge-doodle absolute inset-0 z-10 h-full w-full ${
-                mode === 'draw' ? 'cursor-crosshair' : 'pointer-events-none'
-              }`}
-              onPointerDown={onDrawPointerDown}
-              onPointerMove={onDrawPointerMove}
-              onPointerUp={onDrawPointerUp}
-              onPointerLeave={onDrawPointerUp}
-            />
-          </>
-        }
-        overlay={state.stickers.map((s, i) => {
-          const def = stickerById(s.defId)
-          if (!def) return null
-          return (
-            <button
-              key={s.uid}
-              type="button"
-              className={`sticker-on-badge absolute cursor-grab touch-none select-none active:cursor-grabbing ${
-                mode === 'draw' ? 'pointer-events-none' : 'pointer-events-auto'
-              }`}
-              style={{
-                left: `${s.x}%`,
-                top: `${s.y}%`,
-                zIndex: draggingUid === s.uid ? 1000 : i + 1,
-                transform: stickerBadgeTransform(s.rotation),
-              }}
-              onPointerDown={(e) => onStickerPointerDown(e, s.uid)}
-              onPointerMove={(e) => onStickerPointerMove(e, s.uid)}
-              onPointerUp={onStickerPointerUp}
-              onPointerCancel={onStickerPointerUp}
-              onDoubleClick={() => removeSticker(s.uid)}
-            >
-              <StickerFace def={def} large dragging={draggingUid === s.uid} />
-            </button>
-          )
-        })}
-      />
+    <div className="maker-badge-slot">
+      <div className="maker-badge-cluster">
+        <Lanyard cord={state.cord} scale={BADGE_LAYOUT.lanyardScale} className="lanyard-offscreen" />
+        <BadgeFace
+          badgeRef={badgeRef}
+          width={BADGE_W}
+          footVideo={state.footVideo}
+          border={state.border}
+          bodyHeight={BODY_H}
+          footHeight={FOOT_H}
+          className="relative z-[1]"
+          body={
+            <>
+              <input
+                value={state.name}
+                onChange={(e) => onChange({ ...state, name: e.target.value })}
+                onBlur={() => push(state)}
+                placeholder="YOUR NAME"
+                maxLength={22}
+                className="poster-name-input absolute top-2 left-1/2 z-20 w-[84%] -translate-x-1/2 bg-transparent text-center text-black uppercase outline-none placeholder:font-normal placeholder:text-black/25"
+              />
+              <canvas
+                ref={canvasRef}
+                className={`badge-doodle absolute inset-0 z-10 h-full w-full ${
+                  mode === 'draw' ? 'cursor-crosshair' : 'pointer-events-none'
+                }`}
+                onPointerDown={onDrawPointerDown}
+                onPointerMove={onDrawPointerMove}
+                onPointerUp={onDrawPointerUp}
+                onPointerLeave={onDrawPointerUp}
+              />
+            </>
+          }
+          overlay={state.stickers.map((s, i) => {
+            const def = stickerById(s.defId)
+            if (!def) return null
+            return (
+              <button
+                key={s.uid}
+                type="button"
+                className={`sticker-on-badge absolute cursor-grab touch-none select-none active:cursor-grabbing ${
+                  mode === 'draw' ? 'pointer-events-none' : 'pointer-events-auto'
+                }`}
+                style={{
+                  left: `${s.x}%`,
+                  top: `${s.y}%`,
+                  zIndex: draggingUid === s.uid ? 1000 : i + 1,
+                  transform: stickerBadgeTransform(s.rotation),
+                }}
+                onPointerDown={(e) => onStickerPointerDown(e, s.uid)}
+                onPointerMove={(e) => onStickerPointerMove(e, s.uid)}
+                onPointerUp={onStickerPointerUp}
+                onPointerCancel={onStickerPointerUp}
+                onDoubleClick={() => removeSticker(s.uid)}
+              >
+                <StickerFace def={def} large dragging={draggingUid === s.uid} />
+              </button>
+            )
+          })}
+        />
+      </div>
     </div>
   )
 
