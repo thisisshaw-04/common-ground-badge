@@ -1,9 +1,12 @@
 import { useState } from 'react'
 import {
+  POSTER_SIZES,
   STORY_OVERLAYS,
   STORY_OVERLAY_ORDER,
+  posterBackground,
   visibleBadgeName,
   type BadgeState,
+  type PosterFormat,
   type StoryOverlayId,
 } from '../lib/badge'
 import { downloadBlob, exportStoryMp4 } from '../lib/exportStory'
@@ -14,30 +17,46 @@ interface DoneProps {
   onEdit: () => void
 }
 
-const EXPORT_W = 1080
-const EXPORT_H = 1920
+const DOWNLOADS: {
+  overlay: StoryOverlayId
+  format: PosterFormat
+  label: string
+}[] = [
+  { overlay: 'dark', format: 'story', label: 'Download 9:16 Dark' },
+  { overlay: 'light', format: 'story', label: 'Download 9:16 Light' },
+  { overlay: 'dark', format: 'grid', label: 'Download 3:4 Dark' },
+  { overlay: 'light', format: 'grid', label: 'Download 3:4 Light' },
+]
+
+function downloadKey(overlay: StoryOverlayId, format: PosterFormat) {
+  return `${format}-${overlay}`
+}
 
 export function DoneScreen({ state, onEdit }: DoneProps) {
   const [overlay, setOverlay] = useState<StoryOverlayId>('dark')
-  const [busy, setBusy] = useState<StoryOverlayId | null>(null)
+  const [busy, setBusy] = useState<string | null>(null)
 
-  const download = async (id: StoryOverlayId) => {
-    const node = document.querySelector(
-      `[data-story="${id}"] .done-option-frame`,
-    ) as HTMLElement | null
+  const download = async (id: StoryOverlayId, format: PosterFormat) => {
+    const selector =
+      format === 'grid'
+        ? `[data-grid="${id}"]`
+        : `[data-story="${id}"] .done-option-frame`
+    const node = document.querySelector(selector) as HTMLElement | null
     if (!node || busy) return
-    setBusy(id)
+    const key = downloadKey(id, format)
+    setBusy(key)
     try {
+      const size = POSTER_SIZES[format]
       const blob = await exportStoryMp4(node, {
-        width: EXPORT_W,
-        height: EXPORT_H,
-        backgroundColor: id === 'dark' ? '#0b0b0b' : '#c8c8c8',
+        width: size.width,
+        height: size.height,
+        backgroundColor: posterBackground(id, format),
       })
       const name = (visibleBadgeName(state.name) || 'maker').replace(/\s+/g, '-')
-      downloadBlob(blob, `CommonGround-${name}-${id}-story.mp4`)
+      downloadBlob(blob, `CommonGround-${name}-${id}-${format}.mp4`)
     } catch (err) {
       console.error(err)
-      alert('Could not export the story video — try Chrome or Safari, then again.')
+      alert('Could not export the video — try Chrome or Safari, then again.')
     } finally {
       setBusy(null)
     }
@@ -64,7 +83,7 @@ export function DoneScreen({ state, onEdit }: DoneProps) {
             >
               <span className="done-option-tag">{STORY_OVERLAYS[id].previewLabel}</span>
               <div className="done-option-frame">
-                <StoryPoster state={state} overlay={id} />
+                <StoryPoster state={state} overlay={id} format="story" />
               </div>
             </button>
           )
@@ -85,22 +104,31 @@ export function DoneScreen({ state, onEdit }: DoneProps) {
             LinkedIn or IG!
           </p>
           <div className="done-actions">
-            {STORY_OVERLAY_ORDER.map((id) => (
-              <button
-                key={id}
-                type="button"
-                disabled={busy !== null}
-                onClick={() => void download(id)}
-                className="done-download"
-              >
-                {busy === id
-                  ? 'Recording…'
-                  : `Download ${STORY_OVERLAYS[id].label} story`}
-              </button>
-            ))}
+            {DOWNLOADS.map((item) => {
+              const key = downloadKey(item.overlay, item.format)
+              return (
+                <button
+                  key={key}
+                  type="button"
+                  disabled={busy !== null}
+                  onClick={() => void download(item.overlay, item.format)}
+                  className="done-download"
+                >
+                  {busy === key ? 'Recording…' : item.label}
+                </button>
+              )
+            })}
           </div>
         </div>
       </aside>
+
+      <div className="done-capture-well" aria-hidden>
+        {STORY_OVERLAY_ORDER.map((id) => (
+          <div key={id} data-grid={id} className="done-capture-frame">
+            <StoryPoster state={state} overlay={id} format="grid" />
+          </div>
+        ))}
+      </div>
     </div>
   )
 }

@@ -1,8 +1,9 @@
 import { useLayoutEffect, useRef, useState } from 'react'
 import {
   BADGE_LAYOUT,
-  storyOverlaySrc,
+  posterOverlaySrc,
   type BadgeState,
+  type PosterFormat,
   type StoryOverlayId,
 } from '../lib/badge'
 import { BadgePreview } from './BadgePreview'
@@ -11,11 +12,17 @@ import { Lanyard } from './Lanyard'
 interface StoryPosterProps {
   state: BadgeState
   overlay: StoryOverlayId
+  format?: PosterFormat
   className?: string
 }
 
-/** 9:16 scan overlay with the built badge hanging on top. */
-export function StoryPoster({ state, overlay, className = '' }: StoryPosterProps) {
+/** Scan overlay with the built badge hanging on top. */
+export function StoryPoster({
+  state,
+  overlay,
+  format = 'story',
+  className = '',
+}: StoryPosterProps) {
   const slotRef = useRef<HTMLDivElement>(null)
   const fitRef = useRef<HTMLDivElement>(null)
   const [scale, setScale] = useState(0.5)
@@ -34,20 +41,22 @@ export function StoryPoster({ state, overlay, className = '' }: StoryPosterProps
     ro.observe(slot)
     ro.observe(fit)
     return () => ro.disconnect()
-  }, [state.cord, state.footVideo, state.border])
+  }, [state.cord, state.footVideo, state.border, format])
 
   return (
-    <div className={`story-poster relative h-full w-full overflow-hidden ${className}`.trim()}>
+    <div
+      className={`story-poster relative h-full w-full overflow-hidden ${format === 'grid' ? 'is-grid' : ''} ${className}`.trim()}
+    >
       <img
-        src={storyOverlaySrc(overlay)}
+        src={posterOverlaySrc(overlay, format)}
         alt=""
         className="pointer-events-none absolute inset-0 h-full w-full object-cover object-center"
         draggable={false}
       />
       <div
         ref={slotRef}
-        className="story-badge-slot absolute left-1/2 w-[68%] -translate-x-1/2"
-        style={{ top: '15%', height: Math.max(1, fitH * scale) }}
+        className="story-badge-slot absolute left-1/2 -translate-x-1/2"
+        style={{ height: Math.max(1, fitH * scale) }}
       >
         <div
           ref={fitRef}

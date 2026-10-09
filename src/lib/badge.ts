@@ -86,6 +86,7 @@ export function footVideoSrc(id: FootVideoId) {
 }
 
 export type StoryOverlayId = 'dark' | 'light'
+export type PosterFormat = 'story' | 'grid'
 
 export const STORY_OVERLAYS: Record<
   StoryOverlayId,
@@ -95,11 +96,31 @@ export const STORY_OVERLAYS: Record<
   light: { label: 'Light', previewLabel: 'LIGHT PREVIEW', file: 'light.webp' },
 }
 
+export const GRID_OVERLAYS: Record<StoryOverlayId, { file: string }> = {
+  dark: { file: 'grid-dark.webp' },
+  light: { file: 'grid-light.webp' },
+}
+
 export const STORY_OVERLAY_ORDER: StoryOverlayId[] = ['dark', 'light']
 
-export function storyOverlaySrc(id: StoryOverlayId) {
+export const POSTER_SIZES: Record<PosterFormat, { width: number; height: number }> = {
+  story: { width: 1080, height: 1920 },
+  grid: { width: 1080, height: 1440 },
+}
+
+export function posterOverlaySrc(id: StoryOverlayId, format: PosterFormat = 'story') {
   const base = import.meta.env.BASE_URL || '/'
-  return `${base}story-overlays/${STORY_OVERLAYS[id].file}`
+  const file = format === 'grid' ? GRID_OVERLAYS[id].file : STORY_OVERLAYS[id].file
+  return `${base}story-overlays/${file}`
+}
+
+export function posterBackground(id: StoryOverlayId, format: PosterFormat = 'story') {
+  if (format === 'grid') return id === 'dark' ? '#181818' : '#a9a9a9'
+  return id === 'dark' ? '#0b0b0b' : '#c8c8c8'
+}
+
+export function storyOverlaySrc(id: StoryOverlayId) {
+  return posterOverlaySrc(id, 'story')
 }
 
 /** Maker card + story-poster scale source. */

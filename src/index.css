@@ -223,6 +223,32 @@ textarea {
   background: #111;
 }
 
+.story-badge-slot {
+  top: 15%;
+  width: 68%;
+}
+
+.story-poster.is-grid .story-badge-slot {
+  top: 9%;
+  width: 64%;
+}
+
+.done-capture-well {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: -1;
+  display: flex;
+  pointer-events: none;
+}
+
+.done-capture-frame {
+  width: 360px;
+  height: 480px;
+  overflow: hidden;
+  background: #111;
+}
+
 .done-option.is-current .done-option-frame {
   outline: 2px solid #111;
   outline-offset: 5px;
