@@ -951,9 +951,10 @@ button.track-box:not(.is-selected):hover video {
   animation: none !important;
 }
 
-/* Stickers stuck on the badge sit flat and still */
+/* Stickers stuck on the badge sit flat and still.
+   Size comes from transform scale (not zoom) so html-to-image keeps position. */
 .sticker-on-badge {
-  zoom: 1.18;
+  transform-origin: center center;
 }
 
 .sticker-on-badge .sticker-nice {

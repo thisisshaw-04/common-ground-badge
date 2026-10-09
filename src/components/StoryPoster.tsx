@@ -60,6 +60,7 @@ export function StoryPoster({
       >
         <div
           ref={fitRef}
+          data-story-fit
           className="relative"
           style={{
             position: 'absolute',

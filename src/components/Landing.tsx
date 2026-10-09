@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { DEMO_STICKERS, stickerById } from '../lib/badge'
+import { DEMO_STICKERS, stickerBadgeTransform, stickerById } from '../lib/badge'
 import { BadgeFace } from './BadgeFace'
 import { Lanyard } from './Lanyard'
 import { StickerFace } from './StickerFace'
@@ -112,7 +112,7 @@ export function Landing({ onStart }: LandingProps) {
                       style={{
                         left: `${s.x}%`,
                         top: `${s.y}%`,
-                        transform: `translate(-50%, -50%) rotate(${s.rotation}deg)`,
+                        transform: stickerBadgeTransform(s.rotation),
                       }}
                     >
                       <StickerFace def={def} compact />

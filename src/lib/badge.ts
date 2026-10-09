@@ -133,6 +133,13 @@ export const BADGE_LAYOUT = {
   lanyardScale: 1.1,
 } as const
 
+/** Visual size of a sticker once it’s stuck on the badge (replaces CSS zoom). */
+export const STICKER_BADGE_SCALE = 1.18
+
+export function stickerBadgeTransform(rotation: number) {
+  return `translate(-50%, -50%) rotate(${rotation}deg) scale(${STICKER_BADGE_SCALE})`
+}
+
 export const CORDS: Record<
   CordId,
   { label: string; file: string; swatch: string }

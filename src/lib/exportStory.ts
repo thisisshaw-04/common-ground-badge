@@ -4,7 +4,6 @@ import {
   CanvasSource,
   Mp4OutputFormat,
   Output,
-  QUALITY_HIGH,
   getFirstEncodableVideoCodec,
 } from 'mediabunny'
 import { footFramePath } from '../components/FootVideoFrame'
@@ -25,9 +24,22 @@ const MIN_SECONDS = 1.5
 const MAX_SECONDS = 2
 /** 720-wide keeps WebCodecs / MediaRecorder reliable; 1080p timed out before. */
 const MAX_VIDEO_WIDTH = 720
-const MP4_BUDGET_MS = 18000
+const MP4_BUDGET_MS = 32000
 
-type Layer = { video: HTMLVideoElement; box: { x: number; y: number; w: number; h: number } }
+type Box = { x: number; y: number; w: number; h: number }
+type Layer = { video: HTMLVideoElement; box: Box }
+
+/** Constrained Baseline 3.1 — VLC, IG, and LinkedIn all play this. High 4:4:4 (0xF4) does not. */
+const AVC_BASELINE = 'avc1.42E01F'
+const AVC_MAIN = 'avc1.4D401F'
+const AVC_HIGH_444 = 0xf4
+const AVC_BITRATE = 2_400_000
+
+const SNAPSHOT = {
+  cacheBust: true,
+  fontEmbedCSS: ' ',
+  skipFonts: true,
+} as const
 
 function even(n: number) {
   const v = Math.max(2, Math.round(n))
@@ -90,7 +102,7 @@ function drawCover(
   ctx.drawImage(video, x + (w - dw) / 2, y + (h - dh) / 2, dw, dh)
 }
 
-function mediaBox(node: HTMLElement, media: HTMLElement, width: number, height: number) {
+function mediaBox(node: HTMLElement, media: HTMLElement, width: number, height: number): Box {
   const nr = node.getBoundingClientRect()
   const mr = media.getBoundingClientRect()
   const sx = width / Math.max(1, nr.width)
@@ -103,6 +115,29 @@ function mediaBox(node: HTMLElement, media: HTMLElement, width: number, height: 
   }
 }
 
+function unionBox(a: Box, b: Box): Box {
+  const left = Math.min(a.x, b.x)
+  const top = Math.min(a.y, b.y)
+  const right = Math.max(a.x + a.w, b.x + b.w)
+  const bottom = Math.max(a.y + a.h, b.y + b.h)
+  return { x: left, y: top, w: right - left, h: bottom - top }
+}
+
+function restoreAttr(el: HTMLElement, name: 'style', prev: string | null) {
+  if (prev === null) el.removeAttribute(name)
+  else el.setAttribute(name, prev)
+}
+
+async function mp4AvcProfile(blob: Blob) {
+  const buf = new Uint8Array(await blob.slice(0, 512_000).arrayBuffer())
+  for (let i = 0; i < buf.length - 8; i++) {
+    if (buf[i] === 0x61 && buf[i + 1] === 0x76 && buf[i + 2] === 0x63 && buf[i + 3] === 0x43) {
+      return buf[i + 5] ?? null
+    }
+  }
+  return null
+}
+
 function clipSeconds(primary: HTMLVideoElement | null) {
   if (primary && Number.isFinite(primary.duration) && primary.duration > 0) {
     return Math.min(MAX_SECONDS, Math.max(MIN_SECONDS, primary.duration))
@@ -112,7 +147,9 @@ function clipSeconds(primary: HTMLVideoElement | null) {
 
 function paintFrame(
   ctx: CanvasRenderingContext2D,
-  snap: HTMLCanvasElement,
+  bgSnap: HTMLCanvasElement,
+  badgeSnap: HTMLCanvasElement | null,
+  badgeBox: Box | null,
   layers: Layer[],
   width: number,
   height: number,
@@ -120,7 +157,10 @@ function paintFrame(
 ) {
   ctx.fillStyle = backgroundColor
   ctx.fillRect(0, 0, width, height)
-  ctx.drawImage(snap, 0, 0, width, height)
+  ctx.drawImage(bgSnap, 0, 0, width, height)
+  if (badgeSnap && badgeBox) {
+    ctx.drawImage(badgeSnap, badgeBox.x, badgeBox.y, badgeBox.w, badgeBox.h)
+  }
   for (const { video, box } of layers) {
     ctx.save()
     ctx.translate(box.x, box.y)
@@ -151,34 +191,46 @@ async function sniffExt(blob: Blob): Promise<'mp4' | 'webm'> {
 
 function recorderMime() {
   const types = [
-    'video/mp4;codecs="avc1.4D401F"',
+    `video/mp4;codecs="${AVC_BASELINE}"`,
+    `video/mp4;codecs="${AVC_MAIN}"`,
     'video/mp4;codecs="avc1.42E01E"',
     'video/mp4',
-    'video/webm;codecs=vp9',
     'video/webm;codecs=vp8',
+    'video/webm;codecs=vp9',
     'video/webm',
   ]
   return types.find((type) => typeof MediaRecorder !== 'undefined' && MediaRecorder.isTypeSupported(type)) ?? ''
 }
 
-async function encodeMp4(
+type AvcTry = {
+  fullCodecString?: string
+  hardwareAcceleration: 'prefer-software' | 'no-preference'
+  bitrate: number
+}
+
+const AVC_TRIES: AvcTry[] = [
+  { fullCodecString: AVC_BASELINE, hardwareAcceleration: 'prefer-software', bitrate: AVC_BITRATE },
+  { fullCodecString: AVC_MAIN, hardwareAcceleration: 'prefer-software', bitrate: AVC_BITRATE },
+  { fullCodecString: AVC_BASELINE, hardwareAcceleration: 'no-preference', bitrate: 2_000_000 },
+  { hardwareAcceleration: 'prefer-software', bitrate: 2_000_000 },
+]
+
+async function encodeMp4Once(
   canvas: HTMLCanvasElement,
   paint: () => void,
   primary: HTMLVideoElement | null,
   clip: number,
   signal: AbortSignal,
+  tryCfg: AvcTry,
 ) {
   if (signal.aborted) throw new Error('MP4 encoding cancelled.')
   const format = new Mp4OutputFormat({ fastStart: 'in-memory' })
-  const codec = await getFirstEncodableVideoCodec(
-    ['avc', ...format.getSupportedVideoCodecs().filter((c) => c !== 'avc')],
-    {
-      width: canvas.width,
-      height: canvas.height,
-      quality: QUALITY_HIGH,
-      frameRate: FPS,
-    },
-  )
+  const codec = await getFirstEncodableVideoCodec(['avc'], {
+    width: canvas.width,
+    height: canvas.height,
+    bitrate: tryCfg.bitrate,
+    frameRate: FPS,
+  })
   if (!codec) throw new Error('No MP4 video codec in this browser.')
   if (signal.aborted) throw new Error('MP4 encoding cancelled.')
 
@@ -186,8 +238,12 @@ async function encodeMp4(
   const output = new Output({ format, target })
   const source = new CanvasSource(canvas, {
     codec,
-    quality: QUALITY_HIGH,
-    keyFrameInterval: 1,
+    bitrate: tryCfg.bitrate,
+    keyFrameInterval: 0.5,
+    alpha: 'discard',
+    fullCodecString: tryCfg.fullCodecString,
+    hardwareAcceleration: tryCfg.hardwareAcceleration,
+    latencyMode: 'quality',
   })
   output.addVideoTrack(source, { frameRate: FPS })
   await output.start()
@@ -215,7 +271,31 @@ async function encodeMp4(
 
   const buffer = target.buffer
   if (!buffer || buffer.byteLength < 64) throw new Error('MP4 encoding produced an empty file.')
-  return new Blob([buffer], { type: 'video/mp4' })
+  const blob = new Blob([buffer], { type: 'video/mp4' })
+  const profile = await mp4AvcProfile(blob)
+  if (profile === AVC_HIGH_444) {
+    throw new Error('Encoder produced High 4:4:4 H.264, which many players cannot decode.')
+  }
+  return blob
+}
+
+async function encodeMp4(
+  canvas: HTMLCanvasElement,
+  paint: () => void,
+  primary: HTMLVideoElement | null,
+  clip: number,
+  signal: AbortSignal,
+) {
+  let last: unknown
+  for (const tryCfg of AVC_TRIES) {
+    try {
+      return await encodeMp4Once(canvas, paint, primary, clip, signal, tryCfg)
+    } catch (err) {
+      last = err
+      if (signal.aborted) throw err
+    }
+  }
+  throw last instanceof Error ? last : new Error('MP4 encoding failed.')
 }
 
 async function encodeRecorder(
@@ -321,14 +401,57 @@ export async function exportStoryVideo(node: HTMLElement, opts: StoryExportOptio
   }
 
   await sleep(60)
-  let snap: HTMLCanvasElement
-  try {
-    snap = await toCanvas(node, {
-      pixelRatio: width / Math.max(1, node.clientWidth),
-      cacheBust: true,
-      backgroundColor: opts.backgroundColor,
-      fontEmbedCSS: ' ',
+
+  const layers = videos
+    .map((video) => {
+      const media = (video.closest('.foot-frame-media') as HTMLElement | null) ?? video
+      return { video, box: mediaBox(node, media, width, height) }
     })
+    .filter((layer) => layer.video.videoWidth > 0)
+
+  const fit = node.querySelector('[data-story-fit]') as HTMLElement | null
+  const lan = fit?.querySelector('.lanyard-hang') as HTMLElement | null
+  const fitBox = fit ? mediaBox(node, fit, width, height) : null
+  const lanBox = lan ? mediaBox(node, lan, width, height) : null
+  const badgeBox = fitBox && lanBox ? unionBox(fitBox, lanBox) : fitBox
+  const ratio = width / Math.max(1, node.clientWidth)
+
+  let bgSnap: HTMLCanvasElement
+  let badgeSnap: HTMLCanvasElement | null = null
+  try {
+    bgSnap = await toCanvas(node, {
+      ...SNAPSHOT,
+      pixelRatio: ratio,
+      backgroundColor: opts.backgroundColor,
+      filter: (el) => !el.hasAttribute('data-story-fit'),
+    })
+
+    if (fit) {
+      const prevFit = fit.getAttribute('style')
+      const prevLan = lan?.getAttribute('style') ?? null
+      try {
+        fit.style.transform = 'none'
+        fit.style.left = '0px'
+        fit.style.top = '0px'
+        fit.style.position = 'relative'
+        if (lan) {
+          lan.style.position = 'relative'
+          lan.style.left = 'auto'
+          lan.style.bottom = 'auto'
+          lan.style.transform = 'none'
+          lan.style.marginLeft = 'auto'
+          lan.style.marginRight = 'auto'
+        }
+        await sleep(40)
+        badgeSnap = await toCanvas(fit, {
+          ...SNAPSHOT,
+          pixelRatio: badgeBox ? badgeBox.w / Math.max(1, fit.offsetWidth) : ratio,
+        })
+      } finally {
+        restoreAttr(fit, 'style', prevFit)
+        if (lan) restoreAttr(lan, 'style', prevLan)
+      }
+    }
   } finally {
     for (const { el, filter } of filterRestore) el.style.filter = filter
     for (const video of hidden) video.style.opacity = ''
@@ -340,14 +463,8 @@ export async function exportStoryVideo(node: HTMLElement, opts: StoryExportOptio
   const ctx = canvas.getContext('2d', { alpha: false })
   if (!ctx) throw new Error('Could not open a canvas to record.')
 
-  const layers = videos
-    .map((video) => {
-      const media = (video.closest('.foot-frame-media') as HTMLElement | null) ?? video
-      return { video, box: mediaBox(node, media, width, height) }
-    })
-    .filter((layer) => layer.video.videoWidth > 0)
-
-  const paint = () => paintFrame(ctx, snap, layers, width, height, opts.backgroundColor)
+  const paint = () =>
+    paintFrame(ctx, bgSnap, badgeSnap, badgeBox, layers, width, height, opts.backgroundColor)
   const primary = layers[0]?.video ?? null
   const clip = clipSeconds(primary)
   const wasPlaying = primary ? !primary.paused : false

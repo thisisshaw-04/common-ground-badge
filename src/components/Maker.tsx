@@ -14,6 +14,7 @@ import {
   STICKERS,
   TABS,
   stickerById,
+  stickerBadgeTransform,
   BADGE_LAYOUT,
   type BadgeState,
   type BorderId,
@@ -651,7 +652,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                         left: `${s.x}%`,
                         top: `${s.y}%`,
                         zIndex: draggingUid === s.uid ? 1000 : i + 1,
-                        transform: `translate(-50%, -50%) rotate(${s.rotation}deg)`,
+                        transform: stickerBadgeTransform(s.rotation),
                       }}
                       onPointerDown={(e) => onStickerPointerDown(e, s.uid)}
                       onPointerMove={(e) => onStickerPointerMove(e, s.uid)}

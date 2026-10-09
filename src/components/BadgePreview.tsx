@@ -1,4 +1,10 @@
-import { BADGE_LAYOUT, stickerById, visibleBadgeName, type BadgeState } from '../lib/badge'
+import {
+  BADGE_LAYOUT,
+  stickerBadgeTransform,
+  stickerById,
+  visibleBadgeName,
+  type BadgeState,
+} from '../lib/badge'
 import { BadgeFace } from './BadgeFace'
 import { StickerFace } from './StickerFace'
 
@@ -47,7 +53,7 @@ export function BadgePreview({
               left: `${s.x}%`,
               top: `${s.y}%`,
               zIndex: i + 1,
-              transform: `translate(-50%, -50%) rotate(${s.rotation}deg)`,
+              transform: stickerBadgeTransform(s.rotation),
             }}
           >
             <StickerFace def={def} large />
