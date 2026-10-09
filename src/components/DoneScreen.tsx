@@ -22,10 +22,10 @@ const DOWNLOADS: {
   format: PosterFormat
   label: string
 }[] = [
-  { overlay: 'dark', format: 'story', label: 'Download 9:16 Dark' },
-  { overlay: 'light', format: 'story', label: 'Download 9:16 Light' },
-  { overlay: 'dark', format: 'grid', label: 'Download 3:4 Dark' },
-  { overlay: 'light', format: 'grid', label: 'Download 3:4 Light' },
+  { overlay: 'dark', format: 'story', label: 'Download 9:16 Dark GIF' },
+  { overlay: 'light', format: 'story', label: 'Download 9:16 Light GIF' },
+  { overlay: 'dark', format: 'grid', label: 'Download 3:4 Dark GIF' },
+  { overlay: 'light', format: 'grid', label: 'Download 3:4 Light GIF' },
 ]
 
 function downloadKey(overlay: StoryOverlayId, format: PosterFormat) {

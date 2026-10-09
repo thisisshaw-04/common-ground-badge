@@ -102,14 +102,30 @@ export async function exportStoryGif(node: HTMLElement, opts: StoryExportOptions
     await waitForVideo(video)
   }
 
-  await sleep(60)
-  const snap = await toCanvas(node, {
-    pixelRatio: width / Math.max(1, node.clientWidth),
-    cacheBust: true,
-    backgroundColor: opts.backgroundColor,
-  })
+  if (!node.clientWidth || !node.clientHeight) {
+    throw new Error('The poster is not on screen yet — wait a beat and try again.')
+  }
 
-  for (const video of hidden) video.style.opacity = ''
+  const filterRestore: { el: HTMLElement; filter: string }[] = []
+  for (const el of [node, ...node.querySelectorAll<HTMLElement>('*')]) {
+    if (getComputedStyle(el).filter === 'none') continue
+    filterRestore.push({ el, filter: el.style.filter })
+    el.style.filter = 'none'
+  }
+
+  await sleep(60)
+  let snap: HTMLCanvasElement
+  try {
+    snap = await toCanvas(node, {
+      pixelRatio: width / Math.max(1, node.clientWidth),
+      cacheBust: true,
+      backgroundColor: opts.backgroundColor,
+      fontEmbedCSS: ' ',
+    })
+  } finally {
+    for (const { el, filter } of filterRestore) el.style.filter = filter
+    for (const video of hidden) video.style.opacity = ''
+  }
 
   const canvas = document.createElement('canvas')
   canvas.width = width
@@ -195,6 +211,12 @@ export function downloadBlob(blob: Blob, filename: string) {
   const a = document.createElement('a')
   a.href = url
   a.download = filename
+  a.rel = 'noopener'
+  a.style.display = 'none'
+  document.body.appendChild(a)
   a.click()
-  window.setTimeout(() => URL.revokeObjectURL(url), 4000)
+  window.setTimeout(() => {
+    a.remove()
+    URL.revokeObjectURL(url)
+  }, 4000)
 }
