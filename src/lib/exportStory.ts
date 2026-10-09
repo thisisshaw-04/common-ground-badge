@@ -1,9 +1,11 @@
 import { toCanvas } from 'html-to-image'
 import {
+  AudioBufferSource,
   BufferTarget,
   CanvasSource,
   Mp4OutputFormat,
   Output,
+  getFirstEncodableAudioCodec,
   getFirstEncodableVideoCodec,
 } from 'mediabunny'
 import { footFramePath } from '../components/FootVideoFrame'
@@ -16,24 +18,24 @@ export interface StoryExportOptions {
 
 export interface StoryVideoFile {
   blob: Blob
-  ext: 'mp4' | 'webm'
+  ext: 'mp4'
 }
 
-const FPS = 24
+const FPS = 30
 const MIN_SECONDS = 1.5
 const MAX_SECONDS = 2
-/** 720-wide keeps WebCodecs / MediaRecorder reliable; 1080p timed out before. */
+/** 720-wide keeps WebCodecs reliable and matches H.264 Level 3.1. */
 const MAX_VIDEO_WIDTH = 720
 const MP4_BUDGET_MS = 32000
 
 type Box = { x: number; y: number; w: number; h: number }
 type Layer = { video: HTMLVideoElement; box: Box }
 
-/** Constrained Baseline 3.1 — VLC, IG, and LinkedIn all play this. High 4:4:4 (0xF4) does not. */
+/** Constrained Baseline 3.1 — iPhone, Android, IG, LinkedIn, VLC. */
 const AVC_BASELINE = 'avc1.42E01F'
 const AVC_MAIN = 'avc1.4D401F'
-const AVC_HIGH_444 = 0xf4
-const AVC_BITRATE = 2_400_000
+const AVC_BITRATE = 2_500_000
+const AAC_RATE = 44100
 
 const SNAPSHOT = {
   cacheBust: true,
@@ -123,26 +125,55 @@ function unionBox(a: Box, b: Box): Box {
   return { x: left, y: top, w: right - left, h: bottom - top }
 }
 
-function restoreAttr(el: HTMLElement, name: 'style', prev: string | null) {
-  if (prev === null) el.removeAttribute(name)
-  else el.setAttribute(name, prev)
+function copyCanvases(from: HTMLElement, to: HTMLElement) {
+  const src = [...from.querySelectorAll('canvas')]
+  const dst = [...to.querySelectorAll('canvas')]
+  src.forEach((source, i) => {
+    const target = dst[i]
+    if (!target) return
+    target.width = source.width
+    target.height = source.height
+    target.getContext('2d')?.drawImage(source, 0, 0)
+  })
 }
 
-async function mp4AvcProfile(blob: Blob) {
-  const buf = new Uint8Array(await blob.slice(0, 512_000).arrayBuffer())
-  for (let i = 0; i < buf.length - 8; i++) {
-    if (buf[i] === 0x61 && buf[i + 1] === 0x76 && buf[i + 2] === 0x63 && buf[i + 3] === 0x43) {
-      return buf[i + 5] ?? null
-    }
+/** Off-screen copy of the poster so the live preview never jumps. */
+function mountClone(node: HTMLElement) {
+  const clone = node.cloneNode(true) as HTMLElement
+  copyCanvases(node, clone)
+  for (const video of clone.querySelectorAll('video')) {
+    video.remove()
   }
-  return null
+  for (const el of [clone, ...clone.querySelectorAll<HTMLElement>('*')]) {
+    if (getComputedStyle(el).filter !== 'none') el.style.filter = 'none'
+  }
+  clone.style.cssText = [
+    'position:fixed',
+    'left:-14000px',
+    'top:0',
+    `width:${node.clientWidth}px`,
+    `height:${node.clientHeight}px`,
+    'margin:0',
+    'pointer-events:none',
+    'z-index:-1',
+  ].join(';')
+  document.body.appendChild(clone)
+  return clone
 }
 
-function clipSeconds(primary: HTMLVideoElement | null) {
-  if (primary && Number.isFinite(primary.duration) && primary.duration > 0) {
-    return Math.min(MAX_SECONDS, Math.max(MIN_SECONDS, primary.duration))
-  }
-  return MIN_SECONDS
+async function hiddenVideoCopy(video: HTMLVideoElement) {
+  const copy = document.createElement('video')
+  copy.src = video.currentSrc || video.src
+  copy.muted = true
+  copy.defaultMuted = true
+  copy.playsInline = true
+  copy.setAttribute('playsinline', '')
+  copy.preload = 'auto'
+  copy.crossOrigin = video.crossOrigin
+  copy.style.cssText = 'position:fixed;left:-9999px;width:2px;height:2px;opacity:0;pointer-events:none'
+  document.body.appendChild(copy)
+  await waitForVideo(copy)
+  return copy
 }
 
 function paintFrame(
@@ -176,30 +207,30 @@ function paintFrame(
   }
 }
 
-async function sniffExt(blob: Blob): Promise<'mp4' | 'webm'> {
-  const buf = new Uint8Array(await blob.slice(0, 16).arrayBuffer())
-  if (buf[0] === 0x47 && buf[1] === 0x49 && buf[2] === 0x46) {
-    throw new Error('Encoder produced a GIF, not a video.')
+function findAvcC(buf: Uint8Array) {
+  for (let i = 0; i < buf.length - 8; i++) {
+    if (buf[i] === 0x61 && buf[i + 1] === 0x76 && buf[i + 2] === 0x63 && buf[i + 3] === 0x43) {
+      return i
+    }
   }
-  if (buf[0] === 0x1a && buf[1] === 0x45 && buf[2] === 0xdf && buf[3] === 0xa3) return 'webm'
-  const tag = String.fromCharCode(buf[4], buf[5], buf[6], buf[7])
-  if (tag === 'ftyp') return 'mp4'
-  if (blob.type.includes('mp4')) return 'mp4'
-  if (blob.type.includes('webm')) return 'webm'
-  throw new Error('Encoder produced an unknown file, not a video.')
+  return -1
 }
 
-function recorderMime() {
-  const types = [
-    `video/mp4;codecs="${AVC_BASELINE}"`,
-    `video/mp4;codecs="${AVC_MAIN}"`,
-    'video/mp4;codecs="avc1.42E01E"',
-    'video/mp4',
-    'video/webm;codecs=vp8',
-    'video/webm;codecs=vp9',
-    'video/webm',
-  ]
-  return types.find((type) => typeof MediaRecorder !== 'undefined' && MediaRecorder.isTypeSupported(type)) ?? ''
+/** Baseline / Main / High 8-bit 4:2:0. High 4:4:4 (0xF4) will not play on phones. */
+function phoneSafeAvcProfile(profile: number) {
+  return profile === 0x42 || profile === 0x4d || profile === 0x64
+}
+
+async function assertPhoneSafeMp4(blob: Blob) {
+  const buf = new Uint8Array(await blob.slice(0, 768_000).arrayBuffer())
+  const tag = String.fromCharCode(buf[4], buf[5], buf[6], buf[7])
+  if (tag !== 'ftyp') throw new Error('Not a real MP4 (missing ftyp).')
+  const avc = findAvcC(buf)
+  if (avc < 0) throw new Error('MP4 is missing an H.264 track.')
+  const profile = buf[avc + 5]
+  if (!phoneSafeAvcProfile(profile)) {
+    throw new Error(`H.264 profile 0x${profile.toString(16)} will not play on phones.`)
+  }
 }
 
 type AvcTry = {
@@ -210,10 +241,23 @@ type AvcTry = {
 
 const AVC_TRIES: AvcTry[] = [
   { fullCodecString: AVC_BASELINE, hardwareAcceleration: 'prefer-software', bitrate: AVC_BITRATE },
+  { fullCodecString: AVC_BASELINE, hardwareAcceleration: 'no-preference', bitrate: AVC_BITRATE },
   { fullCodecString: AVC_MAIN, hardwareAcceleration: 'prefer-software', bitrate: AVC_BITRATE },
-  { fullCodecString: AVC_BASELINE, hardwareAcceleration: 'no-preference', bitrate: 2_000_000 },
-  { hardwareAcceleration: 'prefer-software', bitrate: 2_000_000 },
+  { fullCodecString: AVC_MAIN, hardwareAcceleration: 'no-preference', bitrate: 2_000_000 },
 ]
+
+function clipSeconds(primary: HTMLVideoElement | null) {
+  if (primary && Number.isFinite(primary.duration) && primary.duration > 0) {
+    return Math.min(MAX_SECONDS, Math.max(MIN_SECONDS, primary.duration))
+  }
+  return MIN_SECONDS
+}
+
+function silentAudio(seconds: number) {
+  const frames = Math.max(AAC_RATE, Math.ceil(AAC_RATE * seconds))
+  const ctx = new OfflineAudioContext(2, frames, AAC_RATE)
+  return ctx.createBuffer(2, frames, AAC_RATE)
+}
 
 async function encodeMp4Once(
   canvas: HTMLCanvasElement,
@@ -239,14 +283,28 @@ async function encodeMp4Once(
   const source = new CanvasSource(canvas, {
     codec,
     bitrate: tryCfg.bitrate,
-    keyFrameInterval: 0.5,
+    keyFrameInterval: 1,
     alpha: 'discard',
     fullCodecString: tryCfg.fullCodecString,
     hardwareAcceleration: tryCfg.hardwareAcceleration,
     latencyMode: 'quality',
+    contentHint: 'detail',
   })
   output.addVideoTrack(source, { frameRate: FPS })
+
+  const audioCodec = await getFirstEncodableAudioCodec(['aac'], {
+    numberOfChannels: 2,
+    sampleRate: AAC_RATE,
+    bitrate: 64_000,
+  })
+  let audio: AudioBufferSource | null = null
+  if (audioCodec) {
+    audio = new AudioBufferSource({ codec: audioCodec, bitrate: 64_000 })
+    output.addAudioTrack(audio)
+  }
+
   await output.start()
+  if (audio) await audio.add(silentAudio(clip))
 
   const abort = () => {
     void output.cancel().catch(() => {})
@@ -272,10 +330,7 @@ async function encodeMp4Once(
   const buffer = target.buffer
   if (!buffer || buffer.byteLength < 64) throw new Error('MP4 encoding produced an empty file.')
   const blob = new Blob([buffer], { type: 'video/mp4' })
-  const profile = await mp4AvcProfile(blob)
-  if (profile === AVC_HIGH_444) {
-    throw new Error('Encoder produced High 4:4:4 H.264, which many players cannot decode.')
-  }
+  await assertPhoneSafeMp4(blob)
   return blob
 }
 
@@ -298,6 +353,16 @@ async function encodeMp4(
   throw last instanceof Error ? last : new Error('MP4 encoding failed.')
 }
 
+function recorderMime() {
+  const types = [
+    `video/mp4;codecs="${AVC_BASELINE}"`,
+    `video/mp4;codecs="${AVC_MAIN}"`,
+    'video/mp4;codecs="avc1.42E01E"',
+    'video/mp4',
+  ]
+  return types.find((type) => typeof MediaRecorder !== 'undefined' && MediaRecorder.isTypeSupported(type)) ?? ''
+}
+
 async function encodeRecorder(
   canvas: HTMLCanvasElement,
   paint: () => void,
@@ -305,7 +370,7 @@ async function encodeRecorder(
   clip: number,
 ) {
   const mime = recorderMime()
-  if (!mime) throw new Error('This browser cannot record video from a canvas.')
+  if (!mime) throw new Error('This browser cannot record an MP4 from a canvas.')
 
   canvas.style.cssText = 'position:fixed;left:-99999px;top:0;pointer-events:none'
   document.body.appendChild(canvas)
@@ -352,8 +417,9 @@ async function encodeRecorder(
   stream.getTracks().forEach((t) => t.stop())
   canvas.remove()
 
-  const blob = new Blob(chunks, { type: mime.split(';')[0] })
+  const blob = new Blob(chunks, { type: 'video/mp4' })
   if (blob.size < 64) throw new Error('Video recording produced an empty file.')
+  await assertPhoneSafeMp4(blob)
   return blob
 }
 
@@ -375,39 +441,16 @@ async function withTimeout<T>(
   }
 }
 
-/** Story / grid card → looping video, with the foot clip still moving. */
+/** Story / grid card → looping H.264 MP4 phones and laptops can both play. */
 export async function exportStoryVideo(node: HTMLElement, opts: StoryExportOptions): Promise<StoryVideoFile> {
   const scale = Math.min(1, MAX_VIDEO_WIDTH / Math.max(1, opts.width))
   const width = even(opts.width * scale)
   const height = even(opts.height * scale)
-  const videos = [...node.querySelectorAll('video')]
-  const hidden: HTMLVideoElement[] = []
-
-  for (const video of videos) {
-    hidden.push(video)
-    video.style.opacity = '0'
-    await waitForVideo(video)
-  }
+  const liveVideos = [...node.querySelectorAll('video')]
 
   if (!node.clientWidth || !node.clientHeight) {
     throw new Error('The poster is not on screen yet — wait a beat and try again.')
   }
-
-  const filterRestore: { el: HTMLElement; filter: string }[] = []
-  for (const el of [node, ...node.querySelectorAll<HTMLElement>('*')]) {
-    if (getComputedStyle(el).filter === 'none') continue
-    filterRestore.push({ el, filter: el.style.filter })
-    el.style.filter = 'none'
-  }
-
-  await sleep(60)
-
-  const layers = videos
-    .map((video) => {
-      const media = (video.closest('.foot-frame-media') as HTMLElement | null) ?? video
-      return { video, box: mediaBox(node, media, width, height) }
-    })
-    .filter((layer) => layer.video.videoWidth > 0)
 
   const fit = node.querySelector('[data-story-fit]') as HTMLElement | null
   const lan = fit?.querySelector('.lanyard-hang') as HTMLElement | null
@@ -416,65 +459,72 @@ export async function exportStoryVideo(node: HTMLElement, opts: StoryExportOptio
   const badgeBox = fitBox && lanBox ? unionBox(fitBox, lanBox) : fitBox
   const ratio = width / Math.max(1, node.clientWidth)
 
+  const clones: HTMLElement[] = []
+  const scratchVideos: HTMLVideoElement[] = []
   let bgSnap: HTMLCanvasElement
   let badgeSnap: HTMLCanvasElement | null = null
+
   try {
-    bgSnap = await toCanvas(node, {
+    const posterClone = mountClone(node)
+    clones.push(posterClone)
+    await sleep(30)
+
+    bgSnap = await toCanvas(posterClone, {
       ...SNAPSHOT,
       pixelRatio: ratio,
       backgroundColor: opts.backgroundColor,
       filter: (el) => !el.hasAttribute('data-story-fit'),
     })
 
-    if (fit) {
-      const prevFit = fit.getAttribute('style')
-      const prevLan = lan?.getAttribute('style') ?? null
-      try {
-        fit.style.transform = 'none'
-        fit.style.left = '0px'
-        fit.style.top = '0px'
-        fit.style.position = 'relative'
-        if (lan) {
-          lan.style.position = 'relative'
-          lan.style.left = 'auto'
-          lan.style.bottom = 'auto'
-          lan.style.transform = 'none'
-          lan.style.marginLeft = 'auto'
-          lan.style.marginRight = 'auto'
-        }
-        await sleep(40)
-        badgeSnap = await toCanvas(fit, {
-          ...SNAPSHOT,
-          pixelRatio: badgeBox ? badgeBox.w / Math.max(1, fit.offsetWidth) : ratio,
-        })
-      } finally {
-        restoreAttr(fit, 'style', prevFit)
-        if (lan) restoreAttr(lan, 'style', prevLan)
+    const fitClone = posterClone.querySelector('[data-story-fit]') as HTMLElement | null
+    if (fitClone) {
+      const lanClone = fitClone.querySelector('.lanyard-hang') as HTMLElement | null
+      fitClone.style.transform = 'none'
+      fitClone.style.left = '0px'
+      fitClone.style.top = '0px'
+      fitClone.style.position = 'relative'
+      if (lanClone) {
+        lanClone.style.position = 'relative'
+        lanClone.style.left = 'auto'
+        lanClone.style.bottom = 'auto'
+        lanClone.style.transform = 'none'
+        lanClone.style.marginLeft = 'auto'
+        lanClone.style.marginRight = 'auto'
       }
+      await sleep(30)
+      badgeSnap = await toCanvas(fitClone, {
+        ...SNAPSHOT,
+        pixelRatio: badgeBox ? badgeBox.w / Math.max(1, fitClone.offsetWidth) : ratio,
+      })
+    }
+
+    for (const video of liveVideos) {
+      const copy = await hiddenVideoCopy(video)
+      scratchVideos.push(copy)
     }
   } finally {
-    for (const { el, filter } of filterRestore) el.style.filter = filter
-    for (const video of hidden) video.style.opacity = ''
+    for (const el of clones) el.remove()
   }
+
+  const layers = scratchVideos
+    .map((video, i) => {
+      const original = liveVideos[i]
+      const media =
+        (original?.closest('.foot-frame-media') as HTMLElement | null) ?? original ?? video
+      return { video, box: mediaBox(node, media, width, height) }
+    })
+    .filter((layer) => layer.video.videoWidth > 0)
 
   const canvas = document.createElement('canvas')
   canvas.width = width
   canvas.height = height
-  const ctx = canvas.getContext('2d', { alpha: false })
+  const ctx = canvas.getContext('2d', { alpha: false, colorSpace: 'srgb' })
   if (!ctx) throw new Error('Could not open a canvas to record.')
 
   const paint = () =>
     paintFrame(ctx, bgSnap, badgeSnap, badgeBox, layers, width, height, opts.backgroundColor)
   const primary = layers[0]?.video ?? null
   const clip = clipSeconds(primary)
-  const wasPlaying = primary ? !primary.paused : false
-  const resumeAt = primary?.currentTime ?? 0
-
-  const resume = () => {
-    if (!primary) return
-    primary.currentTime = resumeAt
-    if (wasPlaying) void primary.play().catch(() => {})
-  }
 
   try {
     if (primary) {
@@ -494,19 +544,38 @@ export async function exportStoryVideo(node: HTMLElement, opts: StoryExportOptio
       blob = await encodeRecorder(canvas, paint, layers, clip)
     }
 
-    const ext = await sniffExt(blob)
-    return { blob, ext }
+    return { blob, ext: 'mp4' }
   } finally {
-    resume()
+    for (const video of scratchVideos) {
+      video.pause()
+      video.removeAttribute('src')
+      video.load()
+      video.remove()
+    }
   }
 }
 
-export function downloadBlob(blob: Blob, filename: string) {
-  const url = URL.createObjectURL(blob)
+export async function downloadBlob(blob: Blob, filename: string) {
+  const file = new File([blob], filename, { type: blob.type || 'video/mp4' })
+  const nav = navigator as Navigator & {
+    canShare?: (data: ShareData) => boolean
+    share?: (data: ShareData) => Promise<void>
+  }
+  if (typeof nav.share === 'function' && nav.canShare?.({ files: [file] })) {
+    try {
+      await nav.share({ files: [file], title: filename })
+      return
+    } catch (err) {
+      if ((err as DOMException).name === 'AbortError') return
+    }
+  }
+
+  const url = URL.createObjectURL(file)
   const a = document.createElement('a')
   a.href = url
   a.download = filename
   a.rel = 'noopener'
+  a.type = file.type
   a.style.display = 'none'
   document.body.appendChild(a)
   a.click()

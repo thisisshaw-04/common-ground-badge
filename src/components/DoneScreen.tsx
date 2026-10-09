@@ -53,7 +53,7 @@ export function DoneScreen({ state, onEdit }: DoneProps) {
         backgroundColor: posterBackground(id, format),
       })
       const name = (visibleBadgeName(state.name) || 'maker').replace(/\s+/g, '-')
-      downloadBlob(file.blob, `CommonGround-${name}-${id}-${format}.${file.ext}`)
+      await downloadBlob(file.blob, `CommonGround-${name}-${id}-${format}.mp4`)
     } catch (err) {
       console.error(err)
       alert('Could not export the video — try again in Chrome or Safari.')
