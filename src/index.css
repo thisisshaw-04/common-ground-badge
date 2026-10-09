@@ -151,7 +151,7 @@ textarea {
   flex-direction: column;
   height: 100dvh;
   min-height: 100dvh;
-  /* Clip at the screen edge so stretched cord tips leave the viewport cleanly. */
+  /* Clip at the screen edge so cord tips leave the viewport cleanly. */
   overflow: hidden;
   background: var(--bg);
 }
@@ -191,14 +191,13 @@ textarea {
   overflow: visible;
 }
 
-/* Badge + Undo/Clear/Done — shifted up as one unit so the cord leaves the top
-   without distorting the lanyard PNG. */
+/* Badge + Undo/Clear/Done as one stack. Cord keeps its natural aspect ratio
+   and already paints past the top edge (clipped by .maker-mobile). */
 .maker-stage-stack {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
-  transform: translateY(calc(-1 * min(16dvh, 96px)));
 }
 
 /* Slot owns the scaled layout size; cluster paints at native size then scales. */
