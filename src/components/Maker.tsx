@@ -416,7 +416,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
           <section className="animate-pop order-last flex min-h-0 min-w-0 flex-1 flex-col lg:order-none lg:overflow-y-auto no-scrollbar lg:pt-1 lg:pr-1 lg:pb-1">
             <div className="flex min-h-0 flex-col gap-6 [@media(min-height:860px)]:gap-7">
               <div className="grid grid-cols-1 items-start gap-x-5 gap-y-7 sm:grid-cols-2 [@media(min-height:860px)]:gap-y-8">
-                <header className="hidden lg:col-start-1 lg:row-start-1 lg:flex lg:h-full lg:flex-col lg:items-start lg:justify-end lg:self-stretch">
+                <header className="hidden lg:col-start-1 lg:row-start-1 lg:flex lg:h-full lg:flex-col lg:items-start lg:justify-between lg:self-stretch">
                   {heading}
                 </header>
                   <Panel title="Draw" className="sm:col-start-2 sm:row-start-1">
