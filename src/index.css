@@ -1095,8 +1095,8 @@ button.track-box:not(.is-selected):hover video {
   left: 50%;
   bottom: 100%;
   z-index: 7;
-  /* Seat the clip on the 1.5px top stroke — don’t hang it down the face. */
-  margin-bottom: -2px;
+  /* Seat the clip on the top stroke — 0 so it isn’t pulled into the face. */
+  margin-bottom: 0;
   transform: translateX(-50%);
 }
 
