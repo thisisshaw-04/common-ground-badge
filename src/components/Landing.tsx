@@ -1,12 +1,14 @@
-import { EVENT } from '../lib/badge'
-import { FootVideoFrame } from './FootVideoFrame'
+import { BadgeFace } from './BadgeFace'
+import { Lanyard } from './Lanyard'
 
 interface LandingProps {
   onStart: () => void
 }
 
 const BG = `${import.meta.env.BASE_URL}landing-scan.webp`
-const CARD_H = 256
+const BADGE_W = 320
+const BODY_H = 100
+const FOOT_H = 188
 
 export function Landing({ onStart }: LandingProps) {
   return (
@@ -18,24 +20,39 @@ export function Landing({ onStart }: LandingProps) {
         fetchPriority="high"
       />
 
-      <div className="relative z-10 grid min-h-dvh place-items-center px-4">
-        <div className="landing-video-card animate-floaty">
-          <FootVideoFrame id="signal" height={CARD_H} stroke="#d6e824" />
+      <main className="relative z-10 flex min-h-dvh flex-col items-center justify-center px-4 pb-8 pt-6">
+        <div className="landing-stage relative flex flex-col items-center">
+          <Lanyard cord="ink" scale={1} className="lanyard-offscreen" />
+          <BadgeFace
+            width={BADGE_W}
+            footVideo="signal"
+            border="none"
+            bodyHeight={BODY_H}
+            footHeight={FOOT_H}
+            className="landing-badge relative z-[1]"
+            body={null}
+          />
         </div>
-      </div>
 
-      <div className="landing-hero-dock pointer-events-none absolute inset-x-0 bottom-0 z-20 flex flex-col items-center gap-3 px-4 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-10">
-        <button
-          type="button"
-          onClick={onStart}
-          className="cta-blue pointer-events-auto w-full max-w-[18.75rem] px-5 py-3.5 text-lg sm:max-w-[20rem] sm:text-[21px]"
-        >
-          Build a Common Ground Badge
-        </button>
-        <p className="landing-hero-meta pointer-events-auto text-center text-[11px] tracking-[0.04em]">
-          {EVENT.subtitle} · Design × Tech × Culture · {EVENT.date} {EVENT.year}
-        </p>
-      </div>
+        <div className="landing-copy relative z-20 mt-8 max-w-md text-center sm:mt-9">
+          <h1 className="landing-kicker">
+            You made it to
+            <br />
+            Common Ground!
+          </h1>
+          <p className="landing-lede">
+            Your making journey starts here. Grab your{' '}
+            <button
+              type="button"
+              onClick={onStart}
+              className="landing-badge-btn"
+              aria-label="Grab your badge"
+            >
+              badge!
+            </button>
+          </p>
+        </div>
+      </main>
     </div>
   )
 }
