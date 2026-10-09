@@ -567,6 +567,7 @@ textarea {
 
 .panel-title {
   position: static;
+  display: block;
   transform: none;
   margin: 0;
   padding: 0;
