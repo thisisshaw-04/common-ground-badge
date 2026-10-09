@@ -151,11 +151,14 @@ textarea {
   flex-direction: column;
   height: 100dvh;
   min-height: 100dvh;
+  /* Clip at the screen edge so stretched cord tips leave the viewport cleanly. */
   overflow: hidden;
   background: var(--bg);
 }
 
 .maker-back {
+  position: relative;
+  z-index: 20;
   flex: 0 0 auto;
   align-self: flex-start;
   margin: 0;
@@ -185,7 +188,8 @@ textarea {
   justify-content: flex-end;
   gap: 0.5rem;
   padding: 0.1rem 1rem 0.45rem;
-  overflow: hidden;
+  /* Let the cord paint up through the header and off the top of the phone. */
+  overflow: visible;
 }
 
 /* Slot owns the scaled layout size; cluster paints at native size then scales. */
@@ -204,9 +208,9 @@ textarea {
 }
 
 .maker-mobile .maker-badge-slot {
-  /* badge + visible cord stump above the clip */
+  /* badge only — cord hangs above and is allowed to leave the screen */
   width: calc(368px * var(--badge-s));
-  height: calc((var(--badge-native-h) + 88px) * var(--badge-s));
+  height: calc(var(--badge-native-h) * var(--badge-s));
 }
 
 .maker-mobile .maker-badge-cluster {
@@ -214,6 +218,12 @@ textarea {
   left: 50%;
   bottom: 0;
   transform: translateX(-50%) scale(var(--badge-s));
+  transform-origin: bottom center;
+}
+
+/* Stretch straps upward from the clip so the printed cut-off never sits on-screen. */
+.maker-mobile .lanyard-offscreen {
+  transform: translateX(-50%) scaleY(2.6);
   transform-origin: bottom center;
 }
 
@@ -1478,6 +1488,7 @@ button.track-box:not(.is-selected):hover video {
   /* Seat the clip on the top stroke — 0 so it isn’t pulled into the face. */
   margin-bottom: 0;
   transform: translateX(-50%);
+  transform-origin: bottom center;
 }
 
 .lanyard-hang-img {
