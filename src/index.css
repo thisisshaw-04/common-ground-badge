@@ -243,9 +243,9 @@ textarea {
 }
 
 .maker-edge-actions .badge-edge-btn {
-  /* Match .panel-title section-header size; slightly taller than the tight chip. */
+  /* Match phone drawer section headers (.maker-drawer-body .panel-title = 11px). */
   padding-block: 0.48rem;
-  font-size: 12px;
+  font-size: 11px;
   line-height: 1.2;
   font-weight: 600;
 }
