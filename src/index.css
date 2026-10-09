@@ -284,6 +284,10 @@ textarea {
   background: #111;
 }
 
+.landing-main {
+  padding-top: clamp(5.5rem, 16vh, 9.5rem);
+}
+
 .landing-stage {
   width: min(86vw, 20rem);
 }
@@ -291,6 +295,10 @@ textarea {
 .landing-hero .landing-badge {
   width: 100%;
   box-shadow: 0 22px 56px rgba(0, 0, 0, 0.5);
+}
+
+.landing-copy {
+  margin-top: 2.15rem;
 }
 
 .landing-kicker {
@@ -302,7 +310,7 @@ textarea {
 }
 
 .landing-lede {
-  margin-top: 0.85rem;
+  margin-top: 2.1rem;
   color: rgba(255, 255, 255, 0.92);
   font-size: clamp(0.95rem, 2vw, 1.12rem);
   font-weight: 400;
@@ -343,12 +351,20 @@ textarea {
 }
 
 @media (max-height: 720px) {
+  .landing-main {
+    padding-top: clamp(3.5rem, 10vh, 6rem);
+  }
+
   .landing-stage {
     width: min(72vw, 17.5rem);
   }
 
   .landing-copy {
-    margin-top: 1.25rem;
+    margin-top: 1.5rem;
+  }
+
+  .landing-lede {
+    margin-top: 1.5rem;
   }
 }
 

@@ -1,5 +1,7 @@
+import { DEMO_STICKERS, stickerById } from '../lib/badge'
 import { BadgeFace } from './BadgeFace'
 import { Lanyard } from './Lanyard'
+import { StickerFace } from './StickerFace'
 
 interface LandingProps {
   onStart: () => void
@@ -20,7 +22,7 @@ export function Landing({ onStart }: LandingProps) {
         fetchPriority="high"
       />
 
-      <main className="relative z-10 flex min-h-dvh flex-col items-center justify-center px-4 pb-8 pt-6">
+      <main className="landing-main relative z-10 flex min-h-dvh flex-col items-center px-4 pb-10">
         <div className="landing-stage relative flex flex-col items-center">
           <Lanyard cord="ink" scale={1} className="lanyard-offscreen" />
           <BadgeFace
@@ -31,10 +33,27 @@ export function Landing({ onStart }: LandingProps) {
             footHeight={FOOT_H}
             className="landing-badge relative z-[1]"
             body={null}
+            overlay={DEMO_STICKERS.map((s) => {
+              const def = stickerById(s.defId)
+              if (!def) return null
+              return (
+                <span
+                  key={s.uid}
+                  className="sticker-on-badge pointer-events-none absolute"
+                  style={{
+                    left: `${s.x}%`,
+                    top: `${s.y}%`,
+                    transform: `translate(-50%, -50%) rotate(${s.rotation}deg)`,
+                  }}
+                >
+                  <StickerFace def={def} compact />
+                </span>
+              )
+            })}
           />
         </div>
 
-        <div className="landing-copy relative z-20 mt-8 max-w-md text-center sm:mt-9">
+        <div className="landing-copy relative z-20 max-w-md text-center">
           <h1 className="landing-kicker">
             You made it to
             <br />
