@@ -735,7 +735,7 @@ button.track-box:not(.is-selected):hover video {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  object-position: center;
+  object-position: center top;
 }
 
 /* Outer badge shell — frame options drive the edge */
