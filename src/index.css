@@ -370,7 +370,6 @@ textarea {
 }
 
 .sticker-tab.is-selected {
-  border-color: var(--select);
   color: #111;
 }
 
@@ -925,13 +924,24 @@ textarea {
   overflow: hidden;
 }
 
+/*
+ * Inset selection ring — stays inside the control so overflow:auto drawers
+ * and overflow:hidden track-boxes can never crop the pink highlight.
+ */
 .track-box.is-selected,
+.sticker-tab.is-selected,
 .is-selected {
-  outline: 1.5px solid var(--select);
-  outline-offset: 2px;
+  outline: none;
+  border-color: var(--select);
+  box-shadow: inset 0 0 0 2px var(--select);
 }
 
-/* Desktop panels also need a little inset so the ring isn’t flush-clipped. */
+.track-box.is-selected {
+  /* Keep swatch media clipped; the ring is inset so it stays visible. */
+  overflow: hidden;
+}
+
+/* Desktop panels: keep a little breathing room around grids. */
 .panel > .grid {
   padding: 3px;
   margin: -3px;
