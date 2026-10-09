@@ -1295,12 +1295,13 @@ button.track-box:not(.is-selected):hover video {
 }
 
 .tape-stage {
-  --tape-h: 50px;
-  --roll-now: 58px;
-  --cap-now: 18px;
-  --curve: 16px;
-  --overlap: 6px;
-  --hang: 10px;
+  /* Defaults match desktop; inline --vars from StickerRoll override per layout. */
+  --tape-h: 84px;
+  --roll-now: 74px;
+  --cap-now: 22px;
+  --curve: 22px;
+  --overlap: 8px;
+  --hang: 16px;
   --strip-w: 0px;
   position: relative;
   height: calc(var(--tape-h) + var(--hang));

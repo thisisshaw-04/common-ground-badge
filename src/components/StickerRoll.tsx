@@ -15,47 +15,84 @@ interface StickerRollProps {
   stickers: StickerDef[]
   peelingId?: string | null
   onPeelStart: (def: StickerDef, e: ReactPointerEvent<HTMLButtonElement>) => void
+  /** Slimmer spool for the phone drawer only — desktop keeps the original taller tape. */
+  compact?: boolean
 }
 
-/** Slim strip — every category set scales to fit height + visible width. */
-const TAPE_H = 50
-/** Sideways 3/4 roll: wrap on the right, shiny oval core hanging under that end. */
-const CURVE = 16
-const OVERLAP = 6
+type TapeSize = {
+  tapeH: number
+  curve: number
+  overlap: number
+  pad: number
+  rollOut: number
+  rollIn: number
+  capH: number
+  hubW: number
+  hang: number
+}
+
+/** Original desktop tape. */
+const DESKTOP_TAPE: TapeSize = {
+  tapeH: 84,
+  curve: 22,
+  overlap: 8,
+  pad: 12,
+  rollOut: 74,
+  rollIn: 84,
+  capH: 22,
+  hubW: 27,
+  hang: 16,
+}
+
+/** Phone drawer — thinner so every category fits. */
+const MOBILE_TAPE: TapeSize = {
+  tapeH: 50,
+  curve: 16,
+  overlap: 6,
+  pad: 8,
+  rollOut: 58,
+  rollIn: 68,
+  capH: 18,
+  hubW: 22,
+  hang: 10,
+}
+
 const CUT = 2
-const PAD = 8
 const CLOSE_MS = 280
 const OPEN_MS = 560
-/** Rest spool; outer rim widens a little while winding. Hub size stays fixed. */
-const ROLL_W_OUT = 58
-const ROLL_W_IN = 68
-const CAP_H = 18
-/** Fixed hub width — never stretches with the rim. */
-const HUB_W = 22
-const hang = 10
 
 const easeOut = (t: number) => 1 - Math.pow(1 - t, 3)
 const easeIn = (t: number) => t * t * t
 
-export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }: StickerRollProps) {
+export function StickerRoll({
+  tabKey,
+  stickers,
+  peelingId = null,
+  onPeelStart,
+  compact = false,
+}: StickerRollProps) {
+  const size = compact ? MOBILE_TAPE : DESKTOP_TAPE
   const gid = useId().replace(/:/g, '')
   const stageRef = useRef<HTMLDivElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)
   const feed = useRef(0)
   const full = useRef(0)
   const anim = useRef(0)
+  const sizeRef = useRef(size)
+  sizeRef.current = size
   const [shown, setShown] = useState({ key: tabKey, stickers })
   const [fit, setFit] = useState({ scale: 1, copies: 1 })
 
   const paint = (v: number) => {
     const el = stageRef.current
     if (!el) return
+    const s = sizeRef.current
     feed.current = v
     el.style.setProperty('--strip-w', `${(v * Math.max(0, full.current)).toFixed(2)}px`)
     const remain = 1 - Math.min(1, Math.max(0, v))
-    const w = ROLL_W_OUT + remain * (ROLL_W_IN - ROLL_W_OUT)
+    const w = s.rollOut + remain * (s.rollIn - s.rollOut)
     el.style.setProperty('--roll-now', `${w.toFixed(2)}px`)
-    el.style.setProperty('--cap-now', `${CAP_H}px`)
+    el.style.setProperty('--cap-now', `${s.capH}px`)
   }
 
   const run = (to: number, ms: number, ease: (t: number) => number) =>
@@ -78,18 +115,19 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
     const track = trackRef.current
     if (!stage || !track) return
     const measure = () => {
+      const s = sizeRef.current
       const set = track.firstElementChild as HTMLElement | null
       const setW = set?.offsetWidth ?? 0
       const setH = set?.offsetHeight ?? 0
       full.current = Math.max(0, stage.clientWidth - CUT)
       // Fit the whole category set inside the flat strip (before the wrap).
-      const roomH = Math.max(24, TAPE_H - 8)
-      const roomW = Math.max(80, full.current - ROLL_W_OUT * 0.55)
+      const roomH = Math.max(24, s.tapeH - 8)
+      const roomW = Math.max(80, full.current - s.rollOut * 0.55)
       const scaleH = setH ? roomH / setH : 1
       const scaleW = setW ? roomW / setW : 1
       const scale = Math.min(1, scaleH, scaleW)
       const span = Math.max(setW * scale, 1)
-      const copies = Math.max(2, Math.ceil((full.current + ROLL_W_IN * 0.6) / span))
+      const copies = Math.max(2, Math.ceil((full.current + s.rollIn * 0.6) / span))
       setFit((f) =>
         Math.abs(f.scale - scale) < 0.002 && f.copies === copies ? f : { scale, copies },
       )
@@ -99,7 +137,7 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
     const ro = new ResizeObserver(measure)
     ro.observe(stage)
     return () => ro.disconnect()
-  }, [shown])
+  }, [shown, compact])
 
   useEffect(() => {
     if (tabKey === shown.key) {
@@ -121,20 +159,20 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
   useEffect(() => () => void ++anim.current, [])
 
   return (
-    <div className="tape-bed">
+    <div className={`tape-bed${compact ? ' is-compact' : ''}`}>
       <div
         ref={stageRef}
         className="tape-stage"
         aria-label="Sticker tape"
         style={
           {
-            '--tape-h': `${TAPE_H}px`,
-            '--roll-now': `${ROLL_W_OUT}px`,
-            '--cap-now': `${CAP_H}px`,
-            '--hub-w': `${HUB_W}px`,
-            '--curve': `${CURVE}px`,
-            '--overlap': `${OVERLAP}px`,
-            '--hang': `${hang}px`,
+            '--tape-h': `${size.tapeH}px`,
+            '--roll-now': `${size.rollOut}px`,
+            '--cap-now': `${size.capH}px`,
+            '--hub-w': `${size.hubW}px`,
+            '--curve': `${size.curve}px`,
+            '--overlap': `${size.overlap}px`,
+            '--hang': `${size.hang}px`,
           } as CSSProperties
         }
       >
@@ -143,7 +181,7 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
             ref={trackRef}
             className="tape-track"
             style={{
-              left: PAD,
+              left: size.pad,
               transform: `translateY(-50%) scale(${fit.scale})`,
               transformOrigin: 'left center',
             }}

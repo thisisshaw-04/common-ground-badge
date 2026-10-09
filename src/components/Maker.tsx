@@ -592,6 +592,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
         stickers={STICKERS.filter((s) => s.tab === tab)}
         peelingId={peel?.def.id ?? null}
         onPeelStart={onPeelStart}
+        compact={!isDesktop}
       />
     </>
   )
