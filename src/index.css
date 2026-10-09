@@ -964,13 +964,11 @@ button.track-box:not(.is-selected):hover video {
 
 .tape-stage {
   --tape-h: 84px;
-  --roll-d: 82px;
-  --roll-fat: 1;
-  --roll-now: calc(var(--roll-d) * var(--roll-fat));
+  --roll-now: 110px;
+  --cap-now: 12px;
   --curve: 22px;
-  --cap-h: 18px;
-  --overlap: 7px;
-  --hang: 14px;
+  --overlap: 8px;
+  --hang: 16px;
   --strip-w: 0px;
   position: relative;
   height: calc(var(--tape-h) + var(--hang));
@@ -1066,8 +1064,7 @@ button.track-box:not(.is-selected):hover video {
   left: auto;
   top: calc(var(--tape-h) - var(--overlap));
   width: 100%;
-  /* Wound: wide + thin. Unwound leftover: narrower, still flat. */
-  height: calc(var(--cap-h) * (1.34 - 0.62 * var(--roll-fat)));
+  height: var(--cap-now);
   display: block;
   overflow: visible;
   filter: drop-shadow(0 4px 5px rgba(17, 17, 17, 0.12));
