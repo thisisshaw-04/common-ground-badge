@@ -54,9 +54,10 @@ export function footFramePath(w: number, h: number) {
 interface FootVideoFrameProps {
   id: FootVideoId
   height: number
+  stroke?: string
 }
 
-export function FootVideoFrame({ id, height }: FootVideoFrameProps) {
+export function FootVideoFrame({ id, height, stroke = '#111' }: FootVideoFrameProps) {
   const uid = useId().replace(/:/g, '')
   const clipId = `foot-clip-${uid}`
   const boxRef = useRef<HTMLDivElement>(null)
@@ -99,7 +100,7 @@ export function FootVideoFrame({ id, height }: FootVideoFrameProps) {
         viewBox={`0 0 ${width} ${height}`}
         aria-hidden
       >
-        <path d={d} fill="none" stroke="#111" strokeWidth={STROKE} strokeLinejoin="round" />
+        <path d={d} fill="none" stroke={stroke} strokeWidth={STROKE} strokeLinejoin="round" />
       </svg>
     </div>
   )

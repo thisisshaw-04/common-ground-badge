@@ -145,6 +145,33 @@ textarea {
   background: var(--bg);
 }
 
+.page-fig.is-landing {
+  background: #111;
+}
+
+.landing-hero {
+  background: #111;
+}
+
+.landing-video-card {
+  width: min(88vw, 28rem);
+  filter: drop-shadow(0 22px 48px rgba(0, 0, 0, 0.55));
+}
+
+.landing-hero-dock {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0));
+}
+
+.landing-hero-meta {
+  color: rgba(214, 232, 36, 0.72);
+}
+
+@media (max-height: 700px) {
+  .landing-video-card {
+    width: min(78vw, 22rem);
+  }
+}
+
 /* Whole-app left/right gutters (landing + maker + done). */
 .app-shell {
   padding-inline: var(--page-gutter);
