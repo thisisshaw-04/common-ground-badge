@@ -14,6 +14,7 @@ import {
   STICKERS,
   TABS,
   stickerById,
+  BADGE_LAYOUT,
   type BadgeState,
   type BorderId,
   type CordId,
@@ -27,9 +28,9 @@ import { CordSwatch, Lanyard } from './Lanyard'
 import { StickerFace } from './StickerFace'
 import { StickerRoll } from './StickerRoll'
 
-const BADGE_W = 368
-const BODY_H = 154
-const FOOT_H = 200
+const BADGE_W = BADGE_LAYOUT.width
+const BODY_H = BADGE_LAYOUT.bodyHeight
+const FOOT_H = BADGE_LAYOUT.footHeight
 
 interface MakerProps {
   state: BadgeState
@@ -565,7 +566,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
           {/* Badge RIGHT */}
           <aside className="animate-pop flex shrink-0 flex-col items-center lg:w-[400px] xl:w-[412px]">
             <div className="relative flex w-full max-w-[380px] flex-col items-center overflow-visible">
-              <Lanyard cord={state.cord} scale={1.1} className="lanyard-offscreen" />
+              <Lanyard cord={state.cord} scale={BADGE_LAYOUT.lanyardScale} className="lanyard-offscreen" />
               <BadgeFace
                 badgeRef={badgeRef}
                 width={BADGE_W}
@@ -647,7 +648,10 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                 </button>
                 <button
                   type="button"
-                  onClick={onDone}
+                  onClick={() => {
+                    saveDrawing()
+                    onDone()
+                  }}
                   className="option-btn btn-done badge-edge-btn min-w-0 flex-[1.4] bg-black py-2 text-[13px] font-bold text-white"
                 >
                   I&apos;m done!

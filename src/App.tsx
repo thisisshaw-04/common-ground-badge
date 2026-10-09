@@ -14,7 +14,7 @@ export default function App() {
   return (
     <div
       className={`page-fig relative min-h-dvh overflow-x-hidden ${
-        screen === 'land' ? 'is-landing' : 'app-shell'
+        screen === 'land' ? 'is-landing' : screen === 'done' ? 'is-done' : 'app-shell'
       }`}
     >
       {screen === 'land' ? <Landing onStart={() => setScreen('make')} /> : null}
@@ -28,11 +28,7 @@ export default function App() {
         />
       </div>
       {screen === 'done' ? (
-        <DoneScreen
-          state={state}
-          badgeNode={badgeRef.current}
-          onEdit={() => setScreen('make')}
-        />
+        <DoneScreen state={state} onEdit={() => setScreen('make')} />
       ) : null}
     </div>
   )

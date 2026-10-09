@@ -85,6 +85,31 @@ export function footVideoSrc(id: FootVideoId) {
   return `${base}foot-videos/${FOOT_VIDEOS[id].file}`
 }
 
+export type StoryOverlayId = 'dark' | 'light'
+
+export const STORY_OVERLAYS: Record<
+  StoryOverlayId,
+  { label: string; previewLabel: string; file: string }
+> = {
+  dark: { label: 'Dark', previewLabel: 'DARK PREVIEW', file: 'dark.webp' },
+  light: { label: 'Light', previewLabel: 'LIGHT PREVIEW', file: 'light.webp' },
+}
+
+export const STORY_OVERLAY_ORDER: StoryOverlayId[] = ['dark', 'light']
+
+export function storyOverlaySrc(id: StoryOverlayId) {
+  const base = import.meta.env.BASE_URL || '/'
+  return `${base}story-overlays/${STORY_OVERLAYS[id].file}`
+}
+
+/** Maker card + story-poster scale source. */
+export const BADGE_LAYOUT = {
+  width: 368,
+  bodyHeight: 154,
+  footHeight: 200,
+  lanyardScale: 1.1,
+} as const
+
 export const CORDS: Record<
   CordId,
   { label: string; file: string; swatch: string }

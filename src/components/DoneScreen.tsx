@@ -1,184 +1,135 @@
 import { useRef, useState } from 'react'
 import { toPng } from 'html-to-image'
-import { EVENT, type BadgeState } from '../lib/badge'
+import {
+  STORY_OVERLAYS,
+  STORY_OVERLAY_ORDER,
+  type BadgeState,
+  type StoryOverlayId,
+} from '../lib/badge'
+import { StoryPoster } from './StoryPoster'
 
 interface DoneProps {
   state: BadgeState
-  badgeNode: HTMLDivElement | null
   onEdit: () => void
 }
 
-export function DoneScreen({ state, badgeNode, onEdit }: DoneProps) {
-  const [busy, setBusy] = useState<'story' | 'grid' | null>(null)
-  const [copied, setCopied] = useState(false)
-  const previewRef = useRef<HTMLDivElement>(null)
+const EXPORT_W = 1080
+const EXPORT_H = 1920
 
-  const exportPng = async (ratio: 'story' | 'grid') => {
-    if (!badgeNode || busy) return
-    setBusy(ratio)
+function freezeVideos(root: HTMLElement) {
+  const swaps: { video: HTMLVideoElement; img: HTMLImageElement }[] = []
+  root.querySelectorAll('video').forEach((video) => {
+    const w = video.videoWidth || video.clientWidth
+    const h = video.videoHeight || video.clientHeight
+    if (!w || !h) return
+    const canvas = document.createElement('canvas')
+    canvas.width = w
+    canvas.height = h
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+    ctx.drawImage(video, 0, 0, w, h)
+    const img = document.createElement('img')
+    img.src = canvas.toDataURL('image/png')
+    img.className = video.className
+    img.style.cssText = video.style.cssText
+    img.alt = ''
+    video.replaceWith(img)
+    swaps.push({ video, img })
+  })
+  return () => {
+    for (const { video, img } of swaps) img.replaceWith(video)
+  }
+}
+
+export function DoneScreen({ state, onEdit }: DoneProps) {
+  const [overlay, setOverlay] = useState<StoryOverlayId>('dark')
+  const [busy, setBusy] = useState(false)
+  const exportRef = useRef<HTMLDivElement>(null)
+
+  const download = async () => {
+    const node = exportRef.current
+    if (!node || busy) return
+    setBusy(true)
     try {
-      const width = 1080
-      const height = ratio === 'story' ? 1920 : 1440
-      const root = document.createElement('div')
-      root.style.width = `${width}px`
-      root.style.height = `${height}px`
-      root.style.background = '#ffffff'
-      root.style.display = 'flex'
-      root.style.alignItems = 'center'
-      root.style.justifyContent = 'center'
-      root.style.position = 'fixed'
-      root.style.left = '-12000px'
-      root.style.top = '0'
-      const clone = badgeNode.cloneNode(true) as HTMLElement
-      clone.querySelectorAll('input').forEach((input) => {
-        const span = document.createElement('div')
-        span.className = input.className
-        span.textContent = (input as HTMLInputElement).value || 'maker'
-        span.style.pointerEvents = 'none'
-        input.replaceWith(span)
+      await new Promise((r) => setTimeout(r, 120))
+      const restore = freezeVideos(node)
+      const url = await toPng(node, {
+        width: EXPORT_W,
+        height: EXPORT_H,
+        pixelRatio: 1,
+        cacheBust: true,
       })
-      clone.style.transform = 'scale(2.4)'
-      clone.style.transformOrigin = 'center center'
-      root.appendChild(clone)
-      document.body.appendChild(root)
-      await new Promise((r) => setTimeout(r, 80))
-      const url = await toPng(root, { width, height, pixelRatio: 1, cacheBust: true })
-      document.body.removeChild(root)
+      restore()
       const a = document.createElement('a')
       const name = (state.name.trim() || 'maker').replace(/\s+/g, '-')
-      a.download =
-        ratio === 'story'
-          ? `CommonGround-${name}-Story.png`
-          : `CommonGround-${name}-Grid.png`
+      a.download = `CommonGround-${name}-${overlay}-story.png`
       a.href = url
       a.click()
     } catch (err) {
       console.error(err)
       alert('Could not export — try again.')
     } finally {
-      setBusy(null)
+      setBusy(false)
     }
-  }
-
-  const shareText = `I made my Common Ground Makeathon badge! ${EVENT.date} · ${EVENT.place}\n${EVENT.site}\n${EVENT.luma}`
-
-  const share = async () => {
-    try {
-      if (navigator.share) {
-        await navigator.share({
-          title: 'My Common Ground Badge',
-          text: shareText,
-          url: EVENT.site,
-        })
-        return
-      }
-    } catch {
-      /* fall through */
-    }
-    await navigator.clipboard.writeText(shareText)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }
-
-  const tweet = () => {
-    const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`
-    window.open(url, '_blank', 'noopener,noreferrer')
   }
 
   return (
-    <div className="page-fig flex h-dvh flex-col overflow-hidden">
-      <main className="relative mx-auto flex min-h-0 w-full max-w-3xl flex-1 flex-col items-center overflow-y-auto px-2 py-6 text-center sm:px-4 sm:py-8">
-        <div className="animate-pop">
-          <p className="text-lg text-black/55">Nice.</p>
-          <div className="mt-3 flex flex-wrap items-center justify-center gap-2">
-            <span className="brand-chip brand-chip-rect text-2xl uppercase tracking-tight sm:text-3xl">
-              Your badge
-            </span>
-            <span className="brand-chip brand-chip-pill text-2xl sm:text-3xl">is ready</span>
-          </div>
-          <p className="mx-auto mt-4 max-w-md text-black/55">
-            Save it for stories, post it everywhere, then show up on {EVENT.date} at{' '}
-            {EVENT.place}.
+    <div className="done-stage">
+      <section className="done-previews" aria-label="Story overlay">
+        {STORY_OVERLAY_ORDER.map((id) => {
+          const selected = overlay === id
+          return (
+            <button
+              key={id}
+              type="button"
+              onClick={() => setOverlay(id)}
+              className={`done-option ${selected ? 'is-selected' : ''}`}
+              aria-pressed={selected}
+              aria-label={`${STORY_OVERLAYS[id].label} overlay`}
+            >
+              {selected ? (
+                <span className="done-option-tag">{STORY_OVERLAYS[id].previewLabel}</span>
+              ) : (
+                <span className="done-option-tag is-spacer" aria-hidden>
+                  {STORY_OVERLAYS[id].previewLabel}
+                </span>
+              )}
+              <div className="done-option-frame">
+                <StoryPoster state={state} overlay={id} />
+              </div>
+            </button>
+          )
+        })}
+      </section>
+
+      <aside className="done-copy">
+        <div className="done-copy-inner">
+          <h1 className="done-title">Your badge is ready</h1>
+          <p className="done-lede">
+            Lay it on a 9:16 scan — dark or light — and download a story with your
+            hanging badge on top.
           </p>
-        </div>
-
-        <div ref={previewRef} className="animate-floaty mt-6 scale-[0.88] sm:scale-100">
-          {badgeNode ? (
-            <div
-              className="pointer-events-none"
-              dangerouslySetInnerHTML={{
-                __html: (() => {
-                  const clone = badgeNode.cloneNode(true) as HTMLElement
-                  clone.querySelectorAll('input').forEach((input) => {
-                    const span = document.createElement('div')
-                    span.className = input.className
-                    span.textContent = (input as HTMLInputElement).value || 'your name'
-                    input.replaceWith(span)
-                  })
-                  clone.querySelectorAll('canvas').forEach((c) => {
-                    if (state.drawingDataUrl) {
-                      const img = document.createElement('img')
-                      img.src = state.drawingDataUrl
-                      img.className = 'absolute inset-0 z-10 h-full w-full'
-                      img.alt = ''
-                      c.replaceWith(img)
-                    }
-                  })
-                  return clone.outerHTML
-                })(),
-              }}
-            />
-          ) : null}
-        </div>
-
-        <div className="animate-pop mt-6 grid w-full max-w-sm gap-2.5 pb-8">
           <button
             type="button"
-            disabled={!!busy}
-            onClick={() => exportPng('story')}
-            className="cta-blue px-4 py-3.5 text-sm disabled:opacity-60"
+            disabled={busy}
+            onClick={() => void download()}
+            className="cta-blue done-download"
           >
-            {busy === 'story' ? 'Saving…' : 'Save 9:16 Story'}
+            {busy ? 'Saving…' : 'Download story'}
           </button>
-          <button
-            type="button"
-            disabled={!!busy}
-            onClick={() => exportPng('grid')}
-            className="rounded-xl bg-white px-4 py-3.5 text-sm font-semibold text-black ring-2 ring-black/15 disabled:opacity-60"
-          >
-            {busy === 'grid' ? 'Saving…' : 'Save 3:4 Grid'}
-          </button>
-          <button
-            type="button"
-            onClick={share}
-            className="rounded-xl bg-[var(--panel)] px-4 py-3.5 text-sm font-semibold text-black ring-1 ring-black/10"
-          >
-            {copied ? 'Copied link!' : 'Share to socials'}
-          </button>
-          <button
-            type="button"
-            onClick={tweet}
-            className="rounded-xl px-4 py-3 text-sm font-medium text-black/45 hover:text-black"
-          >
-            Post on X / Twitter
-          </button>
-          <a
-            href={EVENT.luma}
-            target="_blank"
-            rel="noreferrer"
-            className="text-sm text-black/45 underline decoration-[var(--blue)]/40 underline-offset-2 hover:text-[var(--blue)]"
-          >
-            Event on Luma
-          </a>
-          <button
-            type="button"
-            onClick={onEdit}
-            className="mt-1 text-sm font-semibold text-[var(--blue)]"
-          >
+          <button type="button" onClick={onEdit} className="done-edit">
             ← Keep editing
           </button>
         </div>
-      </main>
+      </aside>
+
+      <div
+        ref={exportRef}
+        className="story-export"
+        aria-hidden
+      >
+        <StoryPoster state={state} overlay={overlay} />
+      </div>
     </div>
   )
 }

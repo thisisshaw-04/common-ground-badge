@@ -149,6 +149,145 @@ textarea {
   background: #111;
 }
 
+.page-fig.is-done {
+  background: #fff;
+}
+
+.done-stage {
+  display: flex;
+  min-height: 100dvh;
+  background: #fff;
+}
+
+.done-previews {
+  display: flex;
+  align-items: flex-end;
+  gap: 1.35rem;
+  padding: 2.25rem 1.5rem 2.25rem clamp(1.25rem, 4vw, 3rem);
+}
+
+.done-option {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.45rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+}
+
+.done-option-tag {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #111;
+  line-height: 1;
+}
+
+.done-option-tag.is-spacer {
+  visibility: hidden;
+}
+
+.done-option-frame {
+  width: min(28vw, 17.5rem);
+  aspect-ratio: 9 / 16;
+  overflow: hidden;
+  background: #111;
+}
+
+.done-option.is-selected .done-option-frame {
+  outline: 2px solid #111;
+  outline-offset: 0;
+}
+
+.done-copy {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.5rem;
+}
+
+.done-copy-inner {
+  display: flex;
+  width: min(100%, 22rem);
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.done-title {
+  color: #111;
+  font-size: clamp(1.7rem, 3vw, 2.15rem);
+  font-weight: 500;
+  letter-spacing: -0.035em;
+  line-height: 1.15;
+}
+
+.done-lede {
+  margin-top: 0.85rem;
+  max-width: 18rem;
+  color: rgba(17, 17, 17, 0.58);
+  font-size: 0.98rem;
+  line-height: 1.45;
+}
+
+.done-download {
+  margin-top: 1.6rem;
+  width: 100%;
+  max-width: 16rem;
+  padding: 0.85rem 1.25rem;
+  font-size: 1rem;
+}
+
+.done-edit {
+  margin-top: 0.85rem;
+  border: 0;
+  background: transparent;
+  color: #111;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.done-edit:hover {
+  text-decoration: underline;
+}
+
+.story-export {
+  position: fixed;
+  top: 0;
+  left: -14000px;
+  width: 1080px;
+  height: 1920px;
+  pointer-events: none;
+}
+
+@media (max-width: 900px) {
+  .done-stage {
+    flex-direction: column;
+  }
+
+  .done-previews {
+    justify-content: center;
+    padding: 1.5rem 1rem 0.5rem;
+  }
+
+  .done-option-frame {
+    width: min(42vw, 11.5rem);
+  }
+
+  .done-copy {
+    flex: none;
+    padding: 1.25rem 1.25rem 2.5rem;
+  }
+}
+
 .landing-hero {
   background: #111;
 }
