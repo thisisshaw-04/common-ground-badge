@@ -36,7 +36,7 @@ export function BadgePreview({
           ) : null}
         </>
       }
-      overlay={state.stickers.map((s) => {
+      overlay={state.stickers.map((s, i) => {
         const def = stickerById(s.defId)
         if (!def) return null
         return (
@@ -46,6 +46,7 @@ export function BadgePreview({
             style={{
               left: `${s.x}%`,
               top: `${s.y}%`,
+              zIndex: i + 1,
               transform: `translate(-50%, -50%) rotate(${s.rotation}deg)`,
             }}
           >

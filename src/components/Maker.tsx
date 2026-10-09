@@ -337,10 +337,22 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
     saveDrawing()
   }
 
+  const bringToFront = (stickers: PlacedSticker[], uid: string) => {
+    const i = stickers.findIndex((s) => s.uid === uid)
+    if (i < 0 || i === stickers.length - 1) return stickers
+    const next = stickers.slice()
+    const [hit] = next.splice(i, 1)
+    next.push(hit)
+    return next
+  }
+
   const onStickerPointerDown = (e: ReactPointerEvent<HTMLButtonElement>, uid: string) => {
     if (mode === 'draw') return
+    const stacked = bringToFront(state.stickers, uid)
+    const next = stacked === state.stickers ? state : { ...state, stickers: stacked }
     dragUid.current = uid
-    dragLive.current = state
+    dragLive.current = next
+    if (next !== state) onChange(next)
     setDraggingUid(uid)
     setMode('stick')
     e.currentTarget.setPointerCapture(e.pointerId)
@@ -625,7 +637,7 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                     />
                   </>
                 }
-                overlay={state.stickers.map((s) => {
+                overlay={state.stickers.map((s, i) => {
                   const def = stickerById(s.defId)
                   if (!def) return null
                   return (
@@ -634,10 +646,11 @@ export function Maker({ state, onChange, onDone, onBack, badgeRef }: MakerProps)
                       type="button"
                       className={`sticker-on-badge absolute cursor-grab touch-none select-none active:cursor-grabbing ${
                         mode === 'draw' ? 'pointer-events-none' : 'pointer-events-auto'
-                      } ${draggingUid === s.uid ? 'z-[120]' : 'z-[100]'}`}
+                      }`}
                       style={{
                         left: `${s.x}%`,
                         top: `${s.y}%`,
+                        zIndex: draggingUid === s.uid ? 1000 : i + 1,
                         transform: `translate(-50%, -50%) rotate(${s.rotation}deg)`,
                       }}
                       onPointerDown={(e) => onStickerPointerDown(e, s.uid)}
