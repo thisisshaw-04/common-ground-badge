@@ -1,4 +1,4 @@
-import { BADGE_LAYOUT, stickerById, type BadgeState } from '../lib/badge'
+import { BADGE_LAYOUT, stickerById, visibleBadgeName, type BadgeState } from '../lib/badge'
 import { BadgeFace } from './BadgeFace'
 import { StickerFace } from './StickerFace'
 
@@ -10,7 +10,7 @@ export function BadgePreview({
   state: BadgeState
   className?: string
 }) {
-  const name = state.name.trim()
+  const name = visibleBadgeName(state.name)
   return (
     <BadgeFace
       width={BADGE_LAYOUT.width}

@@ -207,3 +207,10 @@ export const DEMO_STATE: BadgeState = {
 export function stickerById(id: string) {
   return STICKERS.find((s) => s.id === id)
 }
+
+/** Name painted on the finished badge. Empty fields and the placeholder stay off. */
+export function visibleBadgeName(name: string) {
+  const t = name.replace(/\s+/g, ' ').trim()
+  if (!t || /^your name$/i.test(t)) return ''
+  return t
+}

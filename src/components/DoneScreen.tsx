@@ -3,6 +3,7 @@ import { toPng } from 'html-to-image'
 import {
   STORY_OVERLAYS,
   STORY_OVERLAY_ORDER,
+  visibleBadgeName,
   type BadgeState,
   type StoryOverlayId,
 } from '../lib/badge'
@@ -61,7 +62,7 @@ export function DoneScreen({ state, onEdit }: DoneProps) {
       })
       restore()
       const a = document.createElement('a')
-      const name = (state.name.trim() || 'maker').replace(/\s+/g, '-')
+      const name = (visibleBadgeName(state.name) || 'maker').replace(/\s+/g, '-')
       a.download = `CommonGround-${name}-${id}-story.png`
       a.href = url
       a.click()
