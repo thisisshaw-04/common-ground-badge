@@ -159,17 +159,10 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
           <span className="tape-shine" />
         </div>
         <div className="tape-roll" aria-hidden>
-          <svg className="tape-roll-end" viewBox="0 0 66 26" preserveAspectRatio="none">
-            <defs>
-              <radialGradient id="tape-paper" cx="50%" cy="30%" r="70%">
-                <stop offset="0%" stopColor="#ffffff" />
-                <stop offset="70%" stopColor="#f6f6f6" />
-                <stop offset="100%" stopColor="#e2e2e2" />
-              </radialGradient>
-            </defs>
-            <ellipse cx="33" cy="14.2" rx="33" ry="11.8" fill="#e8e8e8" />
-            <ellipse cx="33" cy="13" rx="33" ry="11.8" fill="url(#tape-paper)" />
-            <ellipse cx="33" cy="13.2" rx="20.2" ry="7.1" fill="#c2c2c2" />
+          <svg className="tape-roll-end" viewBox="0 0 66 26.4" preserveAspectRatio="none">
+            <ellipse cx="33" cy="14.5" rx="33" ry="12" fill="#e4e4e4" />
+            <ellipse cx="33" cy="13.2" rx="33" ry="13.2" fill="#ffffff" />
+            <ellipse cx="33" cy="13.2" rx="18" ry="7.2" fill="#c6c6c6" />
           </svg>
         </div>
       </div>
