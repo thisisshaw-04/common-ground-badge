@@ -1,5 +1,6 @@
 import {
   useEffect,
+  useId,
   useLayoutEffect,
   useRef,
   useState,
@@ -17,22 +18,23 @@ interface StickerRollProps {
 }
 
 const TAPE_H = 84
-/** Remaining roll width. Only the top-right wraps; the core hangs under a straight bottom. */
-const ROLL = 66
-const CURVE = 26
-const SQUASH = 0.4
+/** Sideways 3/4 roll: wrap on the right, shiny oval core hanging under that end. */
+const ROLL = 74
+const CURVE = 22
+const CAP_H = 32
+const OVERLAP = 7
 const CUT = 2
 const PAD = 12
 const CLOSE_MS = 280
 const OPEN_MS = 560
 
-const capH = ROLL * SQUASH
-const hang = capH * 0.7
+const hang = CAP_H - OVERLAP
 
 const easeOut = (t: number) => 1 - Math.pow(1 - t, 3)
 const easeIn = (t: number) => t * t * t
 
 export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }: StickerRollProps) {
+  const gid = useId().replace(/:/g, '')
   const stageRef = useRef<HTMLDivElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)
   const feed = useRef(0)
@@ -117,7 +119,8 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
             '--tape-h': `${TAPE_H}px`,
             '--roll-d': `${ROLL}px`,
             '--curve': `${CURVE}px`,
-            '--cap-h': `${capH}px`,
+            '--cap-h': `${CAP_H}px`,
+            '--overlap': `${OVERLAP}px`,
             '--hang': `${hang}px`,
           } as CSSProperties
         }
@@ -157,14 +160,53 @@ export function StickerRoll({ tabKey, stickers, peelingId = null, onPeelStart }:
             ))}
           </div>
           <span className="tape-shine" />
+          <span className="tape-wrap" />
         </div>
         <div className="tape-roll" aria-hidden>
-          <svg className="tape-roll-end" viewBox="0 0 66 26.4" preserveAspectRatio="none">
-            <ellipse cx="33" cy="14.6" rx="33" ry="12" fill="#dedede" />
-            {/* TR quadrant only: hides the strip’s square ear. White oval paints next, so the curve is the edge. */}
-            <rect x="33" y="-1" width="34" height="15" fill="var(--bg)" />
-            <ellipse cx="33" cy="13.2" rx="33" ry="13.2" fill="#ffffff" />
-            <ellipse cx="33" cy="13.2" rx="17.5" ry="7" fill="#c4c4c4" />
+          <svg className="tape-roll-end" viewBox="0 0 74 32" preserveAspectRatio="none">
+            <defs>
+              <radialGradient id={`${gid}-rim`} cx="42%" cy="32%" r="78%">
+                <stop offset="0%" stopColor="#ffffff" />
+                <stop offset="38%" stopColor="#f7f7fa" />
+                <stop offset="68%" stopColor="#e4e4ea" />
+                <stop offset="100%" stopColor="#c8c8d0" />
+              </radialGradient>
+              <radialGradient id={`${gid}-core`} cx="48%" cy="40%" r="72%">
+                <stop offset="0%" stopColor="#7a7a82" />
+                <stop offset="55%" stopColor="#9a9aa2" />
+                <stop offset="100%" stopColor="#b8b8be" />
+              </radialGradient>
+              <linearGradient id={`${gid}-gloss`} x1="0.5" y1="0" x2="0.5" y2="1">
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="0" />
+                <stop offset="55%" stopColor="#ffffff" stopOpacity="0.12" />
+                <stop offset="100%" stopColor="#ffffff" stopOpacity="0.95" />
+              </linearGradient>
+              <mask id={`${gid}-ring`}>
+                <ellipse cx="37" cy="15" rx="37" ry="15" fill="#fff" />
+                <ellipse cx="37" cy="15.2" rx="17.5" ry="7.1" fill="#000" />
+              </mask>
+            </defs>
+            <ellipse cx="37" cy="20" rx="34" ry="13" fill="#111111" opacity="0.12" />
+            <ellipse cx="37" cy="15" rx="37" ry="15" fill={`url(#${gid}-rim)`} />
+            <ellipse
+              cx="37"
+              cy="19"
+              rx="28"
+              ry="9"
+              fill={`url(#${gid}-gloss)`}
+              mask={`url(#${gid}-ring)`}
+            />
+            <ellipse cx="37" cy="15.2" rx="17.5" ry="7.1" fill={`url(#${gid}-core)`} />
+            <ellipse
+              cx="37"
+              cy="14.4"
+              rx="16.2"
+              ry="6.4"
+              fill="none"
+              stroke="#ffffff"
+              strokeOpacity="0.55"
+              strokeWidth="1.3"
+            />
           </svg>
         </div>
       </div>

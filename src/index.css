@@ -964,10 +964,11 @@ button.track-box:not(.is-selected):hover video {
 
 .tape-stage {
   --tape-h: 84px;
-  --roll-d: 66px;
-  --curve: 26px;
-  --cap-h: 26px;
-  --hang: 18px;
+  --roll-d: 74px;
+  --curve: 22px;
+  --cap-h: 32px;
+  --overlap: 7px;
+  --hang: 25px;
   --strip-w: 0px;
   position: relative;
   height: calc(var(--tape-h) + var(--hang));
@@ -995,33 +996,57 @@ button.track-box:not(.is-selected):hover video {
   width: var(--strip-w);
   overflow: hidden;
   background: #ffffff;
-  border: 1px solid #f0f0f0;
+  border: 1px solid #f2f2f4;
   border-right: 0;
   border-bottom: 0;
-  /* Wrap only at the top-right. The core SVG covers the square BR ear. */
-  border-radius: 4px var(--curve) 0 4px;
+  /* TR wraps the cylinder; BR quarter-ellipse meets the hanging spool. */
+  border-radius: 5px var(--curve) calc(var(--roll-d) / 2) 5px /
+    5px var(--curve) var(--overlap) 5px;
 }
 
-/* Specular on the remaining roll, not across a huge arc. */
+.tape-wrap {
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  right: 0;
+  width: calc(var(--roll-d) * 0.46);
+  height: 100%;
+  pointer-events: none;
+  border-radius: 0 var(--curve) 0 0;
+  background:
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.08) 28%,
+      rgba(255, 255, 255, 0.55) 44%,
+      rgba(255, 255, 255, 0.96) 52%,
+      rgba(230, 230, 238, 0.35) 62%,
+      rgba(170, 170, 182, 0.28) 82%,
+      rgba(130, 130, 142, 0.22) 100%
+    );
+}
+
+/* Specular streak on the wrap, like the last sticker going around the roll. */
 .tape-shine {
   position: absolute;
   z-index: 4;
-  top: 10%;
-  bottom: 16%;
-  right: calc(var(--roll-d) * 0.22);
-  width: 5px;
+  top: 8%;
+  bottom: 10%;
+  right: calc(var(--roll-d) * 0.2);
+  width: 9px;
   pointer-events: none;
-  border-radius: 4px;
+  border-radius: 6px;
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(255, 255, 255, 0.88) 50%,
+    rgba(255, 255, 255, 0.55) 30%,
+    rgba(255, 255, 255, 0.98) 50%,
+    rgba(255, 255, 255, 0.45) 72%,
     transparent 100%
   );
-  filter: blur(0.7px);
+  filter: blur(0.45px);
 }
 
-/* Core oval shares the strip’s bottom-right quarter-ellipse. */
 .tape-roll {
   position: absolute;
   z-index: 3;
@@ -1037,11 +1062,12 @@ button.track-box:not(.is-selected):hover video {
   z-index: 3;
   left: 0;
   right: 0;
-  top: calc(var(--tape-h) - var(--cap-h) * 0.5);
+  top: calc(var(--tape-h) - var(--overlap));
   width: 100%;
   height: var(--cap-h);
   display: block;
   overflow: visible;
+  filter: drop-shadow(0 4px 5px rgba(17, 17, 17, 0.12));
 }
 
 .tape-track {
