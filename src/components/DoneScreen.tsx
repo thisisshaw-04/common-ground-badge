@@ -42,14 +42,14 @@ function freezeVideos(root: HTMLElement) {
 
 export function DoneScreen({ state, onEdit }: DoneProps) {
   const [overlay, setOverlay] = useState<StoryOverlayId>('dark')
-  const [busy, setBusy] = useState(false)
+  const [busy, setBusy] = useState<StoryOverlayId | null>(null)
 
-  const download = async () => {
+  const download = async (id: StoryOverlayId) => {
     const node = document.querySelector(
-      '.done-option.is-current .done-option-frame',
+      `[data-story="${id}"] .done-option-frame`,
     ) as HTMLElement | null
     if (!node || busy) return
-    setBusy(true)
+    setBusy(id)
     try {
       await new Promise((r) => setTimeout(r, 80))
       const restore = freezeVideos(node)
@@ -57,24 +57,28 @@ export function DoneScreen({ state, onEdit }: DoneProps) {
       const url = await toPng(node, {
         pixelRatio: ratio,
         cacheBust: true,
-        backgroundColor: overlay === 'dark' ? '#0b0b0b' : '#c8c8c8',
+        backgroundColor: id === 'dark' ? '#0b0b0b' : '#c8c8c8',
       })
       restore()
       const a = document.createElement('a')
       const name = (state.name.trim() || 'maker').replace(/\s+/g, '-')
-      a.download = `CommonGround-${name}-${overlay}-story.png`
+      a.download = `CommonGround-${name}-${id}-story.png`
       a.href = url
       a.click()
     } catch (err) {
       console.error(err)
       alert('Could not export — try again.')
     } finally {
-      setBusy(false)
+      setBusy(null)
     }
   }
 
   return (
     <div className="done-stage">
+      <button type="button" onClick={onEdit} className="done-edit">
+        ← Keep editing
+      </button>
+
       <section className="done-previews" aria-label="Story overlay">
         {STORY_OVERLAY_ORDER.map((id) => {
           const selected = overlay === id
@@ -82,18 +86,13 @@ export function DoneScreen({ state, onEdit }: DoneProps) {
             <button
               key={id}
               type="button"
+              data-story={id}
               onClick={() => setOverlay(id)}
               className={`done-option ${selected ? 'is-current' : ''}`}
               aria-pressed={selected}
               aria-label={`${STORY_OVERLAYS[id].label} overlay`}
             >
-              {selected ? (
-                <span className="done-option-tag">{STORY_OVERLAYS[id].previewLabel}</span>
-              ) : (
-                <span className="done-option-tag is-spacer" aria-hidden>
-                  {STORY_OVERLAYS[id].previewLabel}
-                </span>
-              )}
+              <span className="done-option-tag">{STORY_OVERLAYS[id].previewLabel}</span>
               <div className="done-option-frame">
                 <StoryPoster state={state} overlay={id} />
               </div>
@@ -104,22 +103,32 @@ export function DoneScreen({ state, onEdit }: DoneProps) {
 
       <aside className="done-copy">
         <div className="done-copy-inner">
-          <h1 className="done-title">Your badge is ready</h1>
+          <h1 className="done-title">
+            Get hyped,
+            <br />
+            you made it to
+            <br />
+            Common Ground!
+          </h1>
           <p className="done-lede">
-            Lay it on a 9:16 scan — dark or light — and download a story with your
-            hanging badge on top.
+            Share your badge with <span className="done-hash">#CommonGround</span> on
+            LinkedIn or IG!
           </p>
-          <button
-            type="button"
-            disabled={busy}
-            onClick={() => void download()}
-            className="cta-blue done-download"
-          >
-            {busy ? 'Saving…' : 'Download story'}
-          </button>
-          <button type="button" onClick={onEdit} className="done-edit">
-            ← Keep editing
-          </button>
+          <div className="done-actions">
+            {STORY_OVERLAY_ORDER.map((id) => (
+              <button
+                key={id}
+                type="button"
+                disabled={busy !== null}
+                onClick={() => void download(id)}
+                className="done-download"
+              >
+                {busy === id
+                  ? 'Saving…'
+                  : `Download ${STORY_OVERLAYS[id].label} story`}
+              </button>
+            ))}
+          </div>
         </div>
       </aside>
     </div>

@@ -10,7 +10,7 @@ export function BadgePreview({
   state: BadgeState
   className?: string
 }) {
-  const name = state.name.trim() || 'YOUR NAME'
+  const name = state.name.trim()
   return (
     <BadgeFace
       width={BADGE_LAYOUT.width}
@@ -21,9 +21,11 @@ export function BadgePreview({
       className={className}
       body={
         <>
-          <p className="poster-name-input absolute top-2 left-1/2 z-20 w-[84%] -translate-x-1/2 text-center text-[1.35rem] font-bold tracking-[-0.03em] text-black uppercase">
-            {name}
-          </p>
+          {name ? (
+            <p className="poster-name-input absolute top-2 left-1/2 z-20 w-[84%] -translate-x-1/2 text-center text-[1.35rem] font-bold tracking-[-0.03em] text-black uppercase">
+              {name}
+            </p>
+          ) : null}
           {state.drawingDataUrl ? (
             <img
               src={state.drawingDataUrl}
