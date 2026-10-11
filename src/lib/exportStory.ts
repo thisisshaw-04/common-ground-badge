@@ -21,8 +21,9 @@ export interface StoryVideoFile {
 }
 
 const FPS = 30
-const MIN_SECONDS = 1.5
-const MAX_SECONDS = 2
+/** LinkedIn rejects clips under 3s — keep a small headroom above that floor. */
+const MIN_SECONDS = 3
+const MAX_SECONDS = 3.5
 /** 720-wide keeps WebCodecs reliable and matches H.264 Level 3.1. */
 const MAX_VIDEO_WIDTH = 720
 const MP4_BUDGET_MS = 45000
